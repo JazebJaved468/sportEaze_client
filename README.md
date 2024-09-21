@@ -1,2 +1,3 @@
 # sportEaze_client
-React native frontend for sportEaze
+
+React native frontend for sportEazee
