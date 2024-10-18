@@ -1,0 +1,56 @@
+name: React Native CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.17.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint the code
+        run: npm run lint # Assumes you have a "lint" script in package.json
+
+      # - name: Run tests
+      #   run: npm test
+
+      - name: Build Android
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+  # ios-build:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
+
+  #     - name: Install dependencies
+  #       run: npm install
+
+  #     - name: Install CocoaPods
+  #       run: cd ios && pod install
+
+  #     - name: Build iOS
+  #       run: xcodebuild -workspace ios/YourApp.xcworkspace -scheme YourApp -sdk iphonesimulator -configuration Debug build
