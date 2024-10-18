@@ -3,14 +3,18 @@ import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
 import AppNavigator from './modules/Core/Navigator/AppNavigator';
+import {Provider} from 'react-redux';
+import {store} from './store/store';
 
 export const App: React.FC = () => {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.safeArea}>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
   );
 };
 
