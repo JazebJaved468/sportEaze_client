@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerProfilePage} from '../PlayerProfile';
 import {
@@ -9,14 +9,11 @@ import {
 import {set} from 'date-fns';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useGetSampleColorsQuery} from '../../../store/sample/sample.service';
+import {Button, Text, useColorMode, useColorModeValue, View} from 'native-base';
 import {
-  Center,
-  Text,
-  useColorMode,
-  View,
-  Button,
-  useColorModeValue,
-} from 'native-base';
+  getFromLocalStorage,
+  storeInLocalStorage,
+} from '../../../utils/customHooks/helpers/asyncStorage';
 
 const PlayerHome = () => {
   const navigation = useAppNavigation();
@@ -25,11 +22,14 @@ const PlayerHome = () => {
 
   const {data, isLoading} = useGetSampleColorsQuery();
 
-  console.log('data from api', data);
-  const textColor = useColorModeValue('black', 'red');
+  console.log('Sample data from api', data);
+  const {colorMode, setColorMode, toggleColorMode} = useColorMode();
+
+  const backgroundColor = useColorModeValue('white', 'black');
+  const textColor = useColorModeValue('black', 'white');
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: backgroundColor}}>
       <View style={styles.container}>
         <Text style={[styles.homeText, {color: textColor}]}>Sample Home</Text>
         <Button
@@ -41,6 +41,19 @@ const PlayerHome = () => {
       </View>
 
       <Button
+        m={10}
+        onPress={() => {
+          toggleColorMode();
+          storeInLocalStorage({
+            key: 'colorMode',
+            value: colorMode === 'light' ? 'dark' : 'light',
+          });
+        }}>
+        Switch Color Mode
+      </Button>
+
+      <Button
+        m={10}
         onPress={() => {
           navigation.navigate(PlayerProfilePage);
         }}>
@@ -54,7 +67,6 @@ export default PlayerHome;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
