@@ -9,6 +9,11 @@ import {
 import {set} from 'date-fns';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useGetSampleColorsQuery} from '../../../store/sample/sample.service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  getFromLocalStorage,
+  storeInLocalStorage,
+} from '../../../utils/customHooks/helpers/asyncStorage';
 
 const PlayerHome = () => {
   const navigation = useAppNavigation();
@@ -24,12 +29,20 @@ const PlayerHome = () => {
       <View style={styles.container}>
         <Text style={styles.homeText}>Sample Home</Text>
         <Button
-          title={'update message'}
+          title={'set color mode'}
           onPress={() => {
-            dispatch(updateMessage('Go to Player profile'));
+            storeInLocalStorage({key: 'colorMode', value: 'dark'});
+            // dispatch(updateMessage('Go to Player profile'));
           }}
         />
       </View>
+
+      <Button
+        title={'get color mode'}
+        onPress={() => {
+          getFromLocalStorage({key: 'colorMode'});
+        }}
+      />
 
       <Button
         title={message}
