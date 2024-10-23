@@ -5,15 +5,19 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import AppNavigator from './modules/Core/Navigator/AppNavigator';
 import {Provider} from 'react-redux';
 import {store} from './store/store';
+import {NativeBaseProvider} from 'native-base';
+import {theme} from './styles/nativeBaseCustomizeStyles/customizeTheme';
 
 export const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <SafeAreaView style={styles.safeArea}>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </SafeAreaView>
+      <NativeBaseProvider theme={theme}>
+        <SafeAreaView style={styles.safeArea}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </SafeAreaView>
+      </NativeBaseProvider>
     </Provider>
   );
 };
