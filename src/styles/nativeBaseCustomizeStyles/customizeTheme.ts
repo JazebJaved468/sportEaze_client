@@ -1,4 +1,5 @@
 import {extendTheme} from 'native-base';
+import {getFromLocalStorage} from '../../utils/customHooks/helpers/asyncStorage';
 
 export const theme = extendTheme({
   colors: {
@@ -22,6 +23,6 @@ export const theme = extendTheme({
   },
   config: {
     // Changing initialColorMode to 'dark'
-    // initialColorMode:   'dark',
+    // initialColorMode: getFromLocalStorage({key: 'colorMode'}) || 'light',
   },
 });

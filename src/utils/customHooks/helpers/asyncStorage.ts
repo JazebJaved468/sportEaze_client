@@ -21,8 +21,8 @@ export const storeInLocalStorage = async ({
 
 export const getFromLocalStorage = async ({key}: {key: KeysInLocalStorage}) => {
   try {
-    const res = await AsyncStorage.getItem(key);
-    console.log('---------------> color mode', res);
+    const colorMode = await AsyncStorage.getItem(key);
+    return colorMode;
   } catch (error) {
     console.log(
       `x-x-x-x-x-x-x-x-x-x-x-x-x--> error getting ${key} from local storage`,
