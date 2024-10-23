@@ -1,4 +1,4 @@
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerProfilePage} from '../PlayerProfile';
@@ -9,11 +9,6 @@ import {
 import {set} from 'date-fns';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useGetSampleColorsQuery} from '../../../store/sample/sample.service';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  getFromLocalStorage,
-  storeInLocalStorage,
-} from '../../../utils/customHooks/helpers/asyncStorage';
 
 const PlayerHome = () => {
   const navigation = useAppNavigation();
@@ -23,16 +18,16 @@ const PlayerHome = () => {
   const {data, isLoading} = useGetSampleColorsQuery();
 
   console.log('data from api', data);
+  const textColor = useColorModeValue('black', 'red');
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.container}>
-        <Text style={styles.homeText}>Sample Home</Text>
+        <Text style={[styles.homeText, {color: textColor}]}>Sample Home</Text>
         <Button
-          title={'set color mode'}
+          title={'update message'}
           onPress={() => {
-            storeInLocalStorage({key: 'colorMode', value: 'dark'});
-            // dispatch(updateMessage('Go to Player profile'));
+            dispatch(updateMessage('Go to Player profile'));
           }}
         />
       </View>
@@ -45,11 +40,18 @@ const PlayerHome = () => {
       />
 
       <Button
-        title={message}
+        title={'get color mode'}
         onPress={() => {
-          navigation.navigate(PlayerProfilePage);
+          getFromLocalStorage({key: 'colorMode'});
         }}
       />
+
+      <Button
+        onPress={() => {
+          navigation.navigate(PlayerProfilePage);
+        }}>
+        {message}
+      </Button>
     </View>
   );
 };
@@ -65,6 +67,7 @@ const styles = StyleSheet.create({
   },
   homeText: {
     fontSize: 30,
+    lineHeight: 50,
     fontWeight: '700',
   },
 });
