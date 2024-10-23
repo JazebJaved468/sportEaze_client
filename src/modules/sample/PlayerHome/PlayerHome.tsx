@@ -1,4 +1,4 @@
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerProfilePage} from '../PlayerProfile';
@@ -9,6 +9,14 @@ import {
 import {set} from 'date-fns';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useGetSampleColorsQuery} from '../../../store/sample/sample.service';
+import {
+  Center,
+  Text,
+  useColorMode,
+  View,
+  Button,
+  useColorModeValue,
+} from 'native-base';
 
 const PlayerHome = () => {
   const navigation = useAppNavigation();
@@ -18,25 +26,26 @@ const PlayerHome = () => {
   const {data, isLoading} = useGetSampleColorsQuery();
 
   console.log('data from api', data);
+  const textColor = useColorModeValue('black', 'red');
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.container}>
-        <Text style={styles.homeText}>Sample Home</Text>
+        <Text style={[styles.homeText, {color: textColor}]}>Sample Home</Text>
         <Button
-          title={'update message'}
           onPress={() => {
             dispatch(updateMessage('Go to Player profile'));
-          }}
-        />
+          }}>
+          Update Message
+        </Button>
       </View>
 
       <Button
-        title={message}
         onPress={() => {
           navigation.navigate(PlayerProfilePage);
-        }}
-      />
+        }}>
+        {message}
+      </Button>
     </View>
   );
 };
@@ -52,6 +61,7 @@ const styles = StyleSheet.create({
   },
   homeText: {
     fontSize: 30,
+    lineHeight: 50,
     fontWeight: '700',
   },
 });
