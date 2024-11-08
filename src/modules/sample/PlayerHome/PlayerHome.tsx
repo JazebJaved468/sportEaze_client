@@ -14,9 +14,11 @@ import {
   getFromLocalStorage,
   storeInLocalStorage,
 } from '../../../utils/customHooks/helpers/asyncStorage';
+import {VideoScreenPage} from '../../Core/VideoScreen';
 
 const PlayerHome = () => {
   const navigation = useAppNavigation();
+
   const dispatch = useAppDispatch();
   const {message} = useAppSelector(state => state.sample);
 
@@ -31,7 +33,9 @@ const PlayerHome = () => {
   return (
     <View style={{flex: 1, backgroundColor: backgroundColor}}>
       <View style={styles.container}>
-        <Text style={[styles.homeText, {color: textColor}]}>Sample Home</Text>
+        <Text style={[styles.homeText, {color: textColor}]}>
+          {isLoading ? 'Loading...' : data?.data.toString()}
+        </Text>
         <Button
           onPress={() => {
             dispatch(updateMessage('Go to Player profile'));
@@ -39,6 +43,16 @@ const PlayerHome = () => {
           Update Message
         </Button>
       </View>
+
+      {/* <Text>jfhsjfsjk</Text> */}
+
+      <Button
+        m={10}
+        onPress={() => {
+          navigation.navigate(VideoScreenPage);
+        }}>
+        Video Player
+      </Button>
 
       <Button
         m={10}

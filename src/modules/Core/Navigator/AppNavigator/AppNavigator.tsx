@@ -4,10 +4,12 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
 import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
+import VideoScreen, {VideoScreenPage} from '../../VideoScreen';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
   PlayerProfilePage: undefined;
+  VideoScreenPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -22,6 +24,7 @@ export const AppNavigator = () => {
       }}>
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />
       <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} />
+      <Stack.Screen name={VideoScreenPage} component={VideoScreen} />
     </Stack.Navigator>
   );
 };
