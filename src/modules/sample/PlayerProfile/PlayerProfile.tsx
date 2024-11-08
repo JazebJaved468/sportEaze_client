@@ -4,14 +4,17 @@ import {PlayerProfilePage} from '.';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerHomePage} from '../PlayerHome';
+import UserPost from '../../../components/UserPost/UserPost';
 
 export const PlayerProfile = () => {
   const navigation = useAppNavigation();
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <Text style={styles.homeText}>Sample PlayerProfile</Text>
-      </View>
+      </View> */}
+
+      <UserPost />
 
       <Button
         title={'Go Back'}
