@@ -17,6 +17,7 @@ export const Navigationcontainer: React.FC = () => {
   useEffect(() => {
     getColorMode();
   }, []);
+
   return (
     <NavigationContainer>
       <AppNavigator />
