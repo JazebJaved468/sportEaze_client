@@ -14,7 +14,6 @@ import {
   getFromLocalStorage,
   storeInLocalStorage,
 } from '../../../utils/customHooks/helpers/asyncStorage';
-
 const PlayerHome = () => {
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();

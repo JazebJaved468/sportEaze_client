@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useRef} from 'react';
 import {appcolors} from '../../constants/colors';
 import {
   CommentIcon,
@@ -7,6 +7,9 @@ import {
   UserPlaceholderIcon,
   ShareIcon,
 } from '../../assets/icons';
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import CustomBottomSheet from '../CustomBottomSheet';
 
 const UserPost = () => {
   return (
@@ -33,24 +36,47 @@ const PostHeader = () => {
 const PostContent = () => {
   return <View style={styles.postContent}></View>;
 };
+
 const PostFooter = () => {
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+
+  const openBottomSheet = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.present();
+    }
+  };
+  const closeBottomSheet = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.close();
+    }
+  };
   return (
-    <View style={styles.postFooter}>
-      <View style={styles.footerActionsWrapper}>
-        <HeartIcon />
-        <Text>5267</Text>
+    <>
+      <View style={styles.postFooter}>
+        <View style={styles.footerActionsWrapper}>
+          <HeartIcon />
+          <Text>5267</Text>
+        </View>
+
+        <TouchableOpacity onPress={openBottomSheet}>
+          <View style={styles.footerActionsWrapper}>
+            <CommentIcon />
+            <Text>160</Text>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.footerActionsWrapper}>
+          <ShareIcon />
+          <Text>2567</Text>
+        </View>
       </View>
 
-      <View style={styles.footerActionsWrapper}>
-        <CommentIcon />
-        <Text>160</Text>
-      </View>
-
-      <View style={styles.footerActionsWrapper}>
-        <ShareIcon />
-        <Text>2567</Text>
-      </View>
-    </View>
+      <CustomBottomSheet bottomSheetRef={bottomSheetRef}>
+        <View style={{height: 400, backgroundColor: 'red'}}>
+          <Text>Sample Text</Text>
+        </View>
+      </CustomBottomSheet>
+    </>
   );
 };
 
@@ -59,11 +85,12 @@ export default UserPost;
 const styles = StyleSheet.create({
   postContainer: {
     width: '100%',
-    // overflow: 'hidden',
+    marginBottom: 20,
   },
   postHeader: {
     width: '100%',
     paddingVertical: 10,
+    paddingHorizontal: 16,
   },
   postContent: {
     width: '100%',
@@ -79,7 +106,7 @@ const styles = StyleSheet.create({
   profilePhoto: {
     width: 44,
     height: 44,
-    borderRadius: 20,
+    borderRadius: 100,
     backgroundColor: appcolors.black,
     justifyContent: 'center',
     alignItems: 'center',
