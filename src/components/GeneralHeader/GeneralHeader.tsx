@@ -1,11 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {Container} from 'native-base';
+import {Container, useColorModeValue} from 'native-base';
+import {appcolors} from '../../constants/colors';
 
 export const GeneralHeader = () => {
+  const textColor = useColorModeValue(appcolors.black, appcolors.white);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.textStyle}>Sport Eaze</Text>
+      <Text style={[styles.textStyle, {color: textColor}]}>Sport Eaze</Text>
     </View>
   );
 };

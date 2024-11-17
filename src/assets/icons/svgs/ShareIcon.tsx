@@ -3,7 +3,7 @@ import Svg, {SvgProps, Path} from 'react-native-svg';
 export const ShareIcon = (props: SvgProps) => (
   <Svg width={26} height={26} fill='none' viewBox='-0.5 0 25 25' {...props}>
     <Path
-      stroke='#000'
+      stroke={props.color ?? '#000'}
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeWidth={1.4}

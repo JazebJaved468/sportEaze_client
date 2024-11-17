@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Button, StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerProfilePage} from '../PlayerProfile';
@@ -9,7 +9,7 @@ import {
 import {set} from 'date-fns';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useGetSampleColorsQuery} from '../../../store/sample/sample.service';
-import {Button, Text, useColorMode, useColorModeValue, View} from 'native-base';
+import {Text, useColorMode, useColorModeValue, View} from 'native-base';
 import {
   getFromLocalStorage,
   storeInLocalStorage,
@@ -22,7 +22,6 @@ const PlayerHome = () => {
   const {data, isLoading} = useGetSampleColorsQuery();
 
   console.log('Sample data from api', data);
-  const {colorMode, setColorMode, toggleColorMode} = useColorMode();
 
   const backgroundColor = useColorModeValue('white', 'black');
   const textColor = useColorModeValue('black', 'white');
@@ -31,33 +30,23 @@ const PlayerHome = () => {
     <View style={{flex: 1, backgroundColor: backgroundColor}}>
       <View style={styles.container}>
         <Text style={[styles.homeText, {color: textColor}]}>Sample Home</Text>
-        <Button
+        {/* <Button
           onPress={() => {
             dispatch(updateMessage('Go to Player profile'));
           }}>
           Update Message
-        </Button>
+        </Button> */}
       </View>
 
-      <Button
-        m={10}
-        onPress={() => {
-          toggleColorMode();
-          storeInLocalStorage({
-            key: 'colorMode',
-            value: colorMode === 'light' ? 'dark' : 'light',
-          });
-        }}>
-        Switch Color Mode
-      </Button>
-
-      <Button
-        m={10}
-        onPress={() => {
-          navigation.navigate(PlayerProfilePage);
-        }}>
-        {message}
-      </Button>
+      <View style={{height: 100}}>
+        <Button
+          title={message}
+          onPress={() => {
+            navigation.navigate(PlayerProfilePage);
+          }}>
+          {/* {message} */}
+        </Button>
+      </View>
     </View>
   );
 };
