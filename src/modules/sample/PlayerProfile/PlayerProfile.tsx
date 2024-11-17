@@ -5,24 +5,23 @@ import {updateMessage} from '../../../store/sample/sample.slice';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerHomePage} from '../PlayerHome';
 import UserPost from '../../../components/UserPost/UserPost';
+import PageContainer from '../../../components/PageContainer';
 
 export const PlayerProfile = () => {
   const navigation = useAppNavigation();
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      {/* <View style={styles.container}>
-        <Text style={styles.homeText}>Sample PlayerProfile</Text>
-      </View> */}
+    <PageContainer>
+      <View>
+        <UserPost />
 
-      <UserPost />
-
-      <Button
-        title={'Go Back'}
-        onPress={() => {
-          navigation.goBack();
-        }}
-      />
-    </View>
+        <Button
+          title={'Go Back'}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
+    </PageContainer>
   );
 };
 const styles = StyleSheet.create({

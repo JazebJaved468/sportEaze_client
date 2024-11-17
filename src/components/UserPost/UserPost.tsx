@@ -6,10 +6,12 @@ import {
   HeartIcon,
   UserPlaceholderIcon,
   ShareIcon,
+  ImagePlaceholderIcon,
 } from '../../assets/icons';
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomBottomSheet from '../CustomBottomSheet';
+import {useColorMode, useColorModeValue} from 'native-base';
 
 const UserPost = () => {
   return (
@@ -22,19 +24,40 @@ const UserPost = () => {
 };
 
 const PostHeader = () => {
+  const textColor = useColorModeValue(appcolors.black, appcolors.white);
   return (
     <View style={styles.postHeader}>
       <View style={styles.photoAndNameWrapper}>
         <View style={styles.profilePhoto}>
           <UserPlaceholderIcon />
         </View>
-        <Text>Username</Text>
+        <Text style={{color: textColor}}>Username</Text>
       </View>
     </View>
   );
 };
 const PostContent = () => {
-  return <View style={styles.postContent}></View>;
+  const imagePlaceholderColor = useColorModeValue(
+    appcolors.white,
+    appcolors.black,
+  );
+
+  const contentBackgroundColor = useColorModeValue(
+    appcolors.black,
+    appcolors.gray,
+  );
+
+  return (
+    <View
+      style={[styles.postContent, {backgroundColor: contentBackgroundColor}]}>
+      <ImagePlaceholderIcon
+        color={`${imagePlaceholderColor}80`}
+        width={200}
+        height={200}
+        strokeWidth={0.6}
+      />
+    </View>
+  );
 };
 
 const PostFooter = () => {
@@ -50,24 +73,27 @@ const PostFooter = () => {
       bottomSheetRef.current.close();
     }
   };
+
+  const iconColor = useColorModeValue(appcolors.black, appcolors.white);
+  const textColor = useColorModeValue(appcolors.black, appcolors.white);
   return (
     <>
       <View style={styles.postFooter}>
         <View style={styles.footerActionsWrapper}>
-          <HeartIcon />
-          <Text>5267</Text>
+          <HeartIcon color={iconColor} />
+          <Text style={{color: textColor}}>5267</Text>
         </View>
 
         <TouchableOpacity onPress={openBottomSheet}>
           <View style={styles.footerActionsWrapper}>
-            <CommentIcon />
-            <Text>160</Text>
+            <CommentIcon color={iconColor} />
+            <Text style={{color: textColor}}>160</Text>
           </View>
         </TouchableOpacity>
 
         <View style={styles.footerActionsWrapper}>
-          <ShareIcon />
-          <Text>2567</Text>
+          <ShareIcon color={iconColor} />
+          <Text style={{color: textColor}}>2567</Text>
         </View>
       </View>
 
@@ -96,6 +122,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 350,
     backgroundColor: appcolors.black,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   postFooter: {
     width: '100%',

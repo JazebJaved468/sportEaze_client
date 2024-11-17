@@ -9,6 +9,7 @@ import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
 import {appcolors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
+import FanMenu from '../../../Fan/Menu';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,10 +21,14 @@ const screenOptions: BottomTabNavigationOptions = {
 
 export const FanBottomTabNavigator = () => {
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator
+      screenOptions={screenOptions}
+      // initialRouteName='Events'
+      // backBehavior={'initialRoute'}
+    >
       <Tab.Screen name='Feed' component={PostFeed} />
       <Tab.Screen name='Events' component={PlayerHome} />
-      <Tab.Screen name='Menu' component={PlayerProfile} />
+      <Tab.Screen name='Menu' component={FanMenu} />
     </Tab.Navigator>
   );
 };
