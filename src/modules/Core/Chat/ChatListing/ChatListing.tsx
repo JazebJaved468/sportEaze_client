@@ -2,10 +2,6 @@ import {FlatList, Image, StyleSheet, Text} from 'react-native';
 import React from 'react';
 import GeneralHeader from '../../../../components/GeneralHeader';
 import PageContainer from '../../../../components/PageContainer';
-import UserPost from '../../../../components/UserPost/UserPost';
-import {useColorModeValue, View} from 'native-base';
-import {appcolors} from '../../../../constants/colors';
-import {image1} from '../../../../constants/mockData/images';
 import {chatListingMockData} from '../../../../constants/mockData/ChatListing';
 import ChatCard from '../../../../components/ChatCard';
 
