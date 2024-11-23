@@ -5,11 +5,11 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
-import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
+import PlayerProfile from '../../../sample/PlayerProfile';
 import {appcolors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
 import FanMenu from '../../../Fan/Menu';
+import ChatListing from '../../Chat/ChatListing';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +27,7 @@ export const FanBottomTabNavigator = () => {
       // backBehavior={'initialRoute'}
     >
       <Tab.Screen name='Feed' component={PostFeed} />
-      <Tab.Screen name='Events' component={PlayerHome} />
+      <Tab.Screen name='Messages' component={ChatListing} />
       <Tab.Screen name='Menu' component={FanMenu} />
     </Tab.Navigator>
   );
