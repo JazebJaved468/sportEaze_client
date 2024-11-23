@@ -3,12 +3,18 @@ import React from 'react';
 import {Container, useColorModeValue} from 'native-base';
 import {appcolors} from '../../constants/colors';
 
-export const GeneralHeader = () => {
+type GeneralHeaderProps = {
+  title?: string;
+};
+
+export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
+  title = 'SportEaze',
+}) => {
   const textColor = useColorModeValue(appcolors.black, appcolors.white);
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.textStyle, {color: textColor}]}>Sport Eaze</Text>
+      <Text style={[styles.textStyle, {color: textColor}]}>{title}</Text>
     </View>
   );
 };
