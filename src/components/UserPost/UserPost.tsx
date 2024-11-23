@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useRef} from 'react';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 import {
   CommentIcon,
   HeartIcon,
@@ -24,7 +24,7 @@ const UserPost = () => {
 };
 
 const PostHeader = () => {
-  const textColor = useColorModeValue(appcolors.black, appcolors.white);
+  const textColor = useColorModeValue(appColors.black, appColors.white);
   return (
     <View style={styles.postHeader}>
       <View style={styles.photoAndNameWrapper}>
@@ -38,13 +38,13 @@ const PostHeader = () => {
 };
 const PostContent = () => {
   const imagePlaceholderColor = useColorModeValue(
-    appcolors.white,
-    appcolors.black,
+    appColors.white,
+    appColors.black,
   );
 
   const contentBackgroundColor = useColorModeValue(
-    appcolors.black,
-    appcolors.gray,
+    appColors.black,
+    appColors.gray,
   );
 
   return (
@@ -74,8 +74,8 @@ const PostFooter = () => {
     }
   };
 
-  const iconColor = useColorModeValue(appcolors.black, appcolors.white);
-  const textColor = useColorModeValue(appcolors.black, appcolors.white);
+  const iconColor = useColorModeValue(appColors.black, appColors.white);
+  const textColor = useColorModeValue(appColors.black, appColors.white);
   return (
     <>
       <View style={styles.postFooter}>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   postContent: {
     width: '100%',
     height: 350,
-    backgroundColor: appcolors.black,
+    backgroundColor: appColors.black,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 100,
-    backgroundColor: appcolors.black,
+    backgroundColor: appColors.black,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -6,7 +6,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import PlayerProfile from '../../../sample/PlayerProfile';
-import {appcolors} from '../../../../constants/colors';
+import {appColors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
 import FanMenu from '../../../Fan/Menu';
 import ChatListing from '../../Chat/ChatListing';
@@ -14,8 +14,8 @@ import ChatListing from '../../Chat/ChatListing';
 const Tab = createBottomTabNavigator();
 
 const screenOptions: BottomTabNavigationOptions = {
-  tabBarActiveTintColor: appcolors.black,
-  tabBarInactiveTintColor: `${appcolors.gray}90`,
+  tabBarActiveTintColor: appColors.black,
+  tabBarInactiveTintColor: `${appColors.gray}90`,
   headerShown: false,
 };
 

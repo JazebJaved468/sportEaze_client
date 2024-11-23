@@ -3,12 +3,12 @@ import React, {ReactNode} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {bg} from 'date-fns/locale';
 import {useColorMode, useColorModeValue} from 'native-base';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 
 export const PageContainer = ({children}: {children: ReactNode}) => {
   const pageBackgroundColor = useColorModeValue(
-    appcolors.white,
-    appcolors.black,
+    appColors.white,
+    appColors.black,
   );
 
   return (

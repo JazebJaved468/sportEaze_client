@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {SportEazeLogo} from '../../assets/icons';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 
 export const SplashScreen = () => {
   return (
@@ -10,7 +10,7 @@ export const SplashScreen = () => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: appcolors.warmRed,
+        backgroundColor: appColors.warmRed,
       }}>
       <SportEazeLogo />
     </View>

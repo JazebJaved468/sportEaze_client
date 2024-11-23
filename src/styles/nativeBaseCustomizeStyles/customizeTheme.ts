@@ -1,7 +1,7 @@
 import {extendTheme} from 'native-base';
 import {getFromLocalStorage} from '../../utils/customHooks/helpers/asyncStorage';
 import {bg} from 'date-fns/locale';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 
 export const theme = extendTheme({
   colors: {
@@ -31,9 +31,9 @@ export const theme = extendTheme({
   components: {
     Button: {
       defaultProps: {
-        bgColor: appcolors.warmRed,
+        bgColor: appColors.warmRed,
         _text: {
-          color: appcolors.white,
+          color: appColors.white,
         },
         borderRadius: 10,
         p: 0,

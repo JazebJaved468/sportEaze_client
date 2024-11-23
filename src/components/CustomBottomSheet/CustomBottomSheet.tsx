@@ -7,7 +7,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import {useColorModeValue} from 'native-base';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 
 type CustomBottomSheetProps = {
   children: ReactNode;
@@ -21,8 +21,8 @@ export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
   const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
 
   const bottomSheetContainerColor = useColorModeValue(
-    appcolors.white,
-    appcolors.black,
+    appColors.white,
+    appColors.black,
   );
   const renderBackdrop = useCallback(
     (props: BottomSheetDefaultBackdropProps) => (
@@ -35,7 +35,7 @@ export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
     [],
   );
 
-  const handleColor = useColorModeValue(appcolors.black, appcolors.white);
+  const handleColor = useColorModeValue(appColors.black, appColors.white);
 
   return (
     <BottomSheetModal

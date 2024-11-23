@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import React, {ReactElement, ReactNode} from 'react';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 import {useColorMode, useColorModeValue} from 'native-base';
 
 type SkeletonLoaderProps = {

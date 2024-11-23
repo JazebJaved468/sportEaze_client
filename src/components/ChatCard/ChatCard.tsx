@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useColorModeValue} from 'native-base';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 
 export type ChatCardProps = {
   name: string;
@@ -20,10 +20,10 @@ export const ChatCard: React.FC<ChatCardProps> = ({
   isOnline,
   unread,
 }) => {
-  const textColor = useColorModeValue(appcolors.black, appcolors.white);
+  const textColor = useColorModeValue(appColors.black, appColors.white);
   const messageColor = useColorModeValue(
-    appcolors.placeHolder,
-    appcolors.white,
+    appColors.placeHolder,
+    appColors.white,
   );
 
   return (
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: appcolors.divider,
+    borderBottomColor: appColors.divider,
     gap: 18,
     paddingVertical: 20,
   },
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 50,
     borderRadius: 100,
-    // backgroundColor: appcolors.gray,
+    // backgroundColor: appColors.gray,
   },
   name: {
     fontSize: 16,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   onlineMark: {
     width: 12,
     height: 12,
-    backgroundColor: appcolors.warmRed,
+    backgroundColor: appColors.warmRed,
     borderRadius: 100,
     position: 'absolute',
     zIndex: 1,

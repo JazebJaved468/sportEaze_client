@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Container, useColorModeValue} from 'native-base';
-import {appcolors} from '../../constants/colors';
+import {appColors} from '../../constants/colors';
 
 type GeneralHeaderProps = {
   title?: string;
@@ -10,7 +10,7 @@ type GeneralHeaderProps = {
 export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
   title = 'SportEaze',
 }) => {
-  const textColor = useColorModeValue(appcolors.black, appcolors.white);
+  const textColor = useColorModeValue(appColors.black, appColors.white);
 
   return (
     <View style={styles.container}>

@@ -4,7 +4,7 @@ import PageContainer from '../../../components/PageContainer';
 import UserPost from '../../../components/UserPost/UserPost';
 import {Button, useColorMode} from 'native-base';
 import {storeInLocalStorage} from '../../../utils/customHooks/helpers/asyncStorage';
-import {appcolors} from '../../../constants/colors';
+import {appColors} from '../../../constants/colors';
 
 export const FanMenu = () => {
   const {colorMode, setColorMode, toggleColorMode} = useColorMode();
