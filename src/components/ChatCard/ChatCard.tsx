@@ -2,6 +2,9 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useColorModeValue} from 'native-base';
 import {appColors} from '../../constants/colors';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useAppNavigation} from '../../utils/customHooks/navigator';
+import {ChatScreenPage} from '../../modules/Core/Chat/ChatScreen';
 
 export type ChatCardProps = {
   name: string;
@@ -20,6 +23,8 @@ export const ChatCard: React.FC<ChatCardProps> = ({
   isOnline,
   unread,
 }) => {
+  const navigation = useAppNavigation();
+
   const textColor = useColorModeValue(appColors.black, appColors.white);
   const messageColor = useColorModeValue(
     appColors.placeHolder,
@@ -27,32 +32,38 @@ export const ChatCard: React.FC<ChatCardProps> = ({
   );
 
   return (
-    <View style={styles.chatCardContainer}>
-      <View style={styles.profilePicContainer}>
-        {isOnline ? <View style={styles.onlineMark} /> : null}
-        <Image
-          style={styles.profilePic}
-          source={{
-            uri: image,
-          }}
-        />
-      </View>
-      <View style={{flex: 1, gap: 2}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <Text numberOfLines={1} style={[styles.name, {color: textColor}]}>
-            {name}
-          </Text>
-          <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => {
+        navigation.navigate(ChatScreenPage, {name, image, isOnline});
+      }}>
+      <View style={styles.chatCardContainer}>
+        <View style={styles.profilePicContainer}>
+          {isOnline ? <View style={styles.onlineMark} /> : null}
+          <Image
+            style={styles.profilePic}
+            source={{
+              uri: image,
+            }}
+          />
         </View>
-        <Text numberOfLines={1} style={[styles.message, {color: textColor}]}>
-          {message}
-        </Text>
+        <View style={{flex: 1, gap: 2}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text numberOfLines={1} style={[styles.name, {color: textColor}]}>
+              {name}
+            </Text>
+            <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+          </View>
+          <Text numberOfLines={1} style={[styles.message, {color: textColor}]}>
+            {message}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
