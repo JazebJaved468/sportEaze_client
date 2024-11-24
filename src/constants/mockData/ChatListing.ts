@@ -1,4 +1,5 @@
 import {ChatCardProps} from '../../components/ChatCard/ChatCard';
+import {ChatMessageProps} from '../../modules/Core/Chat/ChatScreen/ChatScreen';
 
 export const chatListingMockData: ChatCardProps[] = [
   {
@@ -80,5 +81,187 @@ export const chatListingMockData: ChatCardProps[] = [
     time: 'Last week',
     unread: false,
     isOnline: false,
+  },
+];
+
+export const chatMessagesMockData: ChatMessageProps[] = [
+  {message: 'Hi there!', time: '10:01 AM', isMyMessage: true},
+  {message: 'Hey! How are you doing?', time: '10:02 AM', isMyMessage: false},
+  {
+    message: "I'm doing great, thanks for asking!",
+    time: '10:03 AM',
+    isMyMessage: true,
+  },
+  {message: 'What about you?', time: '10:04 AM', isMyMessage: true},
+  {
+    message: 'Pretty good, just working on a few things.',
+    time: '10:05 AM',
+    isMyMessage: false,
+  },
+  {
+    message: 'Same here. Deadlines are coming up.',
+    time: '10:06 AM',
+    isMyMessage: true,
+  },
+  {
+    message: 'I know the feeling! Anything exciting planned?',
+    time: '10:07 AM',
+    isMyMessage: false,
+  },
+  {
+    message: 'Not really, just the usual grind.',
+    time: '10:08 AM',
+    isMyMessage: true,
+  },
+  {
+    message: 'We should catch up sometime soon!',
+    time: '10:09 AM',
+    isMyMessage: false,
+  },
+  {
+    message: "Absolutely, let me know when you're free.",
+    time: '10:10 AM',
+    isMyMessage: true,
+  },
+  {message: 'Will do! 😊', time: '10:11 AM', isMyMessage: false},
+  {
+    message: 'By the way, did you see the email about the meeting tomorrow?',
+    time: '10:12 AM',
+    isMyMessage: true,
+  },
+  {message: 'Yes, 3 PM, right?', time: '10:13 AM', isMyMessage: false},
+  {message: "Yep, that's the one.", time: '10:14 AM', isMyMessage: true},
+  {message: "Cool, I'll be there.", time: '10:15 AM', isMyMessage: false},
+  {message: 'Awesome, see you then!', time: '10:16 AM', isMyMessage: true},
+  {
+    message: "Hey, quick question: what's the Wi-Fi password?",
+    time: '11:05 AM',
+    isMyMessage: false,
+  },
+  {
+    message: "Let me check... It's 'Welcome123!'",
+    time: '11:06 AM',
+    isMyMessage: true,
+  },
+  {message: 'Thanks!', time: '11:07 AM', isMyMessage: false},
+  {message: 'No problem. 😊', time: '11:08 AM', isMyMessage: true},
+  {
+    message: 'Can you review the document I sent earlier?',
+    time: '1:15 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "Sure, I'll get to it in an hour.",
+    time: '1:16 PM',
+    isMyMessage: true,
+  },
+  {message: 'Perfect, thanks!', time: '1:17 PM', isMyMessage: false},
+  {
+    message: 'By the way, are you joining the team dinner tonight?',
+    time: '2:30 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "I'm not sure yet, depends on how much work I get done.",
+    time: '2:31 PM',
+    isMyMessage: true,
+  },
+  {
+    message: 'Got it. Let me know if you decide to come.',
+    time: '2:32 PM',
+    isMyMessage: false,
+  },
+  {message: 'Will do!', time: '2:33 PM', isMyMessage: true},
+  {
+    message: 'Hey, did you hear about the new project proposal?',
+    time: '3:45 PM',
+    isMyMessage: false,
+  },
+  {message: "Not yet, what's it about?", time: '3:46 PM', isMyMessage: true},
+  {
+    message: "It's a revamp of the current system to improve scalability.",
+    time: '3:47 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "Sounds interesting. Who's leading it?",
+    time: '3:48 PM',
+    isMyMessage: true,
+  },
+  {
+    message: 'It’s Alex from the backend team.',
+    time: '3:49 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "Ah, makes sense. They're great at this stuff.",
+    time: '3:50 PM',
+    isMyMessage: true,
+  },
+  {
+    message: "Totally! I'm excited to see how it turns out.",
+    time: '3:51 PM',
+    isMyMessage: false,
+  },
+  {
+    message:
+      'Hey, can you send me the contact info for the designer we worked with?',
+    time: '4:20 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "Sure, I'll email it to you in a bit.",
+    time: '4:21 PM',
+    isMyMessage: true,
+  },
+  {message: 'Thanks a lot!', time: '4:22 PM', isMyMessage: false},
+  {message: 'No worries.', time: '4:23 PM', isMyMessage: true},
+  {
+    message: 'What time is the movie tonight?',
+    time: '5:15 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "7:30 PM, don't forget your ticket!",
+    time: '5:16 PM',
+    isMyMessage: true,
+  },
+  {
+    message: "Haha, I won't. See you there!",
+    time: '5:17 PM',
+    isMyMessage: false,
+  },
+  {
+    message: 'Hey, just finished the presentation. Want me to send it over?',
+    time: '6:30 PM',
+    isMyMessage: true,
+  },
+  {
+    message: 'Yes, please. Thanks for doing that!',
+    time: '6:31 PM',
+    isMyMessage: false,
+  },
+  {message: 'No problem, happy to help.', time: '6:32 PM', isMyMessage: true},
+  {
+    message: 'Let me know if you need any changes.',
+    time: '6:33 PM',
+    isMyMessage: true,
+  },
+  {message: 'Will do!', time: '6:34 PM', isMyMessage: false},
+  {
+    message: 'Hey, forgot to mention, the deadline moved up to Friday.',
+    time: '7:10 PM',
+    isMyMessage: false,
+  },
+  {
+    message: "Oh, thanks for letting me know. I'll prioritize it.",
+    time: '7:11 PM',
+    isMyMessage: true,
+  },
+  {message: 'Great. Appreciate it!', time: '7:12 PM', isMyMessage: false},
+  {
+    message: 'No worries at all. Got it covered.',
+    time: '7:13 PM',
+    isMyMessage: true,
   },
 ];

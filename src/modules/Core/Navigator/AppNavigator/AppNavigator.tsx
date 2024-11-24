@@ -9,6 +9,7 @@ import {USER_TYPE} from '../../../../types/user/user';
 import PlayerRoot, {PlayerRootPage} from '../../../Player/Root';
 import PatronRoot, {PatronRootPage} from '../../../Patron/Root';
 import MentorRoot, {MentorRootPage} from '../../../Mentor/Root';
+import ChatScreen, {ChatScreenPage} from '../../Chat/ChatScreen';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -17,6 +18,11 @@ export type RootStackParamList = {
   PlayerRootPage: undefined;
   PatronRootPage: undefined;
   MentorRootPage: undefined;
+  ChatScreenPage: {
+    name: string;
+    image: string;
+    isOnline: boolean;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -49,6 +55,7 @@ export const AppNavigator = () => {
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />
       <Stack.Screen name={MentorRootPage} component={MentorRoot} />
+      <Stack.Screen name={ChatScreenPage} component={ChatScreen} />
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />
