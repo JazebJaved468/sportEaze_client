@@ -10,7 +10,7 @@ export const SplashScreen = () => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: appColors.warmRed,
+        backgroundColor: appColors.white,
       }}>
       <SportEazeLogo color={appColors.black} />
     </View>

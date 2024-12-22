@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {appColors} from '../../constants/colors';
 import {
   CommentIcon,
@@ -76,13 +76,25 @@ const PostFooter = () => {
 
   const iconColor = useColorModeValue(appColors.black, appColors.white);
   const textColor = useColorModeValue(appColors.black, appColors.white);
+  const heartColor = appColors.warmRed;
+
+  const [isFavourite, setIsFavourite] = useState(false);
   return (
     <>
       <View style={styles.postFooter}>
-        <View style={styles.footerActionsWrapper}>
-          <HeartIcon color={iconColor} />
-          <Text style={{color: textColor}}>5267</Text>
-        </View>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            setIsFavourite(prev => !prev);
+          }}>
+          <View style={styles.footerActionsWrapper}>
+            <HeartIcon
+              fill={isFavourite ? heartColor : 'none'}
+              color={iconColor}
+            />
+            <Text style={{color: textColor}}>5267</Text>
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={openBottomSheet}>
           <View style={styles.footerActionsWrapper}>
@@ -97,9 +109,17 @@ const PostFooter = () => {
         </View>
       </View>
 
-      <CustomBottomSheet bottomSheetRef={bottomSheetRef}>
-        <View style={{height: 400, backgroundColor: 'red'}}>
-          <Text>Sample Text</Text>
+      <CustomBottomSheet
+        bottomSheetRef={bottomSheetRef}
+        customSnapPoints={['75%', '100%']}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'red',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{fontSize: 30, color: textColor}}>Comment Section</Text>
         </View>
       </CustomBottomSheet>
     </>

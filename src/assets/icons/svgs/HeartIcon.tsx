@@ -3,7 +3,7 @@ import Svg, {SvgProps, Path} from 'react-native-svg';
 export const HeartIcon = (props: SvgProps) => (
   <Svg width={26} height={26} viewBox='0 -3.71 75.17 75.17' {...props}>
     <Path
-      fill='none'
+      fill={props.fill ?? 'none'}
       stroke={props.color ?? '#000'}
       strokeLinejoin='round'
       strokeWidth={4}

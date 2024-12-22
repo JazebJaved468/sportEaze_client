@@ -29,14 +29,14 @@ export const ChatScreen = () => {
   const [conversation, setConversation] = useState(chatMessagesMockData);
 
   return (
-    // <PageContainer>
-    <View style={{flex: 1}}>
-      <ChatScreenHeader image={image} name={name} isOnline={isOnline} />
+    <PageContainer>
+      <View style={{flex: 1}}>
+        <ChatScreenHeader image={image} name={name} isOnline={isOnline} />
 
-      <ChatBody conversation={conversation} />
-      <ChatScreenFooter setConversation={setConversation} />
-    </View>
-    // </PageContainer>
+        <ChatBody conversation={conversation} />
+        <ChatScreenFooter setConversation={setConversation} />
+      </View>
+    </PageContainer>
   );
 };
 
@@ -89,7 +89,7 @@ const ChatBody: React.FC<ChatBodyProps> = ({conversation}) => {
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
-    console.log('changed');
+    // console.log('changed');
     flatListRef.current?.scrollToEnd({animated: true});
   }, [conversation]);
 
