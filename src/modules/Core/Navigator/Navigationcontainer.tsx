@@ -29,7 +29,7 @@ export const Navigationcontainer: React.FC = () => {
   const loadApp = async () => {
     const [colorModeResponse] = await Promise.all([getColorMode()]); // add calls that are independent of each other
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     setAppLoading(false);
   };
 

@@ -1,7 +1,7 @@
 import {sampleApiResponse} from '../../types/sample/sample.response';
-import {baseApi} from '../baseApi.service';
+import {sporteazeBaseApi} from '../baseApi.service';
 
-export const sampleApi = baseApi.injectEndpoints({
+export const sampleApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
     getSampleColors: builder.query<sampleApiResponse, void>({
       query: () => `sample`,
