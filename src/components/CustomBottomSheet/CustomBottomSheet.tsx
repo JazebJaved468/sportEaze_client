@@ -12,11 +12,13 @@ import {appColors} from '../../constants/colors';
 type CustomBottomSheetProps = {
   children: ReactNode;
   bottomSheetRef: RefObject<BottomSheetModal>;
+  customSnapPoints?: string[];
 };
 
 export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
   children,
   bottomSheetRef,
+  customSnapPoints,
 }) => {
   const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
 
@@ -40,7 +42,7 @@ export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
-      snapPoints={snapPoints}
+      snapPoints={customSnapPoints ?? snapPoints}
       index={0}
       enablePanDownToClose={true}
       handleIndicatorStyle={{
@@ -59,7 +61,7 @@ export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
           ]}
         />
       )}>
-      <BottomSheetView>{children}</BottomSheetView>
+      <BottomSheetView style={{flex: 1}}>{children}</BottomSheetView>
     </BottomSheetModal>
   );
 };

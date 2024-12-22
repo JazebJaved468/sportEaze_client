@@ -5,6 +5,7 @@ import {appColors} from '../../constants/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
 import {ChatScreenPage} from '../../modules/Core/Chat/ChatScreen';
+import SkeletonLoader from '../SkeletonLoader';
 
 export type ChatCardProps = {
   name: string;
@@ -67,6 +68,29 @@ export const ChatCard: React.FC<ChatCardProps> = ({
   );
 };
 
+export const ChatCardSkeleton = () => {
+  return (
+    <SkeletonLoader>
+      <View style={styles.chatCardContainer}>
+        <View style={styles.profilePicContainer}>
+          <View style={styles.profilePic} />
+        </View>
+        <View style={{flex: 1, gap: 2}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View style={styles.skeletonName} />
+            <View style={styles.skeletonTime} />
+          </View>
+          <View style={[styles.message]}></View>
+        </View>
+      </View>
+    </SkeletonLoader>
+  );
+};
+
 const styles = StyleSheet.create({
   chatCardContainer: {
     flexDirection: 'row',
@@ -86,6 +110,16 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '500',
+  },
+  skeletonName: {
+    width: '70%',
+    height: 20,
+    borderRadius: 20,
+  },
+  skeletonTime: {
+    width: '10%',
+    height: 20,
+    borderRadius: 20,
   },
   message: {
     fontSize: 12,
