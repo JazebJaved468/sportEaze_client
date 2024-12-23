@@ -10,6 +10,7 @@ import PlayerRoot, {PlayerRootPage} from '../../../Player/Root';
 import PatronRoot, {PatronRootPage} from '../../../Patron/Root';
 import MentorRoot, {MentorRootPage} from '../../../Mentor/Root';
 import ChatScreen, {ChatScreenPage} from '../../Chat/ChatScreen';
+import CreatePost, {CreatePostPage} from '../../../Player/CreatePost';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -23,6 +24,7 @@ export type RootStackParamList = {
     image: string;
     isOnline: boolean;
   };
+  CreatePostPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -51,11 +53,21 @@ export const AppNavigator = () => {
         animation: 'slide_from_right',
         animationDuration: 200,
       }}>
-      <Stack.Screen name={FanRootPage} component={FanRoot} />
-      <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
-      <Stack.Screen name={PatronRootPage} component={PatronRoot} />
-      <Stack.Screen name={MentorRootPage} component={MentorRoot} />
+      {/* Core Screens */}
       <Stack.Screen name={ChatScreenPage} component={ChatScreen} />
+
+      {/* Fan Screens */}
+      <Stack.Screen name={FanRootPage} component={FanRoot} />
+
+      {/* Player Screens */}
+      <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
+      <Stack.Screen name={CreatePostPage} component={CreatePost} />
+
+      {/* Patron Screens */}
+      <Stack.Screen name={PatronRootPage} component={PatronRoot} />
+
+      {/* Mentor Screens */}
+      <Stack.Screen name={MentorRootPage} component={MentorRoot} />
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />

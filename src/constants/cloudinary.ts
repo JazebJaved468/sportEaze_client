@@ -1,0 +1,10 @@
+export enum CloudinaryResourceType {
+  IMAGE = 'image',
+  VIDEO = 'video',
+  AUDIO = 'audio',
+}
+
+export enum CloudinaryUploadPresets {
+  POST_IMAGES = 'post_images',
+  POST_VIDEOS = 'post_videos',
+}

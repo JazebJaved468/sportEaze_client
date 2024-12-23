@@ -1,3 +1,5 @@
+import {CloudinaryAudio, CloudinaryVideo} from './postFeed';
+
 export type CloudinaryImageUploadResponse = {
   asset_folder: string;
   asset_id: string;
@@ -19,4 +21,37 @@ export type CloudinaryImageUploadResponse = {
   version: number;
   version_id: string;
   width: number;
+};
+
+export type CloudinaryVideoUploadResponse = {
+  asset_id: string;
+  public_id: string;
+  version: number;
+  version_id: string;
+  signature: string;
+  width: number;
+  height: number;
+  format: string;
+  resource_type: string;
+  created_at: string;
+  tags: any[];
+  pages: number;
+  bytes: number;
+  type: string;
+  etag: string;
+  placeholder: boolean;
+  url: string;
+  secure_url: string;
+  playback_url: string;
+  asset_folder: string;
+  display_name: string;
+  audio: CloudinaryAudio;
+  video: CloudinaryVideo;
+  is_audio: boolean;
+  frame_rate: number;
+  bit_rate: number;
+  duration: number;
+  rotation: number;
+  original_filename: string;
+  nb_frames: number;
 };

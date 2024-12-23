@@ -10,6 +10,7 @@ import {appColors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
 import FanMenu from '../../../Fan/Menu';
 import ChatListing from '../../Chat/ChatListing';
+import CreatePost from '../../../Player/CreatePost';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +40,7 @@ export const PlayerBottomTabNavigator = () => {
       <Tab.Screen name='Feed' component={PostFeed} />
       <Tab.Screen name='Profile' component={PlayerProfile} />
       <Tab.Screen name='Inbox' component={PlayerProfile} />
-      <Tab.Screen name='Menu' component={PlayerProfile} />
+      <Tab.Screen name='Create' component={CreatePost} />
     </Tab.Navigator>
   );
 };
