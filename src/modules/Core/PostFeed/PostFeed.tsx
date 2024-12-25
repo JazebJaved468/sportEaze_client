@@ -1,15 +1,80 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {MutableRefObject, useRef} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import UserPost from '../../../components/UserPost/UserPost';
 import {FlatList, ScrollView} from 'native-base';
 import GeneralHeader from '../../../components/GeneralHeader';
+import VideoPlayer from '../../../components/VideoPlayer';
 
 export const PostFeed = () => {
+  // const onScroll = (event: any) => {
+
+  //   if (childRef.current) {
+  //     childRef.current.measureLayoutPosition(); // Call child function
+  //   }
+  // };
+
+  // const childRef = useRef(null);
+
+  type ChildRef = {
+    measureLayoutPosition: () => void;
+  };
+
+  const childRefs: MutableRefObject<{[key: string]: ChildRef | null}> = useRef(
+    {},
+  ); // Object to store refs dynamically
+
+  const handleScroll = () => {
+    // Call measureLayoutPosition on each child during scroll
+    Object.values(childRefs.current).forEach(ref => {
+      ref?.measureLayoutPosition();
+    });
+  };
+
+  // Set these refs only for Videos posts
+  const setChildRef = (id: number) => (ref: ChildRef | null) => {
+    if (ref) {
+      childRefs.current[id] = ref;
+    }
+  };
+
   return (
     <PageContainer>
       <GeneralHeader />
-      <FlatList data={[1, 2, 3, 4, 5]} renderItem={() => <UserPost />} />
+
+      <FlatList
+        onScroll={handleScroll}
+        ListHeaderComponent={
+          <>
+            <View style={{width: '100%', height: 100}} />
+            <View style={{width: '100%', height: 100}} />
+            <View style={{width: '100%', height: 100}} />
+            <View style={{width: '100%', height: 100}} />
+          </>
+        }
+        data={[1, 2, 3]}
+        renderItem={({item}) => {
+          console.log('item', item);
+          return <VideoPlayer key={item} ref={setChildRef(item)} url='' />;
+        }}
+      />
+
+      {/* <ScrollView onScroll={handleScroll}>
+       
+        {[1, 2, 3].map(id => (
+          <VideoPlayer key={id} ref={setChildRef(id)} url='' />
+        ))}
+
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+        <View style={{width: '100%', height: 100}} />
+      </ScrollView> */}
     </PageContainer>
   );
 };

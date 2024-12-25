@@ -47,7 +47,7 @@ const getInitialRouteName = ({userType}: {userType: string}) => {
 export const AppNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName={getInitialRouteName({userType: USER_TYPE.FAN})} //usertype will be coming from backend
+      initialRouteName={getInitialRouteName({userType: USER_TYPE.PLAYER})} //usertype will be coming from backend
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
