@@ -44,20 +44,20 @@ export const PostFeed = () => {
 
       <FlatList
         onScroll={handleScroll}
-        ListHeaderComponent={
-          <>
-            <View style={{width: '100%', height: 100}} />
-            <View style={{width: '100%', height: 100}} />
-            <View style={{width: '100%', height: 100}} />
-            <View style={{width: '100%', height: 100}} />
-          </>
-        }
-        data={[1, 2, 3]}
+        scrollEventThrottle={16}
+        data={[1]}
         renderItem={({item}) => {
-          console.log('item', item);
-          return <VideoPlayer key={item} ref={setChildRef(item)} url='' />;
+          return (
+            <VideoPlayer key={item} ref={setChildRef(item)} url='' id={item} />
+          );
         }}
       />
+
+      {/* <ScrollView onScroll={handleScroll}>
+        {[1, 2, 3].map(id => (
+          <VideoPlayer key={id} ref={setChildRef(id)} url='' id={id} />
+        ))}
+      </ScrollView> */}
 
       {/* <ScrollView onScroll={handleScroll}>
        
