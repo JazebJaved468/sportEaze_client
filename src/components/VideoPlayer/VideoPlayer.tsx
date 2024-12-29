@@ -89,7 +89,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
   const resumePlaying = () => {
     if (pause) return;
 
-    console.log('resumePlaying', id);
     if (videoRef?.current) {
       videoRef?.current?.resume();
       setPause(false);
@@ -97,7 +96,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
   };
 
   const onPause = () => {
-    console.log('onPause', id);
     if (videoRef?.current && pause) {
       videoRef?.current?.resume();
       setPause(false);
@@ -124,7 +122,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
   };
 
   const onVideoLoad = (data: any) => {
-    console.log('Video loaded', id, isVideoActive);
     const {width, height} = data.naturalSize;
     if (width && height) {
       setVideoAspectRatio(width / height);
@@ -146,7 +143,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
   }, [appState]);
 
   const measureBox = () => {
-    console.log('measureBox', id);
     videoBoxRef?.current?.measure(
       (
         x: number,
@@ -181,6 +177,7 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
       setIsVideoActive(false);
       stopPlaying();
     } else {
+      // console.log('------------ 🖐 inside screen ');
       setIsVideoActive(true);
       // resumePlaying();
     }
@@ -262,13 +259,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
             //   await setMute(true);
             // }}
             // volume={100}
-            // onLoad={onVideoLoad}
-            // onLoad={renderNaturalSize}
-            // onMutePress={e => {
-            //   console.log('onMutePress', e);
-            //   setMute(e);
-            // }}
-            // hideControlsOnStart
             // pauseOnPress
             // showDuration
             // onAspectRatio={aspectRatio => {
@@ -279,7 +269,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
             //   width: '100%',
             //   height: 400,
             //   alignSelf: 'center',
-
             //   backgroundColor: 'green',
             // }}
             // style={{...videoStyle, width: '100%'}}
@@ -314,7 +303,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => {
-              console.log('pause clicked');
               onPause();
             }}>
             <View
@@ -352,7 +340,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                console.log('mute clicked');
                 onMutePress();
               }}>
               <View
