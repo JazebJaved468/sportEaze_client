@@ -1,12 +1,16 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {AppState, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
 import {useColorMode} from 'native-base';
 import {getFromLocalStorage} from '../../../utils/customHooks/helpers/asyncStorage';
 import SplashScreen from '../../../components/SplashScreen';
+import {AppStates} from '../../../constants/core';
+import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
+import {updateAppState} from '../../../store/core/core.slice';
 
 export const Navigationcontainer: React.FC = () => {
+  const dispatch = useAppDispatch();
   const {setColorMode} = useColorMode();
 
   const [appLoading, setAppLoading] = React.useState(true);
@@ -20,6 +24,27 @@ export const Navigationcontainer: React.FC = () => {
       `Success ---------------> From Local Storage : get colorMode : ${colorMode}`,
     );
     return `Color Mode Success`;
+  };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove(); // Clean up listener
+    };
+  }, []);
+
+  const handleAppStateChange = (appState: string) => {
+    console.log('AppState : ---------------->', appState); // Log the current state
+
+    dispatch(updateAppState(appState));
+
+    if (appState === AppStates.ACTIVE) {
+    } else {
+    }
   };
 
   useEffect(() => {

@@ -7,4 +7,5 @@ export const appColors = {
   divider: '#00000010',
   transparent: 'transparent',
   whisperGray: '#E5E5E5',
+  richBlack: '#030712',
 };
