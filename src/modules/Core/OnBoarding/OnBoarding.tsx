@@ -30,8 +30,7 @@ export const OnBoarding = () => {
           <Text
             style={{
               color: appColors.white,
-              fontSize: 40,
-
+              fontSize: 42,
               fontFamily: 'LatoBlack',
             }}>
             SportEaze
