@@ -5058,6 +5058,7 @@ __metadata:
     react-native: 0.74.6
     react-native-document-picker: ^9.3.1
     react-native-dotenv: ^3.4.11
+    react-native-drop-shadow: ^1.0.0
     react-native-gesture-handler: ^2.21.0
     react-native-image-crop-picker: ^0.41.6
     react-native-linear-gradient: ^2.8.3
@@ -10654,6 +10655,16 @@ __metadata:
   peerDependencies:
     "@babel/runtime": ^7.20.6
   checksum: 3ebac2c2ed79dd7e4920fd3fc2da9187413b7190231618e4858b46c47833677838b96d531afe7bd5c4b0a60454dba40cb8708722210df5d522e30aefbf41da05
+  languageName: node
+  linkType: hard
+
+"react-native-drop-shadow@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "react-native-drop-shadow@npm:1.0.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 86cd622d12226e0d609414577988fff72220d6acc5756d26501f2d43c9647314541d67df8f06355e17215ff118476416b149b6317251d2e7aec6ed89bf328e92
   languageName: node
   linkType: hard
 

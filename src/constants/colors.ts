@@ -8,4 +8,6 @@ export const appColors = {
   transparent: 'transparent',
   whisperGray: '#E5E5E5',
   richBlack: '#030712',
+  lavender: '#8660F1',
+  charcoalBlue: '#060813',
 };
