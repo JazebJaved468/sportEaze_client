@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type KeysInLocalStorage = 'colorMode';
+type KeysInLocalStorage = 'colorMode' | 'isFirstVisit';
 
 export const storeInLocalStorage = async ({
   key,
