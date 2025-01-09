@@ -5063,6 +5063,7 @@ __metadata:
     react-native-image-crop-picker: ^0.41.6
     react-native-linear-gradient: ^2.8.3
     react-native-reanimated: 3.15.0
+    react-native-reanimated-carousel: ^3.5.1
     react-native-safe-area-context: 3.3.2
     react-native-screens: ^3.34.0
     react-native-skeleton-placeholder: ^5.2.4
@@ -10699,6 +10700,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated-carousel@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "react-native-reanimated-carousel@npm:3.5.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.6.0"
+    react-native-gesture-handler: ">=2.0.0"
+    react-native-reanimated: ">=3.0.0"
+  checksum: a2eb640453fa35f659c1fb5575f903364d513fb7f621104afa14fee2284132674dfaf0d87cb29e8c119f7513094a5967d5193f3dfa24043af167c6f26abcfe73
   languageName: node
   linkType: hard
 

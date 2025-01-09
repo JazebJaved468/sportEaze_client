@@ -1,5 +1,3 @@
-import {StyleSheet, Text, View} from 'react-native';
-
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
@@ -12,6 +10,7 @@ import MentorRoot, {MentorRootPage} from '../../../Mentor/Root';
 import ChatScreen, {ChatScreenPage} from '../../Chat/ChatScreen';
 import CreatePost, {CreatePostPage} from '../../../Player/CreatePost';
 import OnBoarding, {OnBoardingPage} from '../../OnBoarding';
+import {store} from '../../../../store/store';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -31,9 +30,9 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const isFirstVisit = true;
-
 const getInitialRouteName = ({userType}: {userType: string}) => {
+  const {isFirstVisit} = store.getState().core;
+
   if (isFirstVisit) {
     return OnBoardingPage;
   }

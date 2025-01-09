@@ -8,7 +8,7 @@ import {appColors} from '../../constants/colors';
 export const PageContainer = ({children}: {children: ReactNode}) => {
   const pageBackgroundColor = useColorModeValue(
     appColors.white,
-    appColors.black,
+    appColors.charcoalBlue,
   );
 
   return (

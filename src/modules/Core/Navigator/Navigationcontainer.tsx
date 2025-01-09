@@ -1,4 +1,4 @@
-import {AppState, StyleSheet, Text, View} from 'react-native';
+import {AppState, StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
@@ -7,7 +7,7 @@ import {getFromLocalStorage} from '../../../utils/customHooks/helpers/asyncStora
 import SplashScreen from '../../../components/SplashScreen';
 import {AppStates} from '../../../constants/core';
 import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
-import {updateAppState} from '../../../store/core/core.slice';
+import {updateAppState, updateFirstVisit} from '../../../store/core/core.slice';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -47,12 +47,26 @@ export const Navigationcontainer: React.FC = () => {
     }
   };
 
+  const checkIsFirstVisit = async () => {
+    const isFirstVisit =
+      (await getFromLocalStorage({key: 'isFirstVisit'})) || 'true';
+
+    console.log(
+      `Success ---------------> From Local Storage : get isFirstVisit : ${isFirstVisit}`,
+    );
+
+    dispatch(updateFirstVisit(isFirstVisit === 'true'));
+  };
+
   useEffect(() => {
     loadApp();
   }, []);
 
   const loadApp = async () => {
-    const [colorModeResponse] = await Promise.all([getColorMode()]); // add calls that are independent of each other
+    const [colorModeResponse, isFirstVisitResponse] = await Promise.all([
+      getColorMode(),
+      checkIsFirstVisit(),
+    ]); // add calls that are independent of each other
 
     await new Promise(resolve => setTimeout(resolve, 1000));
     setAppLoading(false);

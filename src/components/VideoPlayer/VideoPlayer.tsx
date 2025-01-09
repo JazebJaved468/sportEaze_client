@@ -244,7 +244,7 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
               width: '100%',
               height: renderLoading ? 0 : screenWidth / videoAspectRatio, // Maintain aspect ratio
               alignSelf: 'center',
-              backgroundColor: appColors.richBlack,
+              backgroundColor: appColors.black,
             }}
             onEnd={onEnd}
             onProgress={e => {}}
