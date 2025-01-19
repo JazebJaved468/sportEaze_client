@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type KeysInLocalStorage = 'colorMode' | 'isFirstVisit';
+type KeysInLocalStorage =
+  | 'colorMode'
+  | 'isFirstVisit'
+  | 'userToken'
+  | 'userType';
 
 export const storeInLocalStorage = async ({
   key,
@@ -19,6 +23,21 @@ export const storeInLocalStorage = async ({
   }
 };
 
+export const multiStoreInLocalStorage = async ({
+  keyValuePairs,
+}: {
+  keyValuePairs: ReadonlyArray<readonly [string, string]>;
+}) => {
+  try {
+    const res = await AsyncStorage.multiSet(keyValuePairs);
+  } catch (error) {
+    console.log(
+      `x-x-x-x-x-x-x-x-x-x-x-x-x--> error saving ${keyValuePairs} in local storage`,
+      error,
+    );
+  }
+};
+
 export const getFromLocalStorage = async ({key}: {key: KeysInLocalStorage}) => {
   try {
     const colorMode = await AsyncStorage.getItem(key);
@@ -26,6 +45,21 @@ export const getFromLocalStorage = async ({key}: {key: KeysInLocalStorage}) => {
   } catch (error) {
     console.log(
       `x-x-x-x-x-x-x-x-x-x-x-x-x--> error getting ${key} from local storage`,
+      error,
+    );
+  }
+};
+
+export const multiRemoveFromLocalStorage = async ({
+  keys,
+}: {
+  keys: KeysInLocalStorage[];
+}) => {
+  try {
+    const res = await AsyncStorage.multiRemove(keys);
+  } catch (error) {
+    console.log(
+      `x-x-x-x-x-x-x-x-x-x-x-x-x--> error removing ${keys} from local storage`,
       error,
     );
   }

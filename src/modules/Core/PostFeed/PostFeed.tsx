@@ -2,9 +2,10 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {MutableRefObject, useRef} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import UserPost from '../../../components/UserPost/UserPost';
-import {FlatList, ScrollView} from 'native-base';
+import {Button, FlatList, ScrollView} from 'native-base';
 import GeneralHeader from '../../../components/GeneralHeader';
 import VideoPlayer from '../../../components/VideoPlayer';
+import {useBecomePlayerMutation} from '../../../store/auth/auth.service';
 
 export const PostFeed = () => {
   // const onScroll = (event: any) => {
@@ -15,6 +16,7 @@ export const PostFeed = () => {
   // };
 
   // const childRef = useRef(null);
+  const [becomePlayer] = useBecomePlayerMutation();
 
   type ChildRef = {
     measureLayoutPosition: () => void;
@@ -38,6 +40,12 @@ export const PostFeed = () => {
     }
   };
 
+  const convertToPlayer = async () => {
+    const res = await becomePlayer();
+
+    console.log('res', res);
+  };
+
   return (
     <PageContainer>
       <GeneralHeader />
@@ -52,6 +60,8 @@ export const PostFeed = () => {
           );
         }}
       />
+
+      <Button onPress={convertToPlayer}>Become A Player</Button>
 
       {/* <ScrollView onScroll={handleScroll}>
         {[1, 2, 3].map(id => (

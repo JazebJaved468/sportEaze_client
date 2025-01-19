@@ -1,6 +1,6 @@
 export enum USER_TYPE {
-  FAN = 'FAN',
-  PLAYER = 'PLAYER',
-  PATRON = 'PATRON',
-  MENTOR = 'MENTOR',
+  FAN = 'fan',
+  PLAYER = 'player',
+  PATRON = 'patron',
+  MENTOR = 'mentor',
 }

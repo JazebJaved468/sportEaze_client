@@ -1,8 +1,20 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {store} from './store';
 
 export const sporteazeBaseApi = createApi({
   reducerPath: 'sporteazeBaseApi',
-  baseQuery: fetchBaseQuery({baseUrl: process.env.SPORTEAZE_BASE_API}),
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.SPORTEAZE_BASE_API,
+    prepareHeaders: headers => {
+      const {userToken} = store.getState().auth;
+      if (userToken) {
+        headers.set('authorization', `Bearer ${userToken}`);
+      }
+      headers.set('Content-Type', 'application/json');
+      return headers;
+    },
+  }),
+
   endpoints: builder => ({}),
 });
 
