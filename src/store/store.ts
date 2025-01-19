@@ -9,7 +9,7 @@ import sampleReducer from './sample/sample.slice';
 import {sporteazeBaseApi, cloudinaryBaseApi} from './baseApi.service';
 import coreReducer from './core/core.slice';
 import authReducer from './auth/auth.slice';
-import {RootState} from '../utils/customHooks/storeHooks';
+import {apiStatusLogger} from '../utils/customHooks/helpers/logger';
 
 export const store = configureStore({
   reducer: {
@@ -23,22 +23,6 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(sporteazeBaseApi.middleware)
-      .concat(cloudinaryBaseApi.middleware),
+      .concat(cloudinaryBaseApi.middleware)
+      .concat(apiStatusLogger),
 });
-
-const logger: Middleware = store => next => action => {
-  console.log('Dispatching : ', action);
-  next(action);
-};
-
-const apiStatusLogger = () => next => action => {
-  if (isPending(action)) {
-    console.log(`API Call Pending: ${action.type}`, action);
-  } else if (isFulfilled(action)) {
-    console.log(`API Call Successful: ${action.type}`, action);
-  } else if (isRejected(action)) {
-    console.log(`API Call Failed: ${action.type}`, action);
-  }
-
-  return next(action);
-};
