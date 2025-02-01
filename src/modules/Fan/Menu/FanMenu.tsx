@@ -2,7 +2,7 @@ import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import PageContainer from '../../../components/PageContainer';
 import {Button, useColorMode} from 'native-base';
-import {storeInLocalStorage} from '../../../utils/customHooks/helpers/asyncStorage';
+import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {OnBoardingPage} from '../../Core/OnBoarding';
 

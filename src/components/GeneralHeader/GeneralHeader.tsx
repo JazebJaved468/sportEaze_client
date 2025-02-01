@@ -3,7 +3,7 @@ import React from 'react';
 import {Button, Container, useColorModeValue} from 'native-base';
 import {appColors} from '../../constants/colors';
 import {useAppSelector} from '../../utils/customHooks/storeHooks';
-import {onLogout} from '../../utils/customHooks/helpers/auth';
+import {onLogout} from '../../utils/helpers/auth';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
 import {RegisterPage} from '../../modules/Core/Auth/Register';
 import {LoginPage} from '../../modules/Core/Auth/Login';

@@ -1,12 +1,12 @@
-import {authApi} from '../../../store/auth/auth.service';
+import {authApi} from '../../store/auth/auth.service';
 import {
   removeUser,
   updateIsLoggedIn,
   updateUserToken,
   updateUserType,
-} from '../../../store/auth/auth.slice';
-import {playerApi} from '../../../store/player/player.service';
-import {store} from '../../../store/store';
+} from '../../store/auth/auth.slice';
+import {playerApi} from '../../store/player/player.service';
+import {store} from '../../store/store';
 import {
   multiRemoveFromLocalStorage,
   multiStoreInLocalStorage,

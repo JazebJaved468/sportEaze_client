@@ -9,7 +9,7 @@ import sampleReducer from './sample/sample.slice';
 import {sporteazeBaseApi, cloudinaryBaseApi} from './baseApi.service';
 import coreReducer from './core/core.slice';
 import authReducer from './auth/auth.slice';
-import {apiStatusLogger} from '../utils/customHooks/helpers/logger';
+import {apiStatusLogger} from '../utils/helpers/logger';
 
 export const store = configureStore({
   reducer: {

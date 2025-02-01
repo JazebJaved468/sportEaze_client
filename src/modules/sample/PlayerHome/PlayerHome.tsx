@@ -13,7 +13,7 @@ import {Text, useColorMode, useColorModeValue, View} from 'native-base';
 import {
   getFromLocalStorage,
   storeInLocalStorage,
-} from '../../../utils/customHooks/helpers/asyncStorage';
+} from '../../../utils/helpers/asyncStorage';
 const PlayerHome = () => {
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();

@@ -1,5 +1,5 @@
 import {extendTheme} from 'native-base';
-import {getFromLocalStorage} from '../../utils/customHooks/helpers/asyncStorage';
+import {getFromLocalStorage} from '../../utils/helpers/asyncStorage';
 import {bg} from 'date-fns/locale';
 import {appColors} from '../../constants/colors';
 

@@ -12,7 +12,7 @@ import {
   onBecomingPlayer,
   onLogin,
   onRegisterAsFan,
-} from '../../utils/customHooks/helpers/auth';
+} from '../../utils/helpers/auth';
 
 export const authApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
