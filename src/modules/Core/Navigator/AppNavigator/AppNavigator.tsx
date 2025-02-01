@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
 import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
@@ -15,6 +15,7 @@ import Register, {RegisterPage} from '../../Auth/Register';
 import Login, {LoginPage} from '../../Auth/Login';
 import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
+import {useDidUpdateEffect} from '../../../../utils/customHooks/customHooks';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -61,7 +62,9 @@ export const AppNavigator = () => {
 
   const navigation = useAppNavigation();
 
-  useEffect(() => {
+  console.log('userType', userType);
+
+  useDidUpdateEffect(() => {
     if (userType === USER_TYPE.FAN) {
       navigation.reset({
         index: 0,

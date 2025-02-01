@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
 import {useColorMode} from 'native-base';
-import {getFromLocalStorage} from '../../../utils/customHooks/helpers/asyncStorage';
+import {getFromLocalStorage} from '../../../utils/helpers/asyncStorage';
 import SplashScreen from '../../../components/SplashScreen';
 import {AppStates} from '../../../constants/core';
 import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
@@ -15,6 +15,7 @@ import {
   updateUserType,
 } from '../../../store/auth/auth.slice';
 import {useLazyGetUserSettingsQuery} from '../../../store/auth/auth.service';
+import {Toast} from '../../../components/Toast';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -113,12 +114,18 @@ export const Navigationcontainer: React.FC = () => {
   };
 
   if (appLoading) {
-    return <SplashScreen />;
+    return (
+      <>
+        <SplashScreen />
+        <Toast />
+      </>
+    );
   }
 
   return (
     <NavigationContainer>
       <AppNavigator />
+      <Toast />
     </NavigationContainer>
   );
 };
