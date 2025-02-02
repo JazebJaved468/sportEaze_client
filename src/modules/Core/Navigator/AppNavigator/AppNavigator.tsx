@@ -16,6 +16,10 @@ import Login, {LoginPage} from '../../Auth/Login';
 import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {useDidUpdateEffect} from '../../../../utils/customHooks/customHooks';
+import JoinAs, {JoinAsPage} from '../../Auth/JoinAs';
+import FanRegistrationDetails, {
+  FanRegistrationDetailsPage,
+} from '../../../Fan/FanRegistrationDetails';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -33,6 +37,8 @@ export type RootStackParamList = {
   OnBoardingPage: undefined;
   RegisterPage: undefined;
   LoginPage: undefined;
+  JoinAsPage: undefined;
+  FanRegistrationDetailsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -101,9 +107,14 @@ export const AppNavigator = () => {
       <Stack.Screen name={OnBoardingPage} component={OnBoarding} />
       <Stack.Screen name={RegisterPage} component={Register} />
       <Stack.Screen name={LoginPage} component={Login} />
+      <Stack.Screen name={JoinAsPage} component={JoinAs} />
 
       {/* Fan Screens */}
       <Stack.Screen name={FanRootPage} component={FanRoot} />
+      <Stack.Screen
+        name={FanRegistrationDetailsPage}
+        component={FanRegistrationDetails}
+      />
 
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />

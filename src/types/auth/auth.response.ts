@@ -24,3 +24,9 @@ export type onBecomingPlayerResponse = {
   player: User;
   success: boolean;
 };
+
+export type UpdateUserResponse = {
+  message: string;
+  user: User;
+  success: boolean;
+};

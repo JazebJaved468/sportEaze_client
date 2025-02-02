@@ -6,6 +6,8 @@ import {Button, FlatList, ScrollView} from 'native-base';
 import GeneralHeader from '../../../components/GeneralHeader';
 import VideoPlayer from '../../../components/VideoPlayer';
 import {useBecomePlayerMutation} from '../../../store/auth/auth.service';
+import {useAppNavigation} from '../../../utils/customHooks/navigator';
+import {JoinAsPage} from '../Auth/JoinAs';
 
 export const PostFeed = () => {
   // const onScroll = (event: any) => {
@@ -46,9 +48,11 @@ export const PostFeed = () => {
     console.log('res', res);
   };
 
+  const navigation = useAppNavigation();
+
   return (
     <PageContainer>
-      <GeneralHeader />
+      <GeneralHeader showLeftElement={false} titleAlign='left' />
 
       <FlatList
         onScroll={handleScroll}
@@ -61,7 +65,12 @@ export const PostFeed = () => {
         }}
       />
 
-      <Button onPress={convertToPlayer}>Become A Player</Button>
+      <Button
+        onPress={() => {
+          convertToPlayer();
+        }}>
+        Become A Player
+      </Button>
 
       {/* <ScrollView onScroll={handleScroll}>
         {[1, 2, 3].map(id => (

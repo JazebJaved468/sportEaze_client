@@ -1,15 +1,42 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import React from 'react';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {Button} from 'native-base';
+import {Button, ScrollView} from 'native-base';
 import {useRegisterFanMutation} from '../../../../store/auth/auth.service';
 import {useAppDispatch} from '../../../../utils/customHooks/storeHooks';
+import {CustomTextInputField} from '../../../../components/CustomInputField';
+import {
+  validEmailRegex,
+  validPasswordRegex,
+} from '../../../../utils/helpers/patterns';
+import {
+  CloseEyeIcon,
+  OpenEyeIcon,
+  SportEazeLogo,
+} from '../../../../assets/icons';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useTextColor} from '../../../../utils/customHooks/colorHooks';
+import {appColors} from '../../../../constants/colors';
+import PageContainer from '../../../../components/PageContainer';
+import GeneralHeader from '../../../../components/GeneralHeader';
+import {useAppNavigation} from '../../../../utils/customHooks/navigator';
+import {JoinAsPage} from '../JoinAs';
+import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
+
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 export const Register = () => {
-  const [registerFan, {isLoading, isError, error}] = useRegisterFanMutation();
+  const [registerFan, {isLoading: registerFanCIP, isError, error}] =
+    useRegisterFanMutation();
   const dispatch = useAppDispatch();
-  console.log('isLoading', isLoading);
+  const navigation = useAppNavigation();
+  console.log('isLoading', registerFanCIP);
   console.log('isError', JSON.stringify(error));
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const textColor = useTextColor();
+
   const {
     register,
     setValue,
@@ -29,6 +56,11 @@ export const Register = () => {
         email: data.email,
         password: data.password,
       }).unwrap();
+
+      navigation.reset({
+        index: 0,
+        routes: [{name: JoinAsPage}],
+      });
     } catch (e) {
       console.log(
         '-------xxxxxx----------Error while registering Fan : Register.tsx',
@@ -36,53 +68,165 @@ export const Register = () => {
       );
     }
   };
-
-  console.log(errors);
   return (
-    <View>
-      <Text>Register</Text>
+    <PageContainer applyGradient>
+      <GeneralHeader title='Register' showRightElement={false} />
 
-      <Text style={styles.label}>First name</Text>
-      <Controller
-        control={control}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={value => onChange(value)}
-            value={value}
-          />
-        )}
-        name='email'
-        rules={{required: true}}
-      />
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps='handled'>
+        <View style={styles.container}>
+          <View style={{alignItems: 'center', marginTop: 32}}>
+            <SportEazeLogo color={textColor} width={150} height={150} />
+          </View>
 
-      <Text style={styles.label}>Last name</Text>
-      <Controller
-        control={control}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={value => onChange(value)}
-            value={value}
-          />
-        )}
-        name='password'
-        rules={{
-          required: {
-            value: true,
-            message: 'This is required',
-          },
-        }}
-      />
+          <Text
+            style={{
+              color: appColors.warmRed,
+              fontSize: 20,
+              marginTop: 32,
+              textDecorationLine: 'underline',
+              marginBottom: 32,
+              textAlign: 'center',
+            }}>
+            Create new account
+          </Text>
 
-      <Button onPress={handleSubmit(onSubmit)}>Register</Button>
-    </View>
+          {/* Email Wrapper */}
+          <View style={{marginBottom: 26}}>
+            <Controller
+              name='email'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+                pattern: {
+                  value: validEmailRegex,
+                  message: 'Enter a valid email address',
+                },
+                maxLength: {
+                  value: 100,
+                  message: 'Email cannot exceed 100 characters',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <CustomTextInputField
+                  label='Email Address'
+                  placeholder='Enter your email'
+                  value={value}
+                  onChangeText={val => {
+                    onChange(val.trim());
+                  }}
+                  isValid={errors.email ? false : true}
+                  errorMessage={errors.email ? errors.email.message : ''}
+                  autoCapitalize='none'
+                />
+              )}
+            />
+          </View>
+
+          {/* Password Wrapper */}
+          <View style={{marginBottom: 40}}>
+            <Controller
+              name='password'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Password is required',
+                },
+                minLength: {
+                  value: 8,
+                  message: 'Password must be at least 8 characters long',
+                },
+                pattern: {
+                  value: validPasswordRegex,
+                  message:
+                    'Password must contain at least one uppercase letter and one special character.',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <CustomTextInputField
+                  label='Password'
+                  placeholder='Enter your password'
+                  value={value}
+                  onChangeText={onChange}
+                  isValid={errors.password ? false : true}
+                  errorMessage={errors.password ? errors.password.message : ''}
+                  autoCapitalize='none'
+                  isSecure={!isPasswordVisible}
+                  rightElement={
+                    <TouchableOpacity
+                      hitSlop={20}
+                      activeOpacity={0.5}
+                      style={{paddingHorizontal: 16}}
+                      onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                      {isPasswordVisible ? (
+                        <OpenEyeIcon color={textColor} />
+                      ) : (
+                        <CloseEyeIcon color={textColor} />
+                      )}
+                    </TouchableOpacity>
+                  }
+                />
+              )}
+            />
+          </View>
+
+          <Button
+            style={{
+              height: 48,
+              borderRadius: BUTTON_BORDER_RADIUS,
+              marginBottom: 20,
+            }}
+            onPress={handleSubmit(onSubmit)}
+            isLoading={registerFanCIP}>
+            Register
+          </Button>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 4,
+              marginTop: 'auto',
+              justifyContent: 'center',
+              marginBottom: 12,
+            }}>
+            <Text style={{color: textColor}}>Already have an account ?</Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={{
+                backgroundColor: appColors.warmRed,
+                borderRadius: 10,
+                paddingVertical: 4,
+                paddingHorizontal: 16,
+              }}>
+              <Text
+                style={{
+                  color: appColors.white,
+                  // textDecorationLine: 'underline',
+                  fontSize: 16,
+                }}>
+                Sign in
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </PageContainer>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+    flex: 1,
+  },
   input: {
     backgroundColor: 'white',
     borderColor: 'none',

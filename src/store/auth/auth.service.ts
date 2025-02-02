@@ -1,10 +1,15 @@
 import {sporteazeBaseApi} from '../baseApi.service';
-import {LoginParams, RegisterFanParams} from '../../types/auth/auth.params';
+import {
+  LoginParams,
+  RegisterFanParams,
+  UpdateUserParams,
+} from '../../types/auth/auth.params';
 import {
   GetUserSettingsResponse,
   LoginUserResponse,
   onBecomingPlayerResponse,
   RegisterFanResponse,
+  UpdateUserResponse,
 } from '../../types/auth/auth.response';
 import {User} from '../../types/auth/auth.type';
 import {updateUser} from './auth.slice';
@@ -34,6 +39,27 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         } catch (err) {
           console.log(
             'Error while REgistering As a Fan : auth.service.ts : Line 31',
+            err,
+          );
+        }
+      },
+    }),
+
+    updateUser: builder.mutation<UpdateUserResponse, UpdateUserParams>({
+      query: body => ({
+        url: `/user/update-user`,
+        method: 'PATCH',
+        body,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        try {
+          const {data} = await queryFulfilled;
+
+          dispatch(updateUser(data.user));
+        } catch (err) {
+          console.log(
+            'Error while Updating user data : auth.service.ts : Line 66',
             err,
           );
         }
@@ -124,4 +150,5 @@ export const {
   useLoginUserMutation,
   useLazyGetUserSettingsQuery,
   useBecomePlayerMutation,
+  useUpdateUserMutation,
 } = authApi;
