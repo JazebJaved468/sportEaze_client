@@ -40,8 +40,8 @@ export const multiStoreInLocalStorage = async ({
 
 export const getFromLocalStorage = async ({key}: {key: KeysInLocalStorage}) => {
   try {
-    const colorMode = await AsyncStorage.getItem(key);
-    return colorMode;
+    const res = await AsyncStorage.getItem(key);
+    return res;
   } catch (error) {
     console.log(
       `x-x-x-x-x-x-x-x-x-x-x-x-x--> error getting ${key} from local storage`,

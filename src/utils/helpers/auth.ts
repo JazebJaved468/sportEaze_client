@@ -7,6 +7,7 @@ import {
 } from '../../store/auth/auth.slice';
 import {playerApi} from '../../store/player/player.service';
 import {store} from '../../store/store';
+import {USER_TYPE} from '../../types/user/user';
 import {
   multiRemoveFromLocalStorage,
   multiStoreInLocalStorage,
@@ -18,7 +19,7 @@ export const onLogout = async () => {
 
   dispatch(updateIsLoggedIn(false));
   dispatch(updateUserToken(''));
-  dispatch(updateUserType('fan'));
+  dispatch(updateUserType(USER_TYPE.FAN));
   dispatch(removeUser());
 
   await multiRemoveFromLocalStorage({
@@ -27,13 +28,13 @@ export const onLogout = async () => {
 };
 
 export const onRegisterAsFan = async (args: {
-  userType: string;
+  userType: number;
   userToken: string;
 }) => {
   const dispatch = store.dispatch;
 
   dispatch(updateUserToken(args.userToken));
-  dispatch(updateUserType(args.userType.toLowerCase()));
+  dispatch(updateUserType(args.userType));
   dispatch(updateIsLoggedIn(true));
 
   await dispatch(
@@ -43,16 +44,16 @@ export const onRegisterAsFan = async (args: {
   await multiStoreInLocalStorage({
     keyValuePairs: [
       ['userToken', args.userToken],
-      ['userType', args.userType.toLowerCase()],
+      ['userType', args.userType.toString()],
     ],
   });
 };
 
-export const onLogin = async (args: {userType: string; userToken: string}) => {
+export const onLogin = async (args: {userType: number; userToken: string}) => {
   const dispatch = store.dispatch;
 
   dispatch(updateUserToken(args.userToken));
-  dispatch(updateUserType(args.userType.toLowerCase()));
+  dispatch(updateUserType(args.userType));
   dispatch(updateIsLoggedIn(true));
 
   await dispatch(
@@ -62,14 +63,14 @@ export const onLogin = async (args: {userType: string; userToken: string}) => {
   await multiStoreInLocalStorage({
     keyValuePairs: [
       ['userToken', args.userToken],
-      ['userType', args.userType.toLowerCase()],
+      ['userType', args.userType.toString()],
     ],
   });
 };
 
-export const onBecomingPlayer = async (args: {userType: string}) => {
+export const onBecomingPlayer = async (args: {userType: number}) => {
   const dispatch = store.dispatch;
-  dispatch(updateUserType(args.userType.toLowerCase()));
+  dispatch(updateUserType(args.userType));
   const res = await dispatch(
     playerApi.endpoints.getPlayerSettings.initiate(undefined, {
       forceRefetch: true,
@@ -78,6 +79,6 @@ export const onBecomingPlayer = async (args: {userType: string}) => {
 
   await storeInLocalStorage({
     key: 'userType',
-    value: args.userType.toLowerCase(),
+    value: args.userType.toString(),
   });
 };

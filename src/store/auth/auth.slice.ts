@@ -5,7 +5,7 @@ import {Player} from '../../types/player/player.type';
 interface AuthSliceType {
   userToken: string | null;
   isLoggedIn: boolean;
-  userType: string;
+  userType: number;
   user: User | null;
   player: Player | null;
 }
@@ -13,7 +13,7 @@ interface AuthSliceType {
 const initialState = {
   userToken: null,
   isLoggedIn: false,
-  userType: 'fan',
+  userType: 0,
   user: null,
   player: null,
 } satisfies AuthSliceType as AuthSliceType;
@@ -28,7 +28,7 @@ const authSlice = createSlice({
     updateIsLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;
     },
-    updateUserType: (state, action: PayloadAction<string>) => {
+    updateUserType: (state, action: PayloadAction<number>) => {
       state.userType = action.payload;
     },
     updateUser: (state, action: PayloadAction<User>) => {

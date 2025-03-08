@@ -10,5 +10,5 @@ export type User = {
   name: string;
   profilePicUrl: string | null;
   updatedAt: string;
-  userType: string;
+  userType: number;
 };

@@ -82,7 +82,7 @@ export const Navigationcontainer: React.FC = () => {
       try {
         console.log('User Logged In');
         dispatch(updateUserToken(userToken));
-        dispatch(updateUserType(userType || 'fan'));
+        dispatch(updateUserType(Number(userType) || 0));
         dispatch(updateIsLoggedIn(true));
 
         await getUserSettings().unwrap();

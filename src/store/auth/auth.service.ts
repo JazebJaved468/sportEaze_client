@@ -32,8 +32,10 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         try {
           const {data} = await queryFulfilled;
 
+          console.log('data', data);
+
           await onRegisterAsFan({
-            userType: data.UserType,
+            userType: data.userType,
             userToken: data.accessToken,
           });
         } catch (err) {

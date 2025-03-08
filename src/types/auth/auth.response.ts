@@ -4,14 +4,14 @@ export type RegisterFanResponse = {
   message: string;
   success: boolean;
   accessToken: string;
-  UserType: string;
+  userType: number;
 };
 
 export type LoginUserResponse = {
   message: string;
   success: boolean;
   accessToken: string;
-  userType: string;
+  userType: number;
 };
 
 export type GetUserSettingsResponse = {

@@ -43,7 +43,7 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const getInitialRouteName = (userType: string, isFirstVisit: boolean) => {
+const getInitialRouteName = (userType: number, isFirstVisit: boolean) => {
   if (isFirstVisit) {
     return OnBoardingPage;
   }
