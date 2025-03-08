@@ -232,7 +232,7 @@ export const Register = () => {
                 paddingHorizontal: 16,
               }}
               onPress={() => {
-                setIsLogin(true);
+                setIsLogin(!isLogin);
               }}>
               <Text
                 style={{

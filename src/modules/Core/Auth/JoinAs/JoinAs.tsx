@@ -29,12 +29,12 @@ const joiningOptions = [
     description: 'Stay connected with your favorite teams and athletes',
     icon: AthleteIcon,
   },
-  {
-    id: 1,
-    title: 'Player',
-    description: 'Showcase your skills and grow your sports career',
-    icon: AthleteIcon,
-  },
+  // {
+  //   id: 1,
+  //   title: 'Player',
+  //   description: 'Showcase your skills and grow your sports career',
+  //   icon: AthleteIcon,
+  // },
   // {
   //   id: 2,
   //   title: 'Patron',
