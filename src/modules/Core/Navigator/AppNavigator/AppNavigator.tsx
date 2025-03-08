@@ -3,7 +3,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
 import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
 import FanRoot, {FanRootPage} from '../../../Fan/Root';
-import {USER_TYPE} from '../../../../types/user/user';
 import PlayerRoot, {PlayerRootPage} from '../../../Player/Root';
 import PatronRoot, {PatronRootPage} from '../../../Patron/Root';
 import MentorRoot, {MentorRootPage} from '../../../Mentor/Root';
@@ -21,6 +20,7 @@ import FanRegistrationDetails, {
   FanRegistrationDetailsPage,
 } from '../../../Fan/FanRegistrationDetails';
 import {User} from '../../../../types/auth/auth.type';
+import {USER_TYPE} from '../../../../constants/enums';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;

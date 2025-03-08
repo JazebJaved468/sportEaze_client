@@ -1,3 +1,4 @@
+import {USER_TYPE} from '../../constants/enums';
 import {authApi} from '../../store/auth/auth.service';
 import {
   removeUser,
@@ -7,7 +8,6 @@ import {
 } from '../../store/auth/auth.slice';
 import {playerApi} from '../../store/player/player.service';
 import {store} from '../../store/store';
-import {USER_TYPE} from '../../types/user/user';
 import {
   multiRemoveFromLocalStorage,
   multiStoreInLocalStorage,
