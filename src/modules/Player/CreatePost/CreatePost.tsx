@@ -21,7 +21,7 @@ import {
   openImagePicker,
   openVideoCamera,
   openVideoPicker,
-} from '../../../utils/customHooks/helpers/mediaPicker';
+} from '../../../utils/helpers/mediaPicker';
 import {Button} from 'native-base';
 import {ImagePlaceholderIcon} from '../../../assets/icons';
 

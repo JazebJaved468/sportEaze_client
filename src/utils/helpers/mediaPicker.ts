@@ -53,7 +53,7 @@ export const openVideoPicker = async () => {
   }
 };
 
-export const openImagePicker = async () => {
+export const openImagePicker = async (selectMultiple: boolean = true) => {
   try {
     const status = await askReadExternalStoragePermission();
 
@@ -64,11 +64,14 @@ export const openImagePicker = async () => {
         cropping: true,
         includeBase64: true,
         mediaType: 'photo',
-        multiple: true,
+        multiple: selectMultiple,
         maxFiles: 5,
       });
       if (selectedMedia) {
-        return selectedMedia;
+        if (Array.isArray(selectedMedia)) {
+          return selectedMedia;
+        }
+        return [selectedMedia];
       } else {
         return [];
       }

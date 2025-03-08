@@ -3513,6 +3513,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/datetimepicker@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@react-native-community/datetimepicker@npm:8.2.0"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    expo: ">=50.0.0"
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: 3adc9346f8948abed246da3bfa3a223e44c2c5903070178a82e583ce6f8273607fe5a542af834b3a27aff81980c555e5f72bf0e87c85e3f00856a0de21525374
+  languageName: node
+  linkType: hard
+
 "@react-native-community/netinfo@npm:^11.4.1":
   version: 11.4.1
   resolution: "@react-native-community/netinfo@npm:11.4.1"
@@ -5030,6 +5049,7 @@ __metadata:
     "@babel/runtime": ^7.20.0
     "@gorhom/bottom-sheet": ^5
     "@react-native-async-storage/async-storage": ^2.0.0
+    "@react-native-community/datetimepicker": ^8.2.0
     "@react-native-community/netinfo": ^11.4.1
     "@react-native-masked-view/masked-view": ^0.3.2
     "@react-native/babel-preset": 0.74.87
@@ -5056,6 +5076,7 @@ __metadata:
     react: 18.2.0
     react-hook-form: ^7.53.0
     react-native: 0.74.6
+    react-native-date-picker: ^5.0.10
     react-native-document-picker: ^9.3.1
     react-native-dotenv: ^3.4.11
     react-native-drop-shadow: ^1.0.0
@@ -5063,7 +5084,6 @@ __metadata:
     react-native-image-crop-picker: ^0.41.6
     react-native-linear-gradient: ^2.8.3
     react-native-reanimated: 3.15.0
-    react-native-reanimated-carousel: ^3.5.1
     react-native-safe-area-context: 3.3.2
     react-native-screens: ^3.34.0
     react-native-skeleton-placeholder: ^5.2.4
@@ -10632,6 +10652,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-date-picker@npm:^5.0.10":
+  version: 5.0.10
+  resolution: "react-native-date-picker@npm:5.0.10"
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+  checksum: 347266d8c13fb9c45b9b6300628dcf305baec64b9640f96a8678a9cb9cd62e186ccfb69b249c16599c6e601598b96c396c9074616101df3da7b6ef37296133ad
+  languageName: node
+  linkType: hard
+
 "react-native-document-picker@npm:^9.3.1":
   version: 9.3.1
   resolution: "react-native-document-picker@npm:9.3.1"
@@ -10700,18 +10730,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
-  languageName: node
-  linkType: hard
-
-"react-native-reanimated-carousel@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "react-native-reanimated-carousel@npm:3.5.1"
-  peerDependencies:
-    react: ">=16.8.0"
-    react-native: ">=0.6.0"
-    react-native-gesture-handler: ">=2.0.0"
-    react-native-reanimated: ">=3.0.0"
-  checksum: a2eb640453fa35f659c1fb5575f903364d513fb7f621104afa14fee2284132674dfaf0d87cb29e8c119f7513094a5967d5193f3dfa24043af167c6f26abcfe73
   languageName: node
   linkType: hard
 

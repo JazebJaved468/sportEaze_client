@@ -20,7 +20,7 @@ import {
   onBoardingData,
   OnBoardingDataType,
 } from '../../../constants/onBoarding';
-import {storeInLocalStorage} from '../../../utils/customHooks/helpers/asyncStorage';
+import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {FanRootPage} from '../../Fan/Root';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');

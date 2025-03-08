@@ -2,9 +2,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {MutableRefObject, useRef} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import UserPost from '../../../components/UserPost/UserPost';
-import {FlatList, ScrollView} from 'native-base';
+import {Button, FlatList, ScrollView} from 'native-base';
 import GeneralHeader from '../../../components/GeneralHeader';
 import VideoPlayer from '../../../components/VideoPlayer';
+import {useBecomePlayerMutation} from '../../../store/auth/auth.service';
+import {useAppNavigation} from '../../../utils/customHooks/navigator';
+import {JoinAsPage} from '../Auth/JoinAs';
 
 export const PostFeed = () => {
   // const onScroll = (event: any) => {
@@ -38,9 +41,11 @@ export const PostFeed = () => {
     }
   };
 
+  const navigation = useAppNavigation();
+
   return (
     <PageContainer>
-      <GeneralHeader />
+      <GeneralHeader showLeftElement={false} titleAlign='left' />
 
       <FlatList
         onScroll={handleScroll}

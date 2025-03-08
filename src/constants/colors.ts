@@ -10,4 +10,7 @@ export const appColors = {
   richBlack: '#030712',
   lavender: '#8660F1',
   charcoalBlue: '#060813',
+  masculineBlue: '#0077b6',
+  femininePink: '#ff69b4',
+  error: '#DC143C',
 };

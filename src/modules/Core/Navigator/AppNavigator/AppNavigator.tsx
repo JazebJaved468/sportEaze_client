@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
 import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
 import FanRoot, {FanRootPage} from '../../../Fan/Root';
-import {USER_TYPE} from '../../../../types/user/user';
 import PlayerRoot, {PlayerRootPage} from '../../../Player/Root';
 import PatronRoot, {PatronRootPage} from '../../../Patron/Root';
 import MentorRoot, {MentorRootPage} from '../../../Mentor/Root';
@@ -11,6 +10,17 @@ import ChatScreen, {ChatScreenPage} from '../../Chat/ChatScreen';
 import CreatePost, {CreatePostPage} from '../../../Player/CreatePost';
 import OnBoarding, {OnBoardingPage} from '../../OnBoarding';
 import {store} from '../../../../store/store';
+import Register, {RegisterPage} from '../../Auth/Register';
+import Login, {LoginPage} from '../../Auth/Login';
+import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
+import {useAppNavigation} from '../../../../utils/customHooks/navigator';
+import {useDidUpdateEffect} from '../../../../utils/customHooks/customHooks';
+import JoinAs, {JoinAsPage} from '../../Auth/JoinAs';
+import FanRegistrationDetails, {
+  FanRegistrationDetailsPage,
+} from '../../../Fan/FanRegistrationDetails';
+import {User} from '../../../../types/auth/auth.type';
+import {USER_TYPE} from '../../../../constants/enums';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -26,20 +36,30 @@ export type RootStackParamList = {
   };
   CreatePostPage: undefined;
   OnBoardingPage: undefined;
+  RegisterPage: undefined;
+  LoginPage: undefined;
+  JoinAsPage: undefined;
+  FanRegistrationDetailsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const getInitialRouteName = ({userType}: {userType: string}) => {
-  const {isFirstVisit} = store.getState().core;
-
+const getInitialRouteName = (user: User | null, isFirstVisit: boolean) => {
   if (isFirstVisit) {
     return OnBoardingPage;
   }
 
-  switch (userType) {
+  if (!user) {
+    return FanRootPage;
+  }
+
+  switch (user.userType) {
     case USER_TYPE.FAN:
-      return FanRootPage;
+      if (!user.username) {
+        return FanRegistrationDetailsPage;
+      } else {
+        return FanRootPage;
+      }
     case USER_TYPE.PLAYER:
       return PlayerRootPage;
     case USER_TYPE.PATRON:
@@ -52,9 +72,40 @@ const getInitialRouteName = ({userType}: {userType: string}) => {
 };
 
 export const AppNavigator = () => {
+  const {userType, user} = useAppSelector(state => state.auth);
+  const {isFirstVisit} = useAppSelector(state => state.core);
+
+  const navigation = useAppNavigation();
+
+  console.log('userType', userType);
+
+  useDidUpdateEffect(() => {
+    if (userType === USER_TYPE.FAN) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: FanRootPage}],
+      });
+    } else if (userType === USER_TYPE.PLAYER) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: PlayerRootPage}],
+      });
+    } else if (userType === USER_TYPE.PATRON) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: PatronRootPage}],
+      });
+    } else if (userType === USER_TYPE.MENTOR) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: MentorRootPage}],
+      });
+    }
+  }, [userType]);
+
   return (
     <Stack.Navigator
-      initialRouteName={getInitialRouteName({userType: USER_TYPE.PLAYER})} //usertype will be coming from backend
+      initialRouteName={getInitialRouteName(user, isFirstVisit)} //usertype will be coming from backend
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
@@ -63,9 +114,16 @@ export const AppNavigator = () => {
       {/* Core Screens */}
       <Stack.Screen name={ChatScreenPage} component={ChatScreen} />
       <Stack.Screen name={OnBoardingPage} component={OnBoarding} />
+      <Stack.Screen name={RegisterPage} component={Register} />
+      <Stack.Screen name={LoginPage} component={Login} />
+      <Stack.Screen name={JoinAsPage} component={JoinAs} />
 
       {/* Fan Screens */}
       <Stack.Screen name={FanRootPage} component={FanRoot} />
+      <Stack.Screen
+        name={FanRegistrationDetailsPage}
+        component={FanRegistrationDetails}
+      />
 
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
