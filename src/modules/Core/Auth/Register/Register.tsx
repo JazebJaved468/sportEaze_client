@@ -2,8 +2,14 @@ import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Button, ScrollView} from 'native-base';
-import {useRegisterFanMutation} from '../../../../store/auth/auth.service';
-import {useAppDispatch} from '../../../../utils/customHooks/storeHooks';
+import {
+  useLoginUserMutation,
+  useRegisterFanMutation,
+} from '../../../../store/auth/auth.service';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../utils/customHooks/storeHooks';
 import {CustomTextInputField} from '../../../../components/CustomInputField';
 import {
   validEmailRegex,
@@ -22,16 +28,23 @@ import GeneralHeader from '../../../../components/GeneralHeader';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {JoinAsPage} from '../JoinAs';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
+import {LoginPage} from '../Login';
+import {RootStackParamList} from '../../Navigator/AppNavigator/AppNavigator';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 export const Register = () => {
-  const [registerFan, {isLoading: registerFanCIP, isError, error}] =
-    useRegisterFanMutation();
   const dispatch = useAppDispatch();
   const navigation = useAppNavigation();
-  console.log('isLoading', registerFanCIP);
-  console.log('isError', JSON.stringify(error));
+
+  const {isLoggedIn} = useAppSelector(state => state.auth);
+
+  const [registerFan, {isLoading: registerFanCIP, isError, error}] =
+    useRegisterFanMutation();
+  const [loginUser, {isLoading: loginUserCIP}] = useLoginUserMutation();
+
+  const [isLogin, setIsLogin] = useState(true);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -52,15 +65,22 @@ export const Register = () => {
   });
   const onSubmit = async (data: {email: string; password: string}) => {
     try {
-      await registerFan({
-        email: data.email,
-        password: data.password,
-      }).unwrap();
+      if (isLogin) {
+        const res = await loginUser({
+          email: data.email,
+          password: data.password,
+        }).unwrap();
+      } else {
+        await registerFan({
+          email: data.email,
+          password: data.password,
+        }).unwrap();
 
-      navigation.reset({
-        index: 0,
-        routes: [{name: JoinAsPage}],
-      });
+        navigation.reset({
+          index: 0,
+          routes: [{name: JoinAsPage}],
+        });
+      }
     } catch (e) {
       console.log(
         '-------xxxxxx----------Error while registering Fan : Register.tsx',
@@ -70,7 +90,10 @@ export const Register = () => {
   };
   return (
     <PageContainer applyGradient>
-      <GeneralHeader title='Register' showRightElement={false} />
+      <GeneralHeader
+        title={isLogin ? 'Login' : 'Register'}
+        showRightElement={false}
+      />
 
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
@@ -91,7 +114,7 @@ export const Register = () => {
               marginBottom: 32,
               textAlign: 'center',
             }}>
-            Create new account
+            {isLogin ? 'Welcome Back' : 'Create new account'}
           </Text>
 
           {/* Email Wrapper */}
@@ -184,8 +207,8 @@ export const Register = () => {
               marginBottom: 20,
             }}
             onPress={handleSubmit(onSubmit)}
-            isLoading={registerFanCIP}>
-            Register
+            isLoading={registerFanCIP || loginUserCIP}>
+            {isLogin ? 'Login' : 'Register'}
           </Button>
 
           <View
@@ -197,7 +220,9 @@ export const Register = () => {
               justifyContent: 'center',
               marginBottom: 12,
             }}>
-            <Text style={{color: textColor}}>Already have an account ?</Text>
+            <Text style={{color: textColor}}>
+              {isLogin ? 'Dont have an account ?' : 'Already have an account ?'}
+            </Text>
             <TouchableOpacity
               activeOpacity={0.5}
               style={{
@@ -205,6 +230,9 @@ export const Register = () => {
                 borderRadius: 10,
                 paddingVertical: 4,
                 paddingHorizontal: 16,
+              }}
+              onPress={() => {
+                setIsLogin(true);
               }}>
               <Text
                 style={{
@@ -212,7 +240,7 @@ export const Register = () => {
                   // textDecorationLine: 'underline',
                   fontSize: 16,
                 }}>
-                Sign in
+                {isLogin ? 'Register' : 'Login'}
               </Text>
             </TouchableOpacity>
           </View>

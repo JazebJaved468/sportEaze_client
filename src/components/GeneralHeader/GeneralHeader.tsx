@@ -68,10 +68,10 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
 
       {/* <Text style={[styles.textStyle, {color: textColor}]}>
         {user?.userType} -
-      </Text>
-      <Text style={[styles.textStyle, {color: textColor, fontSize: 18}]}>
-        {user?.email}
       </Text> */}
+      <Text style={[styles.textStyle, {color: textColor, fontSize: 18}]}>
+        -{user?.username}
+      </Text>
 
       <View style={{position: 'absolute', right: 16}}>
         {showRightElement ? (
@@ -96,27 +96,28 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
                   borderRadius: 10,
                   overflow: 'hidden',
                 }}>
-                {user?.profilePicUrl ? (
-                  <Image
-                    source={{uri: user?.profilePicUrl}}
-                    style={{
-                      width: 36,
-                      height: 36,
-                      objectFit: 'contain',
-                      borderRadius: 9,
-                    }}
-                  />
-                ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => navigation.navigate(LoginPage)}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  // onPress={() => navigation.navigate(LoginPage)}
+                >
+                  {user?.profilePicUrl ? (
+                    <Image
+                      source={{uri: user?.profilePicUrl}}
+                      style={{
+                        width: 36,
+                        height: 36,
+                        objectFit: 'contain',
+                        borderRadius: 9,
+                      }}
+                    />
+                  ) : (
                     <UserPlaceholderIcon
                       width={22}
                       height={22}
                       color={textColor}
                     />
-                  </TouchableOpacity>
-                )}
+                  )}
+                </TouchableOpacity>
               </View>
             </View>
           ) : (
