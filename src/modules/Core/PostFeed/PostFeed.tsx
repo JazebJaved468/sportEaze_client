@@ -18,7 +18,6 @@ export const PostFeed = () => {
   // };
 
   // const childRef = useRef(null);
-  const [becomePlayer] = useBecomePlayerMutation();
 
   type ChildRef = {
     measureLayoutPosition: () => void;
@@ -42,12 +41,6 @@ export const PostFeed = () => {
     }
   };
 
-  const convertToPlayer = async () => {
-    const res = await becomePlayer();
-
-    console.log('res', res);
-  };
-
   const navigation = useAppNavigation();
 
   return (
@@ -64,13 +57,6 @@ export const PostFeed = () => {
           );
         }}
       />
-
-      <Button
-        onPress={() => {
-          convertToPlayer();
-        }}>
-        Become A Player
-      </Button>
 
       {/* <ScrollView onScroll={handleScroll}>
         {[1, 2, 3].map(id => (

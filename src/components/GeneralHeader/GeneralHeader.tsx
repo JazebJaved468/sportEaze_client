@@ -70,7 +70,7 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
         {user?.userType} -
       </Text> */}
       <Text style={[styles.textStyle, {color: textColor, fontSize: 18}]}>
-        -{user?.username}
+        {user?.username}
       </Text>
 
       <View style={{position: 'absolute', right: 16}}>
