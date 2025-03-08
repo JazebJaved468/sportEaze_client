@@ -20,6 +20,7 @@ import JoinAs, {JoinAsPage} from '../../Auth/JoinAs';
 import FanRegistrationDetails, {
   FanRegistrationDetailsPage,
 } from '../../../Fan/FanRegistrationDetails';
+import {User} from '../../../../types/auth/auth.type';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -43,14 +44,22 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const getInitialRouteName = (userType: number, isFirstVisit: boolean) => {
+const getInitialRouteName = (user: User | null, isFirstVisit: boolean) => {
   if (isFirstVisit) {
     return OnBoardingPage;
   }
 
-  switch (userType) {
+  if (!user) {
+    return FanRootPage;
+  }
+
+  switch (user.userType) {
     case USER_TYPE.FAN:
-      return FanRootPage;
+      if (!user.username) {
+        return FanRegistrationDetailsPage;
+      } else {
+        return FanRootPage;
+      }
     case USER_TYPE.PLAYER:
       return PlayerRootPage;
     case USER_TYPE.PATRON:
@@ -63,7 +72,7 @@ const getInitialRouteName = (userType: number, isFirstVisit: boolean) => {
 };
 
 export const AppNavigator = () => {
-  const {userType} = useAppSelector(state => state.auth);
+  const {userType, user} = useAppSelector(state => state.auth);
   const {isFirstVisit} = useAppSelector(state => state.core);
 
   const navigation = useAppNavigation();
@@ -96,7 +105,7 @@ export const AppNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={getInitialRouteName(userType, isFirstVisit)} //usertype will be coming from backend
+      initialRouteName={getInitialRouteName(user, isFirstVisit)} //usertype will be coming from backend
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',

@@ -120,7 +120,7 @@ export const JoinAs = () => {
 
   const [selectedOption, setSelectedOption] = useState<number>(0);
   return (
-    <PageContainer>
+    <PageContainer applyGradient>
       <GeneralHeader title='Join As' showRightElement={false} />
       <View style={styles.container}>
         <Text style={{color: textColor, marginTop: 24, marginHorizontal: 16}}>

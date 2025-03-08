@@ -12,9 +12,10 @@ export type LoginParams = {
 
 export type UpdateUserParams = {
   name?: string;
-  gender?: string;
+  gender?: number;
   dob?: string;
   city?: string;
   country?: string;
   profilePicUrl?: string | null;
+  username?: string;
 };

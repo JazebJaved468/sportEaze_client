@@ -8,8 +8,8 @@ import {appColors} from '../../constants/colors';
 import {GENDER} from '../../constants/enums';
 
 type GenderPickerProps = {
-  selectedGender: string | undefined;
-  setSelectedGender: (gender: string) => void;
+  selectedGender: number | undefined;
+  setSelectedGender: (gender: number) => void;
   isValid?: boolean;
   errorMessage?: string;
   label?: string;

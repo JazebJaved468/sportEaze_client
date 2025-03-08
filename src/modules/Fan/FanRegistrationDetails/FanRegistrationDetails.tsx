@@ -28,12 +28,18 @@ import {
 import {useUploadImageMutation} from '../../../store/postFeed/postFeed.service';
 import {useDidUpdateEffect} from '../../../utils/customHooks/customHooks';
 import {CloudinaryUploadPresets} from '../../../constants/cloudinary';
-import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
 import {updateToast} from '../../../store/core/core.slice';
 import {useUpdateUserMutation} from '../../../store/auth/auth.service';
+import {prefixWithAtSymbol} from '../../../utils/helpers/string';
 
 const FanRegistrationDetails = () => {
   const dispatch = useAppDispatch();
+
+  const {user} = useAppSelector(state => state.auth);
 
   const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
 
@@ -54,16 +60,18 @@ const FanRegistrationDetails = () => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      name: 'jazeb',
+      name: user?.name || '',
+      username: user?.username || '',
       dob: undefined as string | undefined,
-      gender: undefined as string | undefined,
+      gender: undefined as number | undefined,
     },
   });
 
   type FormData = {
     name: string;
+    username: string;
     dob: string;
-    gender: string;
+    gender: number;
   };
 
   const onSubmit = async (data: FormData) => {
@@ -74,7 +82,7 @@ const FanRegistrationDetails = () => {
 
       const apiData = {
         ...data,
-        gender: data.gender === 'male' ? 'Male' : 'Female',
+        gender: data.gender,
         profilePicUrl: imageUrl ? imageUrl : null,
       };
 
@@ -227,6 +235,43 @@ const FanRegistrationDetails = () => {
             />
           </View>
 
+          {/* UserName Wrapper */}
+          <View style={{marginBottom: 26}}>
+            <Controller
+              name='username'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Username is required',
+                },
+                minLength: {
+                  value: 4,
+                  message: 'Username must be atleast 3 characters long',
+                },
+                maxLength: {
+                  value: 50,
+                  message: 'Username cannot exceed 50 characters',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <CustomTextInputField
+                  label='Username'
+                  placeholder='Enter your Username'
+                  maxLength={51}
+                  autoCapitalize='words'
+                  value={value}
+                  onChangeText={val => {
+                    const formattedUsername = prefixWithAtSymbol(val);
+                    onChange(formattedUsername);
+                  }}
+                  isValid={errors.username ? false : true}
+                  errorMessage={errors.username ? errors.username.message : ''}
+                />
+              )}
+            />
+          </View>
+
           {/* DOB Wrapper */}
           <View style={{marginBottom: 26}}>
             <Controller
@@ -285,8 +330,9 @@ const FanRegistrationDetails = () => {
             onPress={handleSubmit(data => {
               onSubmit({
                 name: data.name,
+                username: data.username,
                 dob: data.dob as string,
-                gender: data.gender as string,
+                gender: data.gender as number,
               });
             })}
             isLoading={imageUploadCIP || updateUserCIP}>

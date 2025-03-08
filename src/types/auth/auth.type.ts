@@ -5,10 +5,11 @@ export type User = {
   deleted: boolean;
   dob: string;
   email: string;
-  gender: string;
+  gender: number;
   id: string;
   name: string;
   profilePicUrl: string | null;
   updatedAt: string;
   userType: number;
+  username: string;
 };
