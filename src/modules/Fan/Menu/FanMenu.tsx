@@ -46,6 +46,10 @@ export const FanMenu = () => {
         <Button m={10} py={3} onPress={convertToPlayer}>
           Become a player
         </Button>
+
+        <Button m={10} py={3} onPress={() => navigation.navigate('GeminiPage')}>
+          Gemini Model
+        </Button>
       </View>
     </PageContainer>
   );

@@ -27,6 +27,29 @@ const pickDocument = async () => {
   }
 };
 
+export const openImageOrVideoPicker = async () => {
+  try {
+    const status = await askReadExternalStoragePermission();
+
+    if (status === PERMISSION_RESULT.GRANTED) {
+      const selectedMedia = await ImagePicker.openPicker({
+        multiple: true,
+      });
+      if (selectedMedia) {
+        return selectedMedia;
+      } else {
+        return [];
+      }
+    } else {
+      console.log('External Storage Permission Denied');
+      return [];
+    }
+  } catch (error) {
+    console.log('xxxxx--- Error: Open Image Picker --- ', error);
+    return [];
+  }
+};
+
 export const openVideoPicker = async () => {
   try {
     const status = await askReadExternalStoragePermission();
