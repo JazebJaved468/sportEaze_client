@@ -1,9 +1,9 @@
 import {Dimensions, StyleSheet, View} from 'react-native';
 import React, {ReactNode} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useColorModeValue} from 'native-base';
 import {appColors} from '../../constants/colors';
 import LinearGradient from 'react-native-linear-gradient';
+import {usePageBackgroundColor} from '../../utils/customHooks/colorHooks';
 
 type PageContainerProps = {
   children: ReactNode;
@@ -18,10 +18,7 @@ export const PageContainer = ({
   backgroundColor,
   applyGradient,
 }: PageContainerProps) => {
-  const pageBackgroundColor = useColorModeValue(
-    appColors.white,
-    appColors.charcoalBlue,
-  );
+  const pageBackgroundColor = usePageBackgroundColor();
 
   return (
     <SafeAreaView
