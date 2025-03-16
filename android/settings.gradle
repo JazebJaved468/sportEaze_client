@@ -5,3 +5,6 @@ includeBuild('../node_modules/@react-native/gradle-plugin')
 
 include ':react-native-image-crop-picker'
 project(':react-native-image-crop-picker').projectDir = new File(settingsDir, '../node_modules/react-native-image-crop-picker/android')
+
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')

@@ -21,6 +21,7 @@ import FanRegistrationDetails, {
 } from '../../../Fan/FanRegistrationDetails';
 import {User} from '../../../../types/auth/auth.type';
 import {USER_TYPE} from '../../../../constants/enums';
+import Gemini from '../../../Fan/Menu/Gemini';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -40,6 +41,7 @@ export type RootStackParamList = {
   LoginPage: undefined;
   JoinAsPage: undefined;
   FanRegistrationDetailsPage: undefined;
+  GeminiPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -124,6 +126,7 @@ export const AppNavigator = () => {
         name={FanRegistrationDetailsPage}
         component={FanRegistrationDetails}
       />
+      <Stack.Screen name={'GeminiPage'} component={Gemini} />
 
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
