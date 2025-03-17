@@ -11,26 +11,10 @@ import {useTextColor} from '../../../utils/customHooks/colorHooks';
 import RNFS from 'react-native-fs';
 import {POST_MEDIA_LIMIT} from '../../../constants/media';
 import {
+  extractValidJSONFromGeminiResponse,
   GEMINI_DEFAULT_MODEL,
   systemInstructions,
 } from '../../../utils/helpers/gemini';
-
-const extractValidJSONFromGeminiResponse = (responseText: string) => {
-  try {
-    // Extract JSON content from triple backticks ```json ... ```
-    const match = responseText.match(/```json\n([\s\S]*?)\n```/);
-
-    if (match && match[1]) {
-      const jsonString = match[1]; // Extract the JSON portion
-      return JSON.parse(jsonString); // Parse into a JS object
-    }
-
-    throw new Error('No valid JSON found in the response.');
-  } catch (error) {
-    console.error('Error parsing JSON:', error);
-    return null; // Return null if parsing fails
-  }
-};
 
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 const model = gemini.getGenerativeModel({
