@@ -11,7 +11,7 @@ export const TickIcon = (props: SvgProps) => (
       stroke={props.color ?? '#fff'}
       strokeLinecap='round'
       strokeLinejoin='round'
-      strokeWidth={3}
+      strokeWidth={props.strokeWidth ?? 3}
       d='m1 6 4.243 4.243 8.484-8.486'
     />
   </Svg>

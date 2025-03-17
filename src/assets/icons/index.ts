@@ -7,6 +7,7 @@ import {CloseEyeIcon} from './svgs/CloseEyeIcon';
 import {CommentIcon} from './svgs/CommentIcon';
 import {CreateIcon} from './svgs/CreateIcon';
 import {CrossIcon} from './svgs/CrossIcon';
+import {DeleteIcon} from './svgs/DeleteIcon';
 import {ExploreIcon} from './svgs/ExploreIcon';
 import {FemaleIcon} from './svgs/FemaleIcon';
 import {GalleryIcon} from './svgs/GalleryIcon';
@@ -24,6 +25,7 @@ import {PlayIcon} from './svgs/PlayIcon';
 import {ProfileIcon} from './svgs/ProfileIcon';
 import {ScarIcon} from './svgs/ScarIcon';
 import {ShareIcon} from './svgs/ShareIcon';
+import {SparkleStarsIcon} from './svgs/SparkleStarsIcon';
 import {SportEazeLogo} from './svgs/SportEazeLogo';
 import {TickIcon} from './svgs/TickIcon';
 import {UnMuteIcon} from './svgs/UnMuteIcon';
@@ -60,4 +62,6 @@ export {
   ArrowDownIcon,
   GalleryIcon,
   CrossIcon,
+  DeleteIcon,
+  SparkleStarsIcon,
 };

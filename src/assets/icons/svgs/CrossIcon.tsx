@@ -8,7 +8,7 @@ export const CrossIcon = (props: SvgProps) => (
     fill='none'
     {...props}>
     <Path
-      stroke='#292D32'
+      stroke={props.color ?? '#292D32'}
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeWidth={1.5}
