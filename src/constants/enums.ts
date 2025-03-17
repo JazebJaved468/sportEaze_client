@@ -10,3 +10,9 @@ export enum GENDER {
   Female = 1,
   Other = 2,
 }
+
+export enum MediaType {
+  IMAGE = 1,
+  VIDEO = 2,
+  DOCUMENT = 3,
+}

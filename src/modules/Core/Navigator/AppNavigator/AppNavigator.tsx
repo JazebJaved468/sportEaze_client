@@ -20,8 +20,11 @@ import FanRegistrationDetails, {
   FanRegistrationDetailsPage,
 } from '../../../Fan/FanRegistrationDetails';
 import {User} from '../../../../types/auth/auth.type';
-import {USER_TYPE} from '../../../../constants/enums';
+import {MediaType, USER_TYPE} from '../../../../constants/enums';
 import Gemini from '../../../Fan/Menu/Gemini';
+import MediaPreview, {
+  MediaPreviewPage,
+} from '../../../../components/MediaPreview';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -42,6 +45,10 @@ export type RootStackParamList = {
   JoinAsPage: undefined;
   FanRegistrationDetailsPage: undefined;
   GeminiPage: undefined;
+  MediaPreviewPage: {
+    mediaPath: string;
+    mediaType: MediaType;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -119,6 +126,13 @@ export const AppNavigator = () => {
       <Stack.Screen name={RegisterPage} component={Register} />
       <Stack.Screen name={LoginPage} component={Login} />
       <Stack.Screen name={JoinAsPage} component={JoinAs} />
+      <Stack.Screen
+        name={MediaPreviewPage}
+        component={MediaPreview}
+        options={{
+          animation: 'fade',
+        }}
+      />
 
       {/* Fan Screens */}
       <Stack.Screen name={FanRootPage} component={FanRoot} />
