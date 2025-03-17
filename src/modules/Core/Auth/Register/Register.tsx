@@ -238,7 +238,7 @@ export const Register = () => {
                 style={{
                   color: appColors.white,
                   // textDecorationLine: 'underline',
-                  fontSize: 16,
+                  fontSize: 14,
                 }}>
                 {isLogin ? 'Register' : 'Login'}
               </Text>
