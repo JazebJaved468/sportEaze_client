@@ -21,6 +21,8 @@ import {
 } from '../../../../assets/icons';
 import {usePageBackgroundColor} from '../../../../utils/customHooks/colorHooks';
 
+const TAB_ICONS_SIZE = 20;
+
 const Tab = createBottomTabNavigator();
 
 const screenOptions: BottomTabNavigationOptions = {
@@ -39,6 +41,7 @@ const screenOptions: BottomTabNavigationOptions = {
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
+  tabBarHideOnKeyboard: true,
   // tabBarLabelStyle: {
   //   fontSize: 12,
   //   fontWeight: '500',
@@ -53,8 +56,6 @@ const BottomTabNames = {
   Menu: 'Menu',
   Explore: 'Explore',
 };
-
-const TAB_ICONS_SIZE = 20;
 
 const TabBarItem = ({
   focused,
@@ -83,6 +84,16 @@ const TabBarItem = ({
       )}
     </>
   );
+};
+
+const TabScreen = ({
+  name,
+  component,
+}: {
+  name: string;
+  component: React.ComponentType<any>;
+}) => {
+  return <Tab.Screen name={name} component={component} />;
 };
 
 export const FanBottomTabNavigator = () => {
