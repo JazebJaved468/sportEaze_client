@@ -1,3 +1,4 @@
+import {ArrowDownIcon} from './svgs/ArrowDownIcon';
 import {AthleteIcon} from './svgs/AthleteIcon';
 import {BackIcon} from './svgs/BackIcon';
 import {CalenderIcon} from './svgs/CalenderIcon';
@@ -5,8 +6,10 @@ import {CameraIcon} from './svgs/CameraIcon';
 import {CloseEyeIcon} from './svgs/CloseEyeIcon';
 import {CommentIcon} from './svgs/CommentIcon';
 import {CreateIcon} from './svgs/CreateIcon';
+import {CrossIcon} from './svgs/CrossIcon';
 import {ExploreIcon} from './svgs/ExploreIcon';
 import {FemaleIcon} from './svgs/FemaleIcon';
+import {GalleryIcon} from './svgs/GalleryIcon';
 import {HeartIcon} from './svgs/HeartIcon';
 import {HomeIcon} from './svgs/HomeIcon';
 import {ImagePlaceholderIcon} from './svgs/ImagePlaceholderIcon';
@@ -54,4 +57,7 @@ export {
   ExploreIcon,
   MessageIcon,
   CreateIcon,
+  ArrowDownIcon,
+  GalleryIcon,
+  CrossIcon,
 };

@@ -86,16 +86,6 @@ const TabBarItem = ({
   );
 };
 
-const TabScreen = ({
-  name,
-  component,
-}: {
-  name: string;
-  component: React.ComponentType<any>;
-}) => {
-  return <Tab.Screen name={name} component={component} />;
-};
-
 export const FanBottomTabNavigator = () => {
   const backgroundColor = usePageBackgroundColor();
   const tabBarItemActiveColor = useColorModeValue(
