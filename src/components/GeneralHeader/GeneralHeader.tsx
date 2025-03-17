@@ -9,6 +9,7 @@ import {RegisterPage} from '../../modules/Core/Auth/Register';
 import {LoginPage} from '../../modules/Core/Auth/Login';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {BackIcon, LogoutIcon, UserPlaceholderIcon} from '../../assets/icons';
+import {fontBold} from '../../styles/fonts';
 
 type GeneralHeaderProps = {
   title?: string;
@@ -63,7 +64,7 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
       </View>
 
       {showTitle ? (
-        <Text style={[styles.title, {color: textColor}]}>{title}</Text>
+        <Text style={[fontBold(20, textColor), styles.title]}>{title}</Text>
       ) : null}
 
       {/* <Text style={[styles.textStyle, {color: textColor}]}>
@@ -75,7 +76,9 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
 
       <View style={{position: 'absolute', right: 16}}>
         {showRightElement ? (
-          isLoggedIn ? (
+          rightElement ? (
+            rightElement
+          ) : isLoggedIn ? (
             <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
               <TouchableOpacity
                 activeOpacity={0.5}
@@ -159,7 +162,5 @@ const styles = StyleSheet.create({
 
   title: {
     textAlign: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 });
