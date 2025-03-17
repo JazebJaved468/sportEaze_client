@@ -8,7 +8,7 @@ export const fontWeight = {
 
 export const fonts = {
   thin: 'LatoThin',
-  light: 'Latolight',
+  light: 'LatoLight',
   regular: 'LatoRegular',
   bold: 'LatoBold',
   black: 'LatoBlack',
