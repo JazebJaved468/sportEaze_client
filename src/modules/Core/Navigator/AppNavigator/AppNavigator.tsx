@@ -48,6 +48,7 @@ export type RootStackParamList = {
   MediaPreviewPage: {
     mediaPath: string;
     mediaType: MediaType;
+    onRemove?: () => void;
   };
 };
 
