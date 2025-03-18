@@ -1,7 +1,6 @@
-import {extendTheme} from 'native-base';
-import {getFromLocalStorage} from '../../utils/helpers/asyncStorage';
-import {bg} from 'date-fns/locale';
+import {ColorMode, extendTheme} from 'native-base';
 import {appColors} from '../../constants/colors';
+import {fonts} from '../fonts';
 
 export const theme = extendTheme({
   colors: {
@@ -29,11 +28,23 @@ export const theme = extendTheme({
   },
 
   components: {
+    Text: {
+      defaultProps: {
+        fontFamily: fonts.regular,
+      },
+      baseStyle: ({colorMode}: {colorMode: ColorMode}) => {
+        return {
+          color: colorMode === 'dark' ? appColors.white : appColors.black,
+        };
+      },
+    },
+
     Button: {
       defaultProps: {
         bgColor: appColors.warmRed,
         _text: {
           color: appColors.white,
+          fontFamily: fonts.regular,
         },
         borderRadius: 10,
         p: 0,

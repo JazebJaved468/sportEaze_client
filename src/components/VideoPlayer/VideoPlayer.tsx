@@ -225,7 +225,8 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
           <Video
             ref={(ref: VideoPlayerRef) => (videoRef.current = ref)}
             source={{
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              // uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              uri: url,
             }}
             // thumbnail={
             //   {

@@ -10,11 +10,12 @@ import React, {ReactNode} from 'react';
 import {border} from 'native-base/lib/typescript/theme/styled-system';
 import {useColorModeValue} from 'native-base';
 import {appColors} from '../../constants/colors';
+import {fontBold, fontRegular} from '../../styles/fonts';
 
 type CustomTextInputFieldProps = {
   value: string;
   onChangeText: (text: string) => void;
-  height?: number;
+  height?: number | 'auto';
   width?: number;
   placeholder?: string;
 
@@ -75,6 +76,7 @@ export const CustomTextInputField = ({
   borderWidth = 1,
   onFocus,
   maxLength,
+  textAlignVertical = 'center',
 }: CustomTextInputFieldProps) => {
   const inputborderColor = useColorModeValue(appColors.gray, appColors.gray);
   const textColor = useColorModeValue(appColors.black, appColors.white);
@@ -85,11 +87,10 @@ export const CustomTextInputField = ({
         <View>
           <Text
             style={[
+              fontBold(14),
               {
-                fontSize: 14,
                 color: !isValid ? appColors.error : textColor,
                 marginBottom: 8,
-                fontWeight: 'bold',
               },
               customLabelStyles,
             ]}>
@@ -100,7 +101,8 @@ export const CustomTextInputField = ({
       <View
         style={{
           flexDirection: 'row',
-          height: height,
+          ...(height === 'auto' ? {} : {height: height}),
+          // height: height === 'auto' ? undefined : height,
           borderWidth: borderWidth,
           paddingHorizontal: 6,
           borderColor: !isValid
@@ -113,6 +115,7 @@ export const CustomTextInputField = ({
           onFocus={onFocus}
           style={{
             flex: 1,
+            ...fontRegular(14),
             color: textColor,
             textAlignVertical: 'center',
           }}
@@ -126,12 +129,13 @@ export const CustomTextInputField = ({
           readOnly={isReadOnly}
           autoCapitalize={autoCapitalize}
           maxLength={maxLength}
+          textAlignVertical={textAlignVertical}
         />
 
         <View
           style={{
-            height: height - 1,
-
+            // height: height - 1,
+            paddingTop: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
