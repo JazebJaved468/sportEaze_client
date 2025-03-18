@@ -13,4 +13,5 @@ export const appColors = {
   masculineBlue: '#0077b6',
   femininePink: '#ff69b4',
   error: '#DC143C',
+  success: '#4CAF50',
 };

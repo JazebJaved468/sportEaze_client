@@ -16,3 +16,8 @@ export enum MediaType {
   VIDEO = 2,
   DOCUMENT = 3,
 }
+
+export enum PostVisibility {
+  PUBLIC = 1,
+  PRIVATE = 2,
+}
