@@ -6,11 +6,12 @@ import {useAppNavigation} from '../../utils/customHooks/navigator';
 import {useTextColor} from '../../utils/customHooks/colorHooks';
 import PageContainer from '../PageContainer';
 import {CrossIcon, TickIcon} from '../../assets/icons';
-import {Button} from 'native-base';
+import {Button, DeleteIcon} from 'native-base';
 import {fontBold, fontRegular} from '../../styles/fonts';
 import {appColors} from '../../constants/colors';
 import {MediaType} from '../../constants/enums';
 import VideoPlayer from '../VideoPlayer';
+import {PulseEffect} from '../PulseEffect';
 
 type MediaPreviewPageRouteProp = RouteProp<
   RootStackParamList,
@@ -57,23 +58,58 @@ export const MediaPreview = () => {
         )}
       </View>
 
-      <Button
-        style={styles.button}
-        p={0}
-        py={0}
-        onPress={() => {
-          navigation.goBack();
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginHorizontal: 16,
+          gap: 16,
         }}>
-        <View style={styles.buttonInnerWrapper}>
-          <TickIcon
-            width={16}
-            height={16}
-            strokeWidth={2}
-            color={appColors.white}
-          />
-          <Text style={fontRegular(18, appColors.white)}>Ok</Text>
-        </View>
-      </Button>
+        <Button
+          style={[
+            styles.button,
+            {
+              borderWidth: 1,
+              borderColor: appColors.warmRed,
+              backgroundColor: appColors.transparent,
+            },
+          ]}
+          p={0}
+          py={0}
+          onPress={() => {
+            params.onRemove?.();
+            navigation.goBack();
+          }}>
+          <View style={styles.buttonInnerWrapper}>
+            <DeleteIcon
+              width={20}
+              height={20}
+              strokeWidth={2}
+              color={appColors.warmRed}
+            />
+            <Text style={fontRegular(16, appColors.warmRed)}>Remove</Text>
+          </View>
+        </Button>
+
+        <Button
+          style={styles.button}
+          p={0}
+          py={0}
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <View style={styles.buttonInnerWrapper}>
+            <TickIcon
+              width={16}
+              height={16}
+              strokeWidth={2}
+              color={appColors.white}
+            />
+            <Text style={fontRegular(16, appColors.white)}>Ok</Text>
+          </View>
+        </Button>
+      </View>
     </PageContainer>
   );
 };
@@ -88,10 +124,10 @@ const styles = StyleSheet.create({
   button: {
     height: 48,
     padding: 0,
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     marginVertical: 16,
     borderRadius: 20,
-    backgroundColor: appColors.warmRed,
+    flex: 1,
   },
 
   image: {
