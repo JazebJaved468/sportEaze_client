@@ -3,6 +3,9 @@ import {AthleteIcon} from './svgs/AthleteIcon';
 import {BackIcon} from './svgs/BackIcon';
 import {CalenderIcon} from './svgs/CalenderIcon';
 import {CameraIcon} from './svgs/CameraIcon';
+import {CircularCheckIcon} from './svgs/CircularCheckIcon';
+import {CircularCrossIcon} from './svgs/CircularCrossIcon';
+import {CircularInfoIcon} from './svgs/CircularInfoIcon';
 import {CloseEyeIcon} from './svgs/CloseEyeIcon';
 import {CommentIcon} from './svgs/CommentIcon';
 import {CreateIcon} from './svgs/CreateIcon';
@@ -64,4 +67,7 @@ export {
   CrossIcon,
   DeleteIcon,
   SparkleStarsIcon,
+  CircularCheckIcon,
+  CircularCrossIcon,
+  CircularInfoIcon,
 };

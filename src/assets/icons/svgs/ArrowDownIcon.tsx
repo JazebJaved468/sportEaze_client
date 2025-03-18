@@ -12,7 +12,7 @@ export const ArrowDownIcon = (props: SvgProps) => (
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeMiterlimit={10}
-      strokeWidth={1.5}
+      strokeWidth={props.strokeWidth ?? 1.5}
       d='M16.92.95 10.4 7.47c-.77.77-2.03.77-2.8 0L1.08.95'
     />
   </Svg>
