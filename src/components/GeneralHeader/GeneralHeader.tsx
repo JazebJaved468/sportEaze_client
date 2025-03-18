@@ -150,7 +150,7 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 20,
     flexDirection: 'row',
     alignItems: 'center',
   },
