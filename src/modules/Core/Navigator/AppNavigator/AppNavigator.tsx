@@ -63,13 +63,13 @@ const getInitialRouteName = (user: User | null, isFirstVisit: boolean) => {
     return FanRootPage;
   }
 
+  if (!user.username) {
+    return JoinAsPage;
+  }
+
   switch (user.userType) {
     case USER_TYPE.FAN:
-      if (!user.username) {
-        return FanRegistrationDetailsPage;
-      } else {
-        return FanRootPage;
-      }
+      return FanRootPage;
     case USER_TYPE.PLAYER:
       return PlayerRootPage;
     case USER_TYPE.PATRON:
@@ -93,7 +93,9 @@ export const AppNavigator = () => {
     if (userType === USER_TYPE.FAN) {
       navigation.reset({
         index: 0,
-        routes: [{name: FanRootPage}],
+        routes: [
+          {name: !user?.username ? FanRegistrationDetailsPage : FanRootPage},
+        ],
       });
     } else if (userType === USER_TYPE.PLAYER) {
       navigation.reset({

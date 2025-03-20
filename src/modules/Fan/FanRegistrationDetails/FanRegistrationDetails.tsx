@@ -57,10 +57,11 @@ const FanRegistrationDetails = () => {
     control,
     reset,
     getValues,
+
     formState: {errors},
   } = useForm({
     defaultValues: {
-      name: user?.name || '',
+      name: user?.fullName || '',
       username: user?.username || '',
       dob: undefined as string | undefined,
       gender: undefined as number | undefined,
@@ -165,7 +166,7 @@ const FanRegistrationDetails = () => {
                   right: 16,
                   bottom: 16,
                   zIndex: 1,
-                  borderRadius: 10,
+                  borderRadius: 12,
                   paddingHorizontal: 8,
                   paddingVertical: 8,
                   backgroundColor: appColors.warmRed,
@@ -263,7 +264,7 @@ const FanRegistrationDetails = () => {
                   value={value}
                   onChangeText={val => {
                     const formattedUsername = prefixWithAtSymbol(val);
-                    onChange(formattedUsername);
+                    onChange(formattedUsername); // Add @ symbol to username
                   }}
                   isValid={errors.username ? false : true}
                   errorMessage={errors.username ? errors.username.message : ''}

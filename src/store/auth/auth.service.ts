@@ -1,14 +1,14 @@
 import {sporteazeBaseApi} from '../baseApi.service';
 import {
   LoginParams,
-  RegisterFanParams,
+  RegisterUserParams,
   UpdateUserParams,
 } from '../../types/auth/auth.params';
 import {
   GetUserSettingsResponse,
   LoginUserResponse,
   onBecomingPlayerResponse,
-  RegisterFanResponse,
+  RegisterUserResponse,
   UpdateUserResponse,
 } from '../../types/auth/auth.response';
 import {User} from '../../types/auth/auth.type';
@@ -21,9 +21,9 @@ import {
 
 export const authApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
-    registerFan: builder.mutation<RegisterFanResponse, RegisterFanParams>({
+    registerUser: builder.mutation<RegisterUserResponse, RegisterUserParams>({
       query: body => ({
-        url: `/user/register-user`,
+        url: `/user/register`,
         method: 'POST',
         body,
       }),
@@ -31,8 +31,6 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
       async onQueryStarted(args, {dispatch, queryFulfilled}) {
         try {
           const {data} = await queryFulfilled;
-
-          console.log('data', data);
 
           await onRegisterAsFan({
             userType: data.userType,
@@ -47,6 +45,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
+    // replace it with reegister fan endpoint /user/fan
     updateUser: builder.mutation<UpdateUserResponse, UpdateUserParams>({
       query: body => ({
         url: `/user/update-user`,
@@ -70,7 +69,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
 
     loginUser: builder.mutation<LoginUserResponse, LoginParams>({
       query: body => ({
-        url: `/user/login-user`,
+        url: `/user/login`,
         method: 'POST',
         body,
       }),
@@ -94,7 +93,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
 
     getUserSettings: builder.query<User, void>({
       query: () => ({
-        url: `/user/get-user`,
+        url: `/user`,
       }),
       transformResponse: (response: GetUserSettingsResponse) => {
         return response.user;
@@ -148,7 +147,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
 });
 
 export const {
-  useRegisterFanMutation,
+  useRegisterUserMutation,
   useLoginUserMutation,
   useLazyGetUserSettingsQuery,
   useBecomePlayerMutation,

@@ -4,7 +4,7 @@ import {Controller, useForm} from 'react-hook-form';
 import {Button, ScrollView} from 'native-base';
 import {
   useLoginUserMutation,
-  useRegisterFanMutation,
+  useRegisterUserMutation,
 } from '../../../../store/auth/auth.service';
 import {
   useAppDispatch,
@@ -38,10 +38,10 @@ export const Register = () => {
   const dispatch = useAppDispatch();
   const navigation = useAppNavigation();
 
-  const {isLoggedIn} = useAppSelector(state => state.auth);
+  const {isLoggedIn, user} = useAppSelector(state => state.auth);
 
-  const [registerFan, {isLoading: registerFanCIP, isError, error}] =
-    useRegisterFanMutation();
+  const [registerUser, {isLoading: registerUserCIP, isError, error}] =
+    useRegisterUserMutation();
   const [loginUser, {isLoading: loginUserCIP}] = useLoginUserMutation();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -59,8 +59,8 @@ export const Register = () => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      email: 'jazeb.player@gmail.com',
-      password: 'Click123!',
+      email: 'jazeb.player.back@gmail.com',
+      password: 'SecurePassword!123',
     },
   });
   const onSubmit = async (data: {email: string; password: string}) => {
@@ -70,8 +70,10 @@ export const Register = () => {
           email: data.email,
           password: data.password,
         }).unwrap();
+
+        console.log('res - after login ', user);
       } else {
-        await registerFan({
+        await registerUser({
           email: data.email,
           password: data.password,
         }).unwrap();
@@ -83,7 +85,7 @@ export const Register = () => {
       }
     } catch (e) {
       console.log(
-        '-------xxxxxx----------Error while registering Fan : Register.tsx',
+        '-------xxxxxx----------Error while registering/Loggin-in User : Register.tsx',
         e,
       );
     }
@@ -207,7 +209,7 @@ export const Register = () => {
               marginBottom: 20,
             }}
             onPress={handleSubmit(onSubmit)}
-            isLoading={registerFanCIP || loginUserCIP}>
+            isLoading={registerUserCIP || loginUserCIP}>
             {isLogin ? 'Login' : 'Register'}
           </Button>
 

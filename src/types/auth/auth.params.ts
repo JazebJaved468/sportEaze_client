@@ -1,7 +1,6 @@
-export type RegisterFanParams = {
+export type RegisterUserParams = {
   email: string;
   password: string;
-  recover?: boolean;
 };
 
 export type LoginParams = {

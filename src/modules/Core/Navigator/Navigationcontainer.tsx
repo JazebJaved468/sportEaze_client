@@ -16,6 +16,7 @@ import {
 } from '../../../store/auth/auth.slice';
 import {useLazyGetUserSettingsQuery} from '../../../store/auth/auth.service';
 import {Toast} from '../../../components/Toast';
+import {USER_TYPE} from '../../../constants/enums';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -82,7 +83,7 @@ export const Navigationcontainer: React.FC = () => {
       try {
         console.log('User Logged In');
         dispatch(updateUserToken(userToken));
-        dispatch(updateUserType(Number(userType) || 0));
+        dispatch(updateUserType(Number(userType) || USER_TYPE.FAN));
         dispatch(updateIsLoggedIn(true));
 
         await getUserSettings().unwrap();
