@@ -8,6 +8,7 @@ import {CircularCrossIcon} from './svgs/CircularCrossIcon';
 import {CircularInfoIcon} from './svgs/CircularInfoIcon';
 import {CloseEyeIcon} from './svgs/CloseEyeIcon';
 import {CommentIcon} from './svgs/CommentIcon';
+import {ConnectionNetworkIcon} from './svgs/ConnectionNetworkIcon';
 import {CreateIcon} from './svgs/CreateIcon';
 import {CrossIcon} from './svgs/CrossIcon';
 import {DeleteIcon} from './svgs/DeleteIcon';
@@ -70,4 +71,5 @@ export {
   CircularCheckIcon,
   CircularCrossIcon,
   CircularInfoIcon,
+  ConnectionNetworkIcon,
 };

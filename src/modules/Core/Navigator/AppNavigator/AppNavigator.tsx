@@ -25,6 +25,9 @@ import Gemini from '../../../Fan/Menu/Gemini';
 import MediaPreview, {
   MediaPreviewPage,
 } from '../../../../components/MediaPreview';
+import Recommendations, {
+  RecommendationsPage,
+} from '../../../Fan/Recommendations';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -50,6 +53,7 @@ export type RootStackParamList = {
     mediaType: MediaType;
     onRemove?: () => void;
   };
+  RecommendationsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -118,6 +122,7 @@ export const AppNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={getInitialRouteName(user, isFirstVisit)} //usertype will be coming from backend
+      //usertype will be coming from backend
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
@@ -144,6 +149,7 @@ export const AppNavigator = () => {
         component={FanRegistrationDetails}
       />
       <Stack.Screen name={'GeminiPage'} component={Gemini} />
+      <Stack.Screen name={RecommendationsPage} component={Recommendations} />
 
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />

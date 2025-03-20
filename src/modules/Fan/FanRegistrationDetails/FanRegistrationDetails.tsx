@@ -31,6 +31,7 @@ import {PulseEffect} from '../../../components/PulseEffect';
 import {SportsPreferenceSelector} from '../../../components/SportsPreferenceSelector';
 import {fontBold} from '../../../styles/fonts';
 import {RegisterFanParams} from '../../../types/fan/fan.params';
+import {RecommendationsPage} from '../Recommendations';
 
 type RegisterFanFormData = {
   profilePic?: ImageType | null;
@@ -412,7 +413,11 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
         sportInterests: data.sportInterests,
       };
 
-      const res = await registerFan(apiData).unwrap();
+      await registerFan(apiData).unwrap();
+      navigation.reset({
+        index: 0,
+        routes: [{name: RecommendationsPage}],
+      });
     } catch (error) {
       console.log(
         '-------xxxxxx----------Error while Fan details : FanRegistrationDetails.tsx',
