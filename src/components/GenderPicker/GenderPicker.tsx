@@ -52,17 +52,17 @@ const GenderPicker = ({
             {
               borderColor: !isValid
                 ? appColors.error
-                : selectedGender === GENDER.Male
+                : selectedGender === GENDER.MALE
                   ? appColors.masculineBlue
                   : textColor,
             },
           ]}
-          onPress={() => setSelectedGender(GENDER.Male)}>
+          onPress={() => setSelectedGender(GENDER.MALE)}>
           <MaleIcon
             width={40}
             height={40}
             color={
-              selectedGender === GENDER.Male
+              selectedGender === GENDER.MALE
                 ? appColors.masculineBlue
                 : textColor
             }
@@ -70,7 +70,7 @@ const GenderPicker = ({
           <Text
             style={{
               color:
-                selectedGender === GENDER.Male
+                selectedGender === GENDER.MALE
                   ? appColors.masculineBlue
                   : textColor,
             }}>
@@ -86,17 +86,17 @@ const GenderPicker = ({
             {
               borderColor: !isValid
                 ? appColors.error
-                : selectedGender === GENDER.Female
+                : selectedGender === GENDER.FEMALE
                   ? appColors.femininePink
                   : textColor,
             },
           ]}
-          onPress={() => setSelectedGender(GENDER.Female)}>
+          onPress={() => setSelectedGender(GENDER.FEMALE)}>
           <FemaleIcon
             width={40}
             height={40}
             color={
-              selectedGender === GENDER.Female
+              selectedGender === GENDER.FEMALE
                 ? appColors.femininePink
                 : textColor
             }
@@ -104,7 +104,7 @@ const GenderPicker = ({
           <Text
             style={{
               color:
-                selectedGender === GENDER.Female
+                selectedGender === GENDER.FEMALE
                   ? appColors.femininePink
                   : textColor,
             }}>

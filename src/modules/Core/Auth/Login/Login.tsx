@@ -20,7 +20,7 @@ export const Login = () => {
   } = useForm({
     defaultValues: {
       email: 'jazeb.player@gmail.com',
-      password: 'Click123!',
+      password: 'SecurePassword!123',
     },
   });
   const onSubmit = async (data: {email: string; password: string}) => {
@@ -31,7 +31,7 @@ export const Login = () => {
       }).unwrap();
     } catch (e) {
       console.log(
-        '-------xxxxxx----------Error while registering Fan : Register.tsx',
+        '-------xxxxxx----------Error while registering/Logging in  User : Login.tsx',
         e,
       );
     }

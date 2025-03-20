@@ -1,14 +1,14 @@
 export enum USER_TYPE {
-  FAN = 0,
-  PLAYER = 1,
-  PATRON = 2,
-  MENTOR = 3,
+  FAN = 1,
+  PLAYER = 2,
+  PATRON = 3,
+  MENTOR = 4,
 }
 
 export enum GENDER {
-  Male = 0,
-  Female = 1,
-  Other = 2,
+  MALE = 1,
+  FEMALE = 2,
+  OTHER = 3,
 }
 
 export enum MediaType {
@@ -20,4 +20,15 @@ export enum MediaType {
 export enum PostVisibility {
   PUBLIC = 1,
   PRIVATE = 2,
+  FOLLOWERS_ONLY = 3,
+}
+
+export enum PostReaction {
+  LIKE = 1,
+  HEART = 2,
+  LAUGH = 3,
+  SAD = 4,
+  WOW = 5,
+  Support = 6,
+  Angry = 7,
 }

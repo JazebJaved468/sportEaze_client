@@ -1,6 +1,6 @@
 import {User} from './auth.type';
 
-export type RegisterFanResponse = {
+export type RegisterUserResponse = {
   message: string;
   success: boolean;
   accessToken: string;
