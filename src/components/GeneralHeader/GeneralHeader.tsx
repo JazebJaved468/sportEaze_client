@@ -19,6 +19,7 @@ type GeneralHeaderProps = {
   leftElement?: ReactNode;
   showTitle?: boolean;
   titleAlign?: 'center' | 'left' | 'right';
+  backHandler?: () => void;
 };
 
 export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
@@ -29,6 +30,7 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
   leftElement,
   showTitle = true,
   titleAlign = 'center',
+  backHandler,
 }) => {
   const navigation = useAppNavigation();
   const textColor = useColorModeValue(appColors.black, appColors.white);
@@ -55,7 +57,9 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.5}
                   hitSlop={20}
-                  onPress={() => navigation.goBack()}>
+                  onPress={() => {
+                    backHandler ? backHandler() : navigation.goBack();
+                  }}>
                   <BackIcon color={textColor} width={18} height={18} />
                 </TouchableOpacity>
               </View>
@@ -68,7 +72,7 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
       ) : null}
 
       {/* <Text style={[styles.textStyle, {color: textColor}]}>
-        {user?.userType} -
+        {user?.username} -
       </Text> */}
       <Text style={[styles.textStyle, {color: textColor, fontSize: 18}]}>
         {user?.username}

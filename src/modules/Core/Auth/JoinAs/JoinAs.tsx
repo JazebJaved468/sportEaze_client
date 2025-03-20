@@ -11,6 +11,7 @@ import {SvgProps} from 'react-native-svg';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {FanRegistrationDetailsPage} from '../../../Fan/FanRegistrationDetails';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
+import {fontBold} from '../../../../styles/fonts';
 
 type OptionCardProps = {
   id: number;
@@ -123,7 +124,11 @@ export const JoinAs = () => {
     <PageContainer applyGradient>
       <GeneralHeader title='Join As' showRightElement={true} />
       <View style={styles.container}>
-        <Text style={{color: textColor, marginTop: 24, marginHorizontal: 16}}>
+        <Text
+          style={[
+            fontBold(18, textColor),
+            {color: textColor, marginTop: 24, marginHorizontal: 16},
+          ]}>
           Please select any one option
         </Text>
 
