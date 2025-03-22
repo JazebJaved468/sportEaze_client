@@ -19,7 +19,7 @@ export const onLogout = async () => {
 
   dispatch(updateIsLoggedIn(false));
   dispatch(updateUserToken(''));
-  dispatch(updateUserType(USER_TYPE.FAN));
+  dispatch(updateUserType(0));
   dispatch(removeUser());
 
   await multiRemoveFromLocalStorage({
@@ -53,12 +53,12 @@ export const onLogin = async (args: {userType: number; userToken: string}) => {
   const dispatch = store.dispatch;
 
   dispatch(updateUserToken(args.userToken));
-  dispatch(updateUserType(args.userType));
-  dispatch(updateIsLoggedIn(true));
-
   await dispatch(
     authApi.endpoints.getUserSettings.initiate(undefined, {forceRefetch: true}),
   );
+
+  dispatch(updateUserType(args.userType));
+  dispatch(updateIsLoggedIn(true));
 
   await multiStoreInLocalStorage({
     keyValuePairs: [

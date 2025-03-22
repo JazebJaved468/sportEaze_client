@@ -8,7 +8,6 @@ import {
 import PlayerProfile from '../../../sample/PlayerProfile';
 import {appColors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
-import FanMenu from '../../../Fan/Menu';
 import ChatListing from '../../Chat/ChatListing';
 import CreatePost from '../../../Player/CreatePost';
 import {useColorModeValue} from 'native-base';
@@ -19,7 +18,8 @@ import {
   MessageIcon,
   ProfileIcon,
 } from '../../../../assets/icons';
-import {usePageBackgroundColor} from '../../../../utils/customHooks/colorHooks';
+import {useCardColor} from '../../../../utils/customHooks/colorHooks';
+import Menu from '../../Menu';
 
 const TAB_ICONS_SIZE = 20;
 
@@ -87,7 +87,7 @@ const TabBarItem = ({
 };
 
 export const FanBottomTabNavigator = () => {
-  const backgroundColor = usePageBackgroundColor();
+  const backgroundColor = useCardColor();
   const tabBarItemActiveColor = useColorModeValue(
     appColors.black,
     appColors.white,
@@ -113,7 +113,7 @@ export const FanBottomTabNavigator = () => {
           tabBarStyle: {
             ...(screenOptions.tabBarStyle as object),
             backgroundColor,
-            borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
+            // borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
           },
           tabBarActiveTintColor: tabBarItemActiveColor,
           tabBarInactiveTintColor: tabBarItemInActiveColor,
@@ -194,13 +194,14 @@ export const FanBottomTabNavigator = () => {
       <Tab.Screen name={BottomTabNames.Feed} component={PostFeed} />
       <Tab.Screen name={BottomTabNames.Explore} component={ChatListing} />
       <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
-      <Tab.Screen name={BottomTabNames.Profile} component={FanMenu} />
+      {/* <Tab.Screen name={BottomTabNames.Profile} component={FanMenu} /> */}
+      <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
   );
 };
 
 export const PlayerBottomTabNavigator = () => {
-  const backgroundColor = usePageBackgroundColor();
+  const backgroundColor = useCardColor();
   const tabBarItemActiveColor = useColorModeValue(
     appColors.black,
     appColors.white,
@@ -222,7 +223,7 @@ export const PlayerBottomTabNavigator = () => {
           tabBarStyle: {
             ...(screenOptions.tabBarStyle as object),
             backgroundColor,
-            borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
+            // borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
           },
           tabBarActiveTintColor: tabBarItemActiveColor,
           tabBarInactiveTintColor: tabBarItemInActiveColor,
@@ -330,7 +331,7 @@ export const PlayerBottomTabNavigator = () => {
 };
 
 export const PatronBottomTabNavigator = () => {
-  const backgroundColor = usePageBackgroundColor();
+  const backgroundColor = useCardColor();
   const tabBarItemActiveColor = useColorModeValue(
     appColors.black,
     appColors.white,
@@ -352,7 +353,7 @@ export const PatronBottomTabNavigator = () => {
           tabBarStyle: {
             ...(screenOptions.tabBarStyle as object),
             backgroundColor,
-            borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
+            // borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
           },
           tabBarActiveTintColor: tabBarItemActiveColor,
           tabBarInactiveTintColor: tabBarItemInActiveColor,
@@ -460,7 +461,7 @@ export const PatronBottomTabNavigator = () => {
 };
 
 export const MentorBottomTabNavigator = () => {
-  const backgroundColor = usePageBackgroundColor();
+  const backgroundColor = useCardColor();
   const tabBarItemActiveColor = useColorModeValue(
     appColors.black,
     appColors.white,
@@ -482,7 +483,7 @@ export const MentorBottomTabNavigator = () => {
           tabBarStyle: {
             ...(screenOptions.tabBarStyle as object),
             backgroundColor,
-            borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
+            // borderTopWidth: colorMode === 'dark' ? 0.5 : 0,
           },
           tabBarActiveTintColor: tabBarItemActiveColor,
           tabBarInactiveTintColor: tabBarItemInActiveColor,
