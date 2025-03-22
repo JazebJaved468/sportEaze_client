@@ -10,5 +10,18 @@ export const useInverseTextColor = () => {
 };
 
 export const usePageBackgroundColor = () => {
-  return useColorModeValue(appColors.white, appColors.charcoalBlue);
+  // return useColorModeValue(appColors.white, appColors.charcoalBlue);
+  return useColorModeValue(appColors.white, appColors.gunmetal);
+};
+
+export const useCardColor = () => {
+  return useColorModeValue(appColors.white, appColors.erieBlack);
+};
+
+export const useLightTextColor = () => {
+  return useColorModeValue(appColors.lightBlack, appColors.lightWhite);
+};
+
+export const useDividerColor = () => {
+  return useColorModeValue(appColors.dividerLight, appColors.dividerDark);
 };
