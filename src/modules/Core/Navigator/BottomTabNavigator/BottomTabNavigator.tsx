@@ -325,7 +325,7 @@ export const PlayerBottomTabNavigator = () => {
       <Tab.Screen name={BottomTabNames.Explore} component={PlayerProfile} />
       <Tab.Screen name={BottomTabNames.Create} component={CreatePost} />
       <Tab.Screen name={BottomTabNames.Messages} component={PlayerProfile} />
-      <Tab.Screen name={BottomTabNames.Profile} component={CreatePost} />
+      <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
   );
 };
@@ -455,7 +455,7 @@ export const PatronBottomTabNavigator = () => {
       <Tab.Screen name={BottomTabNames.Explore} component={PostFeed} />
       <Tab.Screen name={BottomTabNames.Create} component={CreatePost} />
       <Tab.Screen name={BottomTabNames.Messages} component={PlayerProfile} />
-      <Tab.Screen name={BottomTabNames.Profile} component={CreatePost} />
+      <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
   );
 };
@@ -585,7 +585,7 @@ export const MentorBottomTabNavigator = () => {
       <Tab.Screen name={BottomTabNames.Explore} component={PostFeed} />
       <Tab.Screen name={BottomTabNames.Create} component={CreatePost} />
       <Tab.Screen name={BottomTabNames.Messages} component={PlayerProfile} />
-      <Tab.Screen name={BottomTabNames.Profile} component={CreatePost} />
+      <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
   );
 };
