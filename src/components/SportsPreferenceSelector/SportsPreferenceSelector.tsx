@@ -1,10 +1,8 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {useGetAvailableSportsQuery} from '../../store/core/core.service';
 import {appColors} from '../../constants/colors';
 import {fontRegular} from '../../styles/fonts';
-import {PulseEffect} from '../PulseEffect';
-import {Sport} from '../../types/core/core.type';
 
 type SportItem = {
   id: number;
@@ -79,7 +77,7 @@ const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
             columnGap: 8,
           }}>
           {Object.entries(sports).map(([key, sport]) => {
-            return renderSportItem({item: {id: Number(key), name: sport.name}});
+            return renderSportItem({item: {id: Number(key), name: sport}});
           })}
         </View>
       ) : null}

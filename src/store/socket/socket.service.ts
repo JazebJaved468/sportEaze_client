@@ -1,7 +1,5 @@
 import {io, Socket} from 'socket.io-client';
 import {store} from '../store';
-import {Sport} from '../../types/core/core.type';
-
 // const SOCKET_URL = 'http://192.168.100.18:3000'; // Replace with your backend URL
 const SOCKET_URL = 'ws://192.168.100.18:3000/post-comments'; // Replace with your backend URL
 
