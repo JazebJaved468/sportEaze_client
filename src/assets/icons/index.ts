@@ -1,5 +1,5 @@
 import {ArrowDownIcon} from './svgs/ArrowDownIcon';
-import {ArrowRightIcon} from './svgs/ArrowrightIcon';
+import {ArrowRightIcon} from './svgs/ArrowRightIcon';
 import {AthleteIcon} from './svgs/AthleteIcon';
 import {BackIcon} from './svgs/BackIcon';
 import {CalenderIcon} from './svgs/CalenderIcon';
@@ -30,6 +30,7 @@ import {MessageIcon} from './svgs/MessageIcon';
 import {MessageSendIcon} from './svgs/MessageSendIcon';
 import {MoonIcon} from './svgs/MoonIcon';
 import {MuteIcon} from './svgs/MuteIcon';
+import {NotificationsIcon} from './svgs/NotificationsIcon';
 import {OpenEyeIcon} from './svgs/OpenEyeIcon';
 import {PlayerModelIcon} from './svgs/PlayerModelIcon';
 import {PlayIcon} from './svgs/PlayIcon';
@@ -92,4 +93,5 @@ export {
   TermsAndConditionsIcon,
   MoonIcon,
   SunIcon,
+  NotificationsIcon,
 };
