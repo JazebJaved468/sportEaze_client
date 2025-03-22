@@ -6,7 +6,10 @@ import {useColorMode} from 'native-base';
 import {getFromLocalStorage} from '../../../utils/helpers/asyncStorage';
 import SplashScreen from '../../../components/SplashScreen';
 import {AppStates} from '../../../constants/core';
-import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
 import {updateAppState, updateFirstVisit} from '../../../store/core/core.slice';
 import {
   updateIsLoggedIn,
@@ -17,9 +20,14 @@ import {
 import {useLazyGetUserSettingsQuery} from '../../../store/auth/auth.service';
 import {Toast} from '../../../components/Toast';
 import {USER_TYPE} from '../../../constants/enums';
+import {
+  connectSocket,
+  disconnectSocket,
+} from '../../../store/socket/socket.service';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
+  const {isLoggedIn} = useAppSelector(state => state.auth);
   const {setColorMode} = useColorMode();
 
   const [appLoading, setAppLoading] = useState(true);
@@ -97,6 +105,21 @@ export const Navigationcontainer: React.FC = () => {
     //   userType: userToken ? userType : null,
     // };
   };
+
+  useEffect(() => {
+    try {
+      console.log('connecting socket : ', isLoggedIn);
+      if (isLoggedIn) {
+        connectSocket(); // Connect on mount
+      } else {
+        disconnectSocket();
+      }
+    } catch (error) {
+      console.log('Error while connecting socket : ', error);
+    }
+
+    return () => disconnectSocket(); // Cleanup on unmount
+  }, [isLoggedIn]);
 
   useEffect(() => {
     loadApp();
