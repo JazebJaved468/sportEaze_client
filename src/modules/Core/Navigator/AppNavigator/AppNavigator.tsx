@@ -31,6 +31,9 @@ import Recommendations, {
 import NotificationListing, {
   NotificationListingPage,
 } from '../../NotificationListing';
+import PlayerRegistrationDetails, {
+  PlayerRegistrationDetailsPage,
+} from '../../../Player/PlayerRegistrationDetails';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -58,6 +61,8 @@ export type RootStackParamList = {
   };
   RecommendationsPage: undefined;
   NotificationListingPage: undefined;
+
+  PlayerRegistrationDetailsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -162,6 +167,10 @@ export const AppNavigator = () => {
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
       <Stack.Screen name={CreatePostPage} component={CreatePost} />
+      <Stack.Screen
+        name={PlayerRegistrationDetailsPage}
+        component={PlayerRegistrationDetails}
+      />
 
       {/* Patron Screens */}
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />
