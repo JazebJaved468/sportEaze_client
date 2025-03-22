@@ -27,7 +27,7 @@ export const onLogout = async () => {
   });
 };
 
-export const onRegisterAsFan = async (args: {
+export const onRegisterUser = async (args: {
   userType: number;
   userToken: string;
 }) => {
@@ -41,7 +41,7 @@ export const onRegisterAsFan = async (args: {
     authApi.endpoints.getUserSettings.initiate(undefined, {forceRefetch: true}),
   );
 
-  await multiStoreInLocalStorage({
+  multiStoreInLocalStorage({
     keyValuePairs: [
       ['userToken', args.userToken],
       ['userType', args.userType.toString()],

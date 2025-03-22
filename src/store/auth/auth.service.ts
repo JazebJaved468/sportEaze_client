@@ -16,7 +16,7 @@ import {updateUser} from './auth.slice';
 import {
   onBecomingPlayer,
   onLogin,
-  onRegisterAsFan,
+  onRegisterUser,
 } from '../../utils/helpers/auth';
 
 export const authApi = sporteazeBaseApi.injectEndpoints({
@@ -32,7 +32,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         try {
           const {data} = await queryFulfilled;
 
-          await onRegisterAsFan({
+          await onRegisterUser({
             userType: data.userType,
             userToken: data.accessToken,
           });

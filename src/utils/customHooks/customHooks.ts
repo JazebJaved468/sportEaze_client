@@ -1,3 +1,4 @@
+import {useColorMode} from 'native-base';
 import {useEffect, useRef, useState} from 'react';
 
 /**
@@ -20,4 +21,23 @@ export const useDidUpdateEffect = (
 
     return effect();
   }, deps);
+};
+
+export const useContainerShadow = () => {
+  const {colorMode} = useColorMode();
+
+  if (colorMode === 'light') {
+    return {
+      shadowColor: 'rgba(35, 36, 35, 0.4)',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 1,
+      shadowRadius: 6,
+      elevation: 6,
+    };
+  } else {
+    return {};
+  }
 };
