@@ -1,4 +1,5 @@
 import {ArrowDownIcon} from './svgs/ArrowDownIcon';
+import {ArrowRightIcon} from './svgs/ArrowRightIcon';
 import {AthleteIcon} from './svgs/AthleteIcon';
 import {BackIcon} from './svgs/BackIcon';
 import {CalenderIcon} from './svgs/CalenderIcon';
@@ -9,28 +10,38 @@ import {CircularInfoIcon} from './svgs/CircularInfoIcon';
 import {CloseEyeIcon} from './svgs/CloseEyeIcon';
 import {CommentIcon} from './svgs/CommentIcon';
 import {ConnectionNetworkIcon} from './svgs/ConnectionNetworkIcon';
+import {ConnectionsIcon} from './svgs/ConnectionsIcon';
 import {CreateIcon} from './svgs/CreateIcon';
 import {CrossIcon} from './svgs/CrossIcon';
+import {DashboardIcon} from './svgs/DashboardIcon';
 import {DeleteIcon} from './svgs/DeleteIcon';
+import {EditProfileIcon} from './svgs/EditProfileIcon';
 import {ExploreIcon} from './svgs/ExploreIcon';
 import {FemaleIcon} from './svgs/FemaleIcon';
+import {FollowingsIcon} from './svgs/FollowingsIcon';
 import {GalleryIcon} from './svgs/GalleryIcon';
 import {HeartIcon} from './svgs/HeartIcon';
 import {HomeIcon} from './svgs/HomeIcon';
 import {ImagePlaceholderIcon} from './svgs/ImagePlaceholderIcon';
+import {KebabMenuIcon} from './svgs/KebabMenuIcon';
 import {LogoutIcon} from './svgs/LogoutIcon';
 import {MaleIcon} from './svgs/MaleIcon';
 import {MessageIcon} from './svgs/MessageIcon';
 import {MessageSendIcon} from './svgs/MessageSendIcon';
+import {MoonIcon} from './svgs/MoonIcon';
 import {MuteIcon} from './svgs/MuteIcon';
+import {NotificationsIcon} from './svgs/NotificationsIcon';
 import {OpenEyeIcon} from './svgs/OpenEyeIcon';
 import {PlayerModelIcon} from './svgs/PlayerModelIcon';
 import {PlayIcon} from './svgs/PlayIcon';
+import {PrivacyPolicyIcon} from './svgs/PrivacyPolicyIcon';
 import {ProfileIcon} from './svgs/ProfileIcon';
 import {ScarIcon} from './svgs/ScarIcon';
 import {ShareIcon} from './svgs/ShareIcon';
 import {SparkleStarsIcon} from './svgs/SparkleStarsIcon';
 import {SportEazeLogo} from './svgs/SportEazeLogo';
+import {SunIcon} from './svgs/SunIcon';
+import {TermsAndConditionsIcon} from './svgs/TermsAndConditionsIcon';
 import {TickIcon} from './svgs/TickIcon';
 import {UnMuteIcon} from './svgs/UnMuteIcon';
 import {UserPlaceholderIcon} from './svgs/UserPlaceholderIcon';
@@ -72,4 +83,15 @@ export {
   CircularCrossIcon,
   CircularInfoIcon,
   ConnectionNetworkIcon,
+  KebabMenuIcon,
+  DashboardIcon,
+  EditProfileIcon,
+  ArrowRightIcon,
+  ConnectionsIcon,
+  FollowingsIcon,
+  PrivacyPolicyIcon,
+  TermsAndConditionsIcon,
+  MoonIcon,
+  SunIcon,
+  NotificationsIcon,
 };

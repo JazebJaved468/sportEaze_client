@@ -14,4 +14,11 @@ export const appColors = {
   femininePink: '#ff69b4',
   error: '#DC143C',
   success: '#4CAF50',
+  lightBlack: '#00000080',
+  lightWhite: '#ffffff80',
+  lightGray: '#80808080',
+  dividerLight: '#00000030',
+  dividerDark: '#ffffff10',
+  gunmetal: '#2F2F2F',
+  erieBlack: '#202020',
 };

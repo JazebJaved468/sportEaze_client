@@ -28,6 +28,9 @@ import MediaPreview, {
 import Recommendations, {
   RecommendationsPage,
 } from '../../../Fan/Recommendations';
+import NotificationListing, {
+  NotificationListingPage,
+} from '../../NotificationListing';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -54,6 +57,7 @@ export type RootStackParamList = {
     onRemove?: () => void;
   };
   RecommendationsPage: undefined;
+  NotificationListingPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -134,6 +138,10 @@ export const AppNavigator = () => {
       <Stack.Screen name={RegisterPage} component={Register} />
       <Stack.Screen name={LoginPage} component={Login} />
       <Stack.Screen name={JoinAsPage} component={JoinAs} />
+      <Stack.Screen
+        name={NotificationListingPage}
+        component={NotificationListing}
+      />
       <Stack.Screen
         name={MediaPreviewPage}
         component={MediaPreview}

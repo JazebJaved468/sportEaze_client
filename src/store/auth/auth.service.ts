@@ -150,6 +150,7 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useLazyGetUserSettingsQuery,
+  useGetUserSettingsQuery,
   useBecomePlayerMutation,
   useUpdateUserMutation,
 } = authApi;

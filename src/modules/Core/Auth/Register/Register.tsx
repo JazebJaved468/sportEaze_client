@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Button, ScrollView} from 'native-base';
 import {
+  useGetUserSettingsQuery,
   useLoginUserMutation,
   useRegisterUserMutation,
 } from '../../../../store/auth/auth.service';
@@ -43,7 +44,11 @@ export const Register = () => {
   const [registerUser, {isLoading: registerUserCIP, isError, error}] =
     useRegisterUserMutation();
   const [loginUser, {isLoading: loginUserCIP}] = useLoginUserMutation();
-
+  const {
+    data,
+    isLoading: userCIP,
+    isFetching: userFIP,
+  } = useGetUserSettingsQuery();
   const [isLogin, setIsLogin] = useState(true);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -209,7 +214,7 @@ export const Register = () => {
               marginBottom: 20,
             }}
             onPress={handleSubmit(onSubmit)}
-            isLoading={registerUserCIP || loginUserCIP}>
+            isLoading={registerUserCIP || loginUserCIP || userFIP}>
             {isLogin ? 'Login' : 'Register'}
           </Button>
 
