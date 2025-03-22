@@ -1,15 +1,12 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {ReactNode} from 'react';
-import {Button, Container, useColorModeValue} from 'native-base';
-import {appColors} from '../../constants/colors';
 import {useAppSelector} from '../../utils/customHooks/storeHooks';
-import {onLogout} from '../../utils/helpers/auth';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
-import {RegisterPage} from '../../modules/Core/Auth/Register';
-import {LoginPage} from '../../modules/Core/Auth/Login';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {BackIcon, LogoutIcon, UserPlaceholderIcon} from '../../assets/icons';
+import {BackIcon} from '../../assets/icons';
 import {fontBold} from '../../styles/fonts';
+import {NotificationsButton} from '../NotificationsButton';
+import {useTextColor} from '../../utils/customHooks/colorHooks';
 
 type GeneralHeaderProps = {
   title?: string;
@@ -33,7 +30,7 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
   backHandler,
 }) => {
   const navigation = useAppNavigation();
-  const textColor = useColorModeValue(appColors.black, appColors.white);
+  const textColor = useTextColor();
 
   const {isLoggedIn, user, userType} = useAppSelector(state => state.auth);
 
@@ -78,72 +75,12 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
         {user?.username}
       </Text>
 
-      <View style={{position: 'absolute', right: 16}}>
+      <View style={{position: 'absolute', right: 20}}>
         {showRightElement ? (
           rightElement ? (
             rightElement
-          ) : isLoggedIn ? (
-            <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                hitSlop={20}
-                onPress={async () => {
-                  await onLogout();
-                }}>
-                <LogoutIcon width={24} height={24} color={textColor} />
-              </TouchableOpacity>
-
-              <View
-                style={{
-                  width: 38,
-                  height: 38,
-                  backgroundColor: appColors.whisperGray,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                  overflow: 'hidden',
-                }}>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  // onPress={() => navigation.navigate(LoginPage)}
-                >
-                  {user?.profilePicUrl ? (
-                    <Image
-                      source={{uri: user?.profilePicUrl}}
-                      style={{
-                        width: 36,
-                        height: 36,
-                        objectFit: 'contain',
-                        borderRadius: 9,
-                      }}
-                    />
-                  ) : (
-                    <UserPlaceholderIcon
-                      width={22}
-                      height={22}
-                      color={textColor}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
           ) : (
-            <View
-              style={{
-                width: 38,
-                height: 38,
-                backgroundColor: appColors.whisperGray,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 10,
-                overflow: 'hidden',
-              }}>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => navigation.navigate(RegisterPage)}>
-                <UserPlaceholderIcon width={22} height={22} color={textColor} />
-              </TouchableOpacity>
-            </View>
+            <NotificationsButton />
           )
         ) : null}
       </View>

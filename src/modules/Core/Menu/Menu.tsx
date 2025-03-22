@@ -306,7 +306,7 @@ const Menu = () => {
             </MenuSection>
           </ScrollView>
         ) : (
-          <LoginRequired />
+          <LoginRequired message={'Login to access your profile'} />
         )}
       </View>
     </PageContainer>
