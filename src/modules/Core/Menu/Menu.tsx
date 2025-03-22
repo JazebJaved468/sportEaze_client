@@ -26,7 +26,6 @@ import {
   LogoutIcon,
   MoonIcon,
   PrivacyPolicyIcon,
-  SportEazeLogo,
   SunIcon,
   TermsAndConditionsIcon,
   UserPlaceholderIcon,
