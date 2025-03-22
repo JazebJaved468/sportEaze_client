@@ -8,7 +8,13 @@ import {useTextColor} from '../../utils/customHooks/colorHooks';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
 import {Button} from 'native-base';
 
-const LoginRequired = () => {
+type LoginRequiredProps = {
+  message?: string;
+};
+
+const LoginRequired: React.FC<LoginRequiredProps> = ({
+  message = 'Login to access this feature',
+}) => {
   const textColor = useTextColor();
   const navigation = useAppNavigation();
   return (
@@ -19,7 +25,7 @@ const LoginRequired = () => {
           You are not logged in!
         </Text>
         <Text style={[fontRegular(13, textColor), {marginTop: 10}]}>
-          Login to access your profile
+          {message}
         </Text>
       </View>
 
