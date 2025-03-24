@@ -83,9 +83,9 @@ const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
       ) : null}
 
       {!isValid ? (
-        <Text style={[fontRegular(12, appColors.error), styles.errorText]}>
-          {errorMessage}
-        </Text>
+        <View style={styles.errorText}>
+          <ErrorMessage message={errorMessage} />
+        </View>
       ) : null}
     </View>
   );
