@@ -32,3 +32,8 @@ export enum PostReaction {
   Support = 6,
   Angry = 7,
 }
+export enum PlayingLevel {
+  BEGINNER = 1,
+  AMATEUR = 2,
+  PROFESSIONAL = 3,
+}
