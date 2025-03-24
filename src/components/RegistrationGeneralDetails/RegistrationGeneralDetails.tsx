@@ -201,17 +201,37 @@ const RegistrationGeneralDetails: React.FC<RegistrationGeneralDetailsProps> = ({
               value: 50,
               message: 'Username cannot exceed 50 characters',
             },
+            pattern: {
+              value: /^@[a-zA-Z0-9_]+$/,
+              message:
+                'Username can only contain letters, numbers, and underscores',
+            },
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <CustomTextInputField
               label='Username'
               placeholder='Enter your Username'
               maxLength={51}
-              autoCapitalize='words'
+              autoCapitalize='none'
               value={value}
               onChangeText={val => {
-                const formattedUsername = prefixWithAtSymbol(val);
-                onChange(formattedUsername); // Add @ symbol to username
+                // Extract the actual username content (without @)
+                const contentWithoutSymbol = val.startsWith('@')
+                  ? val.substring(1)
+                  : val;
+
+                // Filter out invalid characters
+                const filteredContent = contentWithoutSymbol.replace(
+                  /[^a-zA-Z0-9_]/g,
+                  '',
+                );
+
+                // Only add @ if we have content
+                const formattedUsername = filteredContent
+                  ? `@${filteredContent}`
+                  : '';
+
+                onChange(formattedUsername);
               }}
               isValid={errors.username ? false : true}
               errorMessage={errors.username ? errors.username.message : ''}
