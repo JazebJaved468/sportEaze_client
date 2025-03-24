@@ -3,6 +3,9 @@ import React, {useCallback} from 'react';
 import {useGetAvailableSportsQuery} from '../../store/core/core.service';
 import {appColors} from '../../constants/colors';
 import {fontRegular} from '../../styles/fonts';
+import {ErrorMessage} from '../ErrorMessage';
+import {useContainerShadow} from '../../utils/customHooks/customHooks';
+import {useCardColor} from '../../utils/customHooks/colorHooks';
 
 type SportItem = {
   id: number;
@@ -18,11 +21,13 @@ type SportsPreferenceSelectorProps = {
 
 const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
   onSportsSelected,
-  errorMessage,
+  errorMessage = '',
   isValid,
   selectedSports,
 }) => {
   const {data: sports} = useGetAvailableSportsQuery();
+  const containerShadow = useContainerShadow();
+  const cardColor = useCardColor();
 
   const toggleSport = useCallback(
     (sportId: number) => {
@@ -46,10 +51,15 @@ const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
           onPress={() => toggleSport(item.id)}
           style={[
             styles.sportItem,
+            containerShadow,
+
             {
-              backgroundColor: isSelected
-                ? appColors.warmRed
-                : appColors.whisperGray,
+              backgroundColor: isSelected ? appColors.warmRed : cardColor,
+
+              // borderWidth: isSelected ? 0.5 : 0.5,
+              // borderColor: isSelected
+              //   ? appColors.warmRed
+              //   : `${appColors.black}20`,
             },
           ]}>
           <Text
@@ -95,7 +105,7 @@ export default SportsPreferenceSelector;
 
 const styles = StyleSheet.create({
   errorText: {
-    paddingVertical: 20,
+    paddingVertical: 12,
   },
   sportItem: {
     paddingVertical: 10,
