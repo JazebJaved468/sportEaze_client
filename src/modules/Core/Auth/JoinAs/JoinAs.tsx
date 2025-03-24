@@ -4,13 +4,20 @@ import PageContainer from '../../../../components/PageContainer';
 import GeneralHeader from '../../../../components/GeneralHeader';
 import {useTextColor} from '../../../../utils/customHooks/colorHooks';
 import {appColors} from '../../../../constants/colors';
-import {AthleteIcon, TickIcon} from '../../../../assets/icons';
+import {
+  JoinAsFanIcon,
+  JoinAsMentorIcon,
+  JoinAsPatronIcon,
+  JoinAsPlayerIcon,
+  TickIcon,
+} from '../../../../assets/icons';
 import {Button} from 'native-base';
 import {SvgProps} from 'react-native-svg';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {FanRegistrationDetailsPage} from '../../../Fan/FanRegistrationDetails';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
 import {fontBold} from '../../../../styles/fonts';
+import {RecommendationsPage} from '../../../Fan/Recommendations';
 import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationDetails';
 
 type OptionCardProps = {
@@ -71,7 +78,7 @@ const OptionCard = memo(
             alignItems: 'center',
             overflow: 'hidden',
           }}>
-          <Icon color={appColors.warmRed} />
+          <Icon width={46} height={46} color={appColors.warmRed} />
         </View>
         <View style={{flex: 1}}>
           <Text
@@ -107,30 +114,30 @@ export const JoinAs = () => {
   const joiningOptions = useMemo(
     () => [
       {
-        id: 0,
+        id: 1,
         title: 'Fan',
         description: 'Stay connected with your favorite teams and athletes',
-        icon: AthleteIcon,
+        icon: JoinAsFanIcon,
         onPress: navigateToFanRegistration,
       },
       {
-        id: 1,
+        id: 2,
         title: 'Player',
         description: 'Showcase your skills and grow your sports career',
-        icon: AthleteIcon,
+        icon: JoinAsPlayerIcon,
         onPress: navigateToPlayerRegistration,
       },
       // {
-      //   id: 2,
+      //   id: 3,
       //   title: 'Patron',
       //   description: 'Support and invest in the future of sports',
-      //   icon: AthleteIcon,
+      //   icon: JoinAsPatronIcon,
       // },
       // {
-      //   id: 3,
+      //   id: 4,
       //   title: 'Mentor',
       //   description: 'Guide and inspire the next generation of athletes',
-      //   icon: AthleteIcon,
+      //   icon: JoinAsMentorIcon,
       // },
     ],
     [navigateToFanRegistration, navigateToPlayerRegistration],
