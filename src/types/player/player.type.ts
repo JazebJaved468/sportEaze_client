@@ -1,15 +1,14 @@
-import {User} from '../auth/auth.type';
-
 export type Player = {
-  rank: null;
-  region: null;
-  club: null;
-  FB_link: null;
-  INSTA_link: null;
-  X_link: null;
-  about: null;
-  achievements: any[];
-  contracts: any[];
-  preferredSport: null;
-  user: User;
+  id: string;
+  primarySport: number;
+  secondarySports: number[] | null;
+  playingLevel: number;
+  currentTeam: string | null;
+  coachName: string | null;
+  playerBio: string;
+  trainingLocation: string | null;
+  fbLink: string | null;
+  instaLink: string | null;
+  xLink: string | null;
+  availableForSponsorship: boolean;
 };

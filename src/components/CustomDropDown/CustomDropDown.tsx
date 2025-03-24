@@ -1,6 +1,11 @@
-import {StyleSheet, Text, Touchable, View} from 'react-native';
-import React, {Dispatch, useRef} from 'react';
-import {Button} from 'native-base';
+import {
+  DimensionValue,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useRef} from 'react';
 import {appColors} from '../../constants/colors';
 import {ArrowDownIcon, CircularCheckIcon} from '../../assets/icons';
 import {fontBold, fontRegular} from '../../styles/fonts';
@@ -9,14 +14,35 @@ import {
   useTextColor,
 } from '../../utils/customHooks/colorHooks';
 import CustomBottomSheet from '../CustomBottomSheet';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {PulseEffect} from '../PulseEffect';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ErrorMessage} from '../ErrorMessage';
 
 export type DropDownItemType = {
   id: number;
   title: string;
   value: number;
+};
+
+type DropDownStyleProps = {
+  buttonBackgroundColor?: string;
+  buttonTextColor?: string;
+  buttonWidth?: DimensionValue | number;
+  buttonPaddingVertical?: number;
+  buttonPaddingHorizontal?: number;
+  buttonJustifyContent?: 'center' | 'space-between' | 'flex-start' | 'flex-end';
+  buttonBorderRadius?: number;
+  buttonGap?: number;
+  sheetItemPaddingVertical?: number;
+  sheetHeaderFontSize?: number;
+  sheetItemFontSize?: number;
+  sheetMarginHorizontal?: number;
+  sheetMarginTop?: number;
+  sheetGap?: number;
+  buttonrightIconSize?: number;
+  buttonTextFontSize?: number;
+  buttonBorderWidth?: number;
+  buttonBorderColor?: string;
 };
 
 type CustomDropDownProps = {
@@ -26,6 +52,34 @@ type CustomDropDownProps = {
   onItemSelect?: (item: DropDownItemType) => void;
   snapPoints?: Array<string>;
   sheetTitle?: string;
+  style?: DropDownStyleProps;
+  isValid?: boolean;
+  errorMessage?: string;
+
+  label?: string;
+  customLabelStyles?: any;
+};
+
+// Default style values
+const defaultStyles: DropDownStyleProps = {
+  buttonBackgroundColor: appColors.warmRed,
+  buttonTextColor: appColors.white,
+  buttonTextFontSize: 14,
+  buttonPaddingVertical: 8,
+  buttonPaddingHorizontal: 16,
+  buttonJustifyContent: 'center',
+  buttonBorderRadius: 10,
+  buttonGap: 8,
+  sheetItemPaddingVertical: 20,
+  sheetHeaderFontSize: 16,
+  sheetItemFontSize: 16,
+  sheetMarginHorizontal: 30,
+  sheetMarginTop: 16,
+  sheetGap: 20,
+  buttonWidth: '100%',
+  buttonrightIconSize: 10,
+  buttonBorderWidth: 0,
+  buttonBorderColor: appColors.black,
 };
 
 export const CustomDropDown: React.FC<CustomDropDownProps> = ({
@@ -35,7 +89,14 @@ export const CustomDropDown: React.FC<CustomDropDownProps> = ({
   selectedItem,
   onItemSelect,
   snapPoints = ['50%'],
+  style = {},
+  errorMessage = '',
+  isValid = true,
+  label,
+  customLabelStyles,
 }) => {
+  const styles: DropDownStyleProps = {...defaultStyles, ...style};
+
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const inverseTextColor = useInverseTextColor();
   const textColor = useTextColor();
@@ -50,40 +111,74 @@ export const CustomDropDown: React.FC<CustomDropDownProps> = ({
 
   return (
     <View>
+      {label ? (
+        <Text
+          style={[
+            fontBold(14, textColor),
+            {
+              marginBottom: 8,
+            },
+            customLabelStyles,
+          ]}>
+          {label}
+        </Text>
+      ) : null}
       <PulseEffect>
-        <Button
-          style={{height: 32}}
-          onPress={() => bottomSheetRef.current?.present()}>
-          <View style={styles.innerWrapper}>
-            <Text style={fontRegular(14, appColors.white)}>
-              {selectedItem ? selectedItem.title : buttonTitle}
-            </Text>
-            <ArrowDownIcon width={10} color={appColors.white} />
-          </View>
-        </Button>
+        <TouchableOpacity
+          style={{
+            borderWidth: styles.buttonBorderWidth,
+            borderColor: !isValid ? appColors.error : styles.buttonBorderColor,
+            backgroundColor: styles.buttonBackgroundColor,
+            justifyContent: styles.buttonJustifyContent,
+            borderRadius: styles.buttonBorderRadius,
+            paddingHorizontal: styles.buttonPaddingHorizontal,
+            paddingVertical: styles.buttonPaddingVertical,
+            width: styles.buttonWidth,
+            gap: styles.buttonGap,
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}
+          onPress={() => openBottomSheet()}
+          activeOpacity={0.6}>
+          <Text
+            style={fontRegular(
+              styles.buttonTextFontSize,
+              styles.buttonTextColor,
+            )}>
+            {selectedItem ? selectedItem.title : buttonTitle}
+          </Text>
+          <ArrowDownIcon
+            width={styles.buttonrightIconSize}
+            color={styles.buttonTextColor}
+          />
+        </TouchableOpacity>
       </PulseEffect>
+      {!isValid ? <ErrorMessage message={errorMessage} /> : null}
 
       <CustomBottomSheet
         bottomSheetRef={bottomSheetRef}
         customSnapPoints={snapPoints}>
         <View
           style={{
-            // flex: 1,
+            flex: 1,
             // backgroundColor: 'red',
             // height: 300,
             // justifyContent: 'center',
             // alignItems: 'center',
-            marginHorizontal: 30,
-            marginTop: 16,
-            gap: 20,
+            marginHorizontal: styles.sheetMarginHorizontal,
+            marginTop: styles.sheetMarginTop,
+            gap: styles.sheetGap,
           }}>
           <Text style={fontBold(16, textColor)}>{sheetTitle}</Text>
-          <View>
+
+          <BottomSheetScrollView
+            style={{flex: 1}}
+            showsVerticalScrollIndicator={false}>
             {data.map(item => (
               <TouchableOpacity
                 key={item.id}
                 style={{
-                  paddingVertical: 20,
+                  paddingVertical: styles.sheetItemPaddingVertical,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -92,7 +187,9 @@ export const CustomDropDown: React.FC<CustomDropDownProps> = ({
                   onItemSelect?.(item);
                   closeBottomSheet();
                 }}>
-                <Text key={item.id} style={fontRegular(16, textColor)}>
+                <Text
+                  key={item.id}
+                  style={fontRegular(styles.sheetItemFontSize, textColor)}>
                   {item.title}
                 </Text>
                 {selectedItem && selectedItem.id === item.id ? (
@@ -104,7 +201,7 @@ export const CustomDropDown: React.FC<CustomDropDownProps> = ({
                 ) : null}
               </TouchableOpacity>
             ))}
-          </View>
+          </BottomSheetScrollView>
         </View>
       </CustomBottomSheet>
     </View>
@@ -112,15 +209,5 @@ export const CustomDropDown: React.FC<CustomDropDownProps> = ({
 };
 
 const styles = StyleSheet.create({
-  innerWrapper: {
-    backgroundColor: appColors.warmRed,
-    // paddingVertical: 8,
-    paddingHorizontal: 16,
-    // width: 86,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8,
-    flexDirection: 'row',
-  },
+  innerWrapper: {},
 });

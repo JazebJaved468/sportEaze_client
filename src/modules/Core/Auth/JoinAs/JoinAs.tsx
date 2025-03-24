@@ -1,17 +1,24 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {ReactNode, useState} from 'react';
+import React, {memo, useCallback, useMemo, useState} from 'react';
 import PageContainer from '../../../../components/PageContainer';
 import GeneralHeader from '../../../../components/GeneralHeader';
 import {useTextColor} from '../../../../utils/customHooks/colorHooks';
 import {appColors} from '../../../../constants/colors';
-import {AthleteIcon, TickIcon} from '../../../../assets/icons';
-import {id} from 'date-fns/locale';
-import {Button, Icon} from 'native-base';
+import {
+  JoinAsFanIcon,
+  JoinAsMentorIcon,
+  JoinAsPatronIcon,
+  JoinAsPlayerIcon,
+  TickIcon,
+} from '../../../../assets/icons';
+import {Button} from 'native-base';
 import {SvgProps} from 'react-native-svg';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {FanRegistrationDetailsPage} from '../../../Fan/FanRegistrationDetails';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
 import {fontBold} from '../../../../styles/fonts';
+import {RecommendationsPage} from '../../../Fan/Recommendations';
+import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationDetails';
 
 type OptionCardProps = {
   id: number;
@@ -23,106 +30,128 @@ type OptionCardProps = {
   isFirstItem: boolean;
 };
 
-const joiningOptions = [
-  {
-    id: 0,
-    title: 'Fan',
-    description: 'Stay connected with your favorite teams and athletes',
-    icon: AthleteIcon,
-  },
-  // {
-  //   id: 1,
-  //   title: 'Player',
-  //   description: 'Showcase your skills and grow your sports career',
-  //   icon: AthleteIcon,
-  // },
-  // {
-  //   id: 2,
-  //   title: 'Patron',
-  //   description: 'Support and invest in the future of sports',
-  //   icon: AthleteIcon,
-  // },
-  // {
-  //   id: 3,
-  //   title: 'Mentor',
-  //   description: 'Guide and inspire the next generation of athletes',
-  //   icon: AthleteIcon,
-  // },
-];
+const OptionCard = memo(
+  ({
+    id,
+    title,
+    description,
+    icon: Icon,
+    onPress,
+    selectedOption,
+    isFirstItem = false,
+  }: OptionCardProps) => {
+    const textColor = useTextColor();
+    const isSelected = selectedOption === id;
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        activeOpacity={0.5}
+        style={[
+          styles.optionCard,
+          {
+            borderColor: isSelected ? appColors.warmRed : appColors.whisperGray,
+            marginTop: isFirstItem ? 30 : 0,
+          },
+        ]}>
+        {isSelected ? (
+          <View
+            style={{
+              position: 'absolute',
+              width: 20,
+              height: 20,
+              backgroundColor: appColors.warmRed,
+              borderRadius: 100,
+              right: -6,
+              top: -6,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <TickIcon color={appColors.white} width={10} />
+          </View>
+        ) : null}
 
-const OptionCard = ({
-  id,
-  title,
-  description,
-  icon: Icon,
-  onPress,
-  selectedOption,
-  isFirstItem = false,
-}: OptionCardProps) => {
-  const textColor = useTextColor();
-  const isSelected = selectedOption === id;
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.5}
-      style={[
-        styles.optionCard,
-        {
-          borderColor: isSelected ? appColors.warmRed : appColors.whisperGray,
-          marginTop: isFirstItem ? 30 : 0,
-        },
-      ]}>
-      {isSelected ? (
         <View
           style={{
-            position: 'absolute',
-            width: 20,
-            height: 20,
-            backgroundColor: appColors.warmRed,
-            borderRadius: 100,
-            right: -6,
-            top: -6,
+            width: 46,
+            height: 46,
             justifyContent: 'center',
             alignItems: 'center',
+            overflow: 'hidden',
           }}>
-          <TickIcon color={appColors.white} width={10} />
+          <Icon width={46} height={46} color={appColors.warmRed} />
         </View>
-      ) : null}
-
-      <View
-        style={{
-          width: 46,
-          height: 46,
-          justifyContent: 'center',
-          alignItems: 'center',
-          overflow: 'hidden',
-        }}>
-        <Icon color={appColors.warmRed} />
-      </View>
-      <View style={{flex: 1}}>
-        <Text
-          style={{
-            color: textColor,
-            fontWeight: 'bold',
-            fontSize: 18,
-            marginBottom: 10,
-          }}>
-          {title}
-        </Text>
-        <Text style={{color: textColor}}>{description}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
+        <View style={{flex: 1}}>
+          <Text
+            style={{
+              color: textColor,
+              fontWeight: 'bold',
+              fontSize: 18,
+              marginBottom: 10,
+            }}>
+            {title}
+          </Text>
+          <Text style={{color: textColor}}>{description}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  },
+);
 
 export const JoinAs = () => {
   const navigation = useAppNavigation();
   const textColor = useTextColor();
 
-  const [selectedOption, setSelectedOption] = useState<number>(0);
+  const navigateToFanRegistration = useCallback(() => {
+    navigation.navigate(FanRegistrationDetailsPage);
+  }, [navigation]);
+
+  const navigateToPlayerRegistration = useCallback(() => {
+    navigation.navigate(PlayerRegistrationDetailsPage);
+  }, [navigation]);
+
+  const joiningOptions = useMemo(
+    () => [
+      {
+        id: 0,
+        title: 'Fan',
+        description: 'Stay connected with your favorite teams and athletes',
+        icon: JoinAsFanIcon,
+        onPress: navigateToFanRegistration,
+      },
+      {
+        id: 1,
+        title: 'Player',
+        description: 'Showcase your skills and grow your sports career',
+        icon: JoinAsPlayerIcon,
+        onPress: navigateToPlayerRegistration,
+      },
+      // {
+      //   id: 2,
+      //   title: 'Patron',
+      //   description: 'Support and invest in the future of sports',
+      //   icon: JoinAsPatronIcon,
+      // },
+      // {
+      //   id: 3,
+      //   title: 'Mentor',
+      //   description: 'Guide and inspire the next generation of athletes',
+      //   icon: JoinAsMentorIcon,
+      // },
+    ],
+    [navigateToFanRegistration, navigateToPlayerRegistration],
+  );
+
+  const [selectedOption, setSelectedOption] = useState<number>(
+    joiningOptions[0].id,
+  );
+
   return (
     <PageContainer applyGradient>
-      <GeneralHeader title='Join As' showRightElement={true} />
+      <GeneralHeader
+        showLeftElement={false}
+        title='Join As'
+        showRightElement={true}
+      />
       <View style={styles.container}>
         <Text
           style={[
@@ -157,9 +186,7 @@ export const JoinAs = () => {
             marginBottom: 20,
             marginHorizontal: 16,
           }}
-          onPress={() => {
-            navigation.navigate(FanRegistrationDetailsPage);
-          }}>
+          onPress={joiningOptions[selectedOption].onPress}>
           Next
         </Button>
       </View>

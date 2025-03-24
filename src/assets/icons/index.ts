@@ -1,3 +1,4 @@
+import {AdditionalInfoIcon} from './svgs/AdditionalInfoIcon';
 import {ArrowDownIcon} from './svgs/ArrowDownIcon';
 import {ArrowRightIcon} from './svgs/ArrowRightIcon';
 import {AthleteIcon} from './svgs/AthleteIcon';
@@ -23,6 +24,10 @@ import {GalleryIcon} from './svgs/GalleryIcon';
 import {HeartIcon} from './svgs/HeartIcon';
 import {HomeIcon} from './svgs/HomeIcon';
 import {ImagePlaceholderIcon} from './svgs/ImagePlaceholderIcon';
+import {JoinAsFanIcon} from './svgs/JoinAsFanIcon';
+import {JoinAsMentorIcon} from './svgs/JoinAsMentorIcon';
+import {JoinAsPatronIcon} from './svgs/JoinAsPatronIcon';
+import {JoinAsPlayerIcon} from './svgs/JoinAsPlayerIcon';
 import {KebabMenuIcon} from './svgs/KebabMenuIcon';
 import {LogoutIcon} from './svgs/LogoutIcon';
 import {MaleIcon} from './svgs/MaleIcon';
@@ -32,6 +37,7 @@ import {MoonIcon} from './svgs/MoonIcon';
 import {MuteIcon} from './svgs/MuteIcon';
 import {NotificationsIcon} from './svgs/NotificationsIcon';
 import {OpenEyeIcon} from './svgs/OpenEyeIcon';
+import {PeopleConnectedIcon} from './svgs/PeopleConnectedIcon';
 import {PlayerModelIcon} from './svgs/PlayerModelIcon';
 import {PlayIcon} from './svgs/PlayIcon';
 import {PrivacyPolicyIcon} from './svgs/PrivacyPolicyIcon';
@@ -94,4 +100,10 @@ export {
   MoonIcon,
   SunIcon,
   NotificationsIcon,
+  JoinAsFanIcon,
+  JoinAsMentorIcon,
+  JoinAsPlayerIcon,
+  JoinAsPatronIcon,
+  PeopleConnectedIcon,
+  AdditionalInfoIcon,
 };

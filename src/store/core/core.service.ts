@@ -14,4 +14,5 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
   }),
 });
 
-export const {useGetAvailableSportsQuery} = coreApi;
+export const {useGetAvailableSportsQuery, useLazyGetAvailableSportsQuery} =
+  coreApi;

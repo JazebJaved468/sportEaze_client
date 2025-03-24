@@ -3,6 +3,7 @@ export enum USER_TYPE {
   PLAYER = 2,
   PATRON = 3,
   MENTOR = 4,
+  GENERAL = 0,
 }
 
 export enum GENDER {
@@ -31,4 +32,9 @@ export enum PostReaction {
   WOW = 5,
   Support = 6,
   Angry = 7,
+}
+export enum PlayingLevel {
+  BEGINNER = 1,
+  AMATEUR = 2,
+  PROFESSIONAL = 3,
 }

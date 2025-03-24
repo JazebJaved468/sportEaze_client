@@ -24,6 +24,7 @@ import {
   connectSocket,
   disconnectSocket,
 } from '../../../store/socket/socket.service';
+import {useLazyGetAvailableSportsQuery} from '../../../store/core/core.service';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ export const Navigationcontainer: React.FC = () => {
   const [appLoading, setAppLoading] = useState(true);
 
   const [getUserSettings] = useLazyGetUserSettingsQuery();
+  const [getAvailableSports] = useLazyGetAvailableSportsQuery();
 
   const getColorMode = async () => {
     const colorMode =
@@ -91,7 +93,7 @@ export const Navigationcontainer: React.FC = () => {
       try {
         console.log('User Logged In');
         dispatch(updateUserToken(userToken));
-        dispatch(updateUserType(Number(userType) || USER_TYPE.FAN));
+        dispatch(updateUserType(Number(userType) || USER_TYPE.GENERAL));
         dispatch(updateIsLoggedIn(true));
 
         await getUserSettings().unwrap();
@@ -122,10 +124,18 @@ export const Navigationcontainer: React.FC = () => {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    loadApp();
+    try {
+      loadApp();
+    } catch (error) {
+      console.log('Error while loading App : ', error);
+    }
   }, []);
 
   const loadApp = async () => {
+    // calls that we dont want to wait for
+    getAvailableSports().unwrap();
+
+    // calls that we want to wait for
     const [colorModeResponse, isFirstVisitResponse, isLoggedInResponse] =
       await Promise.all([
         getColorMode(),

@@ -7,17 +7,13 @@ import {
 import {
   GetUserSettingsResponse,
   LoginUserResponse,
-  onBecomingPlayerResponse,
   RegisterUserResponse,
   UpdateUserResponse,
 } from '../../types/auth/auth.response';
 import {User} from '../../types/auth/auth.type';
 import {updateUser} from './auth.slice';
-import {
-  onBecomingPlayer,
-  onLogin,
-  onRegisterUser,
-} from '../../utils/helpers/auth';
+import {onLogin, onRegisterUser} from '../../utils/helpers/auth';
+import {USER_TYPE} from '../../constants/enums';
 
 export const authApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
@@ -33,7 +29,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
           const {data} = await queryFulfilled;
 
           await onRegisterUser({
-            userType: data.userType,
+            userType: USER_TYPE.GENERAL,
             userToken: data.accessToken,
           });
         } catch (err) {
@@ -79,7 +75,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
           const {data} = await queryFulfilled;
 
           await onLogin({
-            userType: data.userType,
+            user: data.user,
             userToken: data.accessToken,
           });
         } catch (err) {
@@ -115,34 +111,6 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
-
-    becomePlayer: builder.mutation<User, void>({
-      query: id => ({
-        url: '/user/player/become-player',
-        method: 'POST',
-      }),
-
-      transformResponse: (response: onBecomingPlayerResponse) => {
-        console.log('response - become player', response);
-        return response.player;
-      },
-      async onQueryStarted(args, {dispatch, queryFulfilled}) {
-        // // `onStart` side-effect
-
-        try {
-          const {data} = await queryFulfilled;
-          // `onSuccess` side-effect
-          // dispatch(updateUser(data));
-          await onBecomingPlayer({userType: data.userType});
-        } catch (err) {
-          // `onError` side-effect
-          console.log(
-            'Error while updating fan as a player : player.service.ts : Line 22',
-            err,
-          );
-        }
-      },
-    }),
   }),
 });
 
@@ -151,6 +119,5 @@ export const {
   useLoginUserMutation,
   useLazyGetUserSettingsQuery,
   useGetUserSettingsQuery,
-  useBecomePlayerMutation,
   useUpdateUserMutation,
 } = authApi;

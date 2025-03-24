@@ -31,6 +31,9 @@ import Recommendations, {
 import NotificationListing, {
   NotificationListingPage,
 } from '../../NotificationListing';
+import PlayerRegistrationDetails, {
+  PlayerRegistrationDetailsPage,
+} from '../../../Player/PlayerRegistrationDetails';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -58,6 +61,8 @@ export type RootStackParamList = {
   };
   RecommendationsPage: undefined;
   NotificationListingPage: undefined;
+
+  PlayerRegistrationDetailsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -71,7 +76,7 @@ const getInitialRouteName = (user: User | null, isFirstVisit: boolean) => {
     return FanRootPage;
   }
 
-  if (!user.username) {
+  if (!user.userType) {
     return JoinAsPage;
   }
 
@@ -90,7 +95,7 @@ const getInitialRouteName = (user: User | null, isFirstVisit: boolean) => {
 };
 
 export const AppNavigator = () => {
-  const {userType, user} = useAppSelector(state => state.auth);
+  const {userType, user, isLoggedIn} = useAppSelector(state => state.auth);
   const {isFirstVisit} = useAppSelector(state => state.core);
 
   const navigation = useAppNavigation();
@@ -98,12 +103,15 @@ export const AppNavigator = () => {
   console.log('userType', userType);
 
   useDidUpdateEffect(() => {
-    if (userType === USER_TYPE.FAN) {
+    if (userType === USER_TYPE.GENERAL && isLoggedIn) {
       navigation.reset({
         index: 0,
-        routes: [
-          {name: !user?.username ? FanRegistrationDetailsPage : FanRootPage},
-        ],
+        routes: [{name: JoinAsPage}],
+      });
+    } else if (userType === USER_TYPE.FAN) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: FanRootPage}],
       });
     } else if (userType === USER_TYPE.PLAYER) {
       navigation.reset({
@@ -120,8 +128,13 @@ export const AppNavigator = () => {
         index: 0,
         routes: [{name: MentorRootPage}],
       });
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{name: FanRootPage}],
+      });
     }
-  }, [userType]);
+  }, [userType, isLoggedIn]);
 
   return (
     <Stack.Navigator
@@ -162,6 +175,10 @@ export const AppNavigator = () => {
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />
       <Stack.Screen name={CreatePostPage} component={CreatePost} />
+      <Stack.Screen
+        name={PlayerRegistrationDetailsPage}
+        component={PlayerRegistrationDetails}
+      />
 
       {/* Patron Screens */}
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />

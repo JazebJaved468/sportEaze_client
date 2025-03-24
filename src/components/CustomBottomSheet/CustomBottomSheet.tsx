@@ -1,10 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import React, {ReactNode, RefObject, useCallback, useMemo} from 'react';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import {BottomSheetBackdrop, BottomSheetModal} from '@gorhom/bottom-sheet';
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import {useColorModeValue} from 'native-base';
 import {appColors} from '../../constants/colors';
@@ -44,7 +40,9 @@ export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
       ref={bottomSheetRef}
       snapPoints={customSnapPoints ?? snapPoints}
       index={0}
+      onDismiss={() => {}}
       enablePanDownToClose={true}
+      enableDynamicSizing={false}
       handleIndicatorStyle={{
         backgroundColor: handleColor,
         width: 36,
@@ -61,7 +59,9 @@ export const CustomBottomSheet: React.FC<CustomBottomSheetProps> = ({
           ]}
         />
       )}>
-      <BottomSheetView style={{flex: 1}}>{children}</BottomSheetView>
+      {/* <BottomSheetScrollView style={{flex: 1}}> */}
+      {children}
+      {/* </BottomSheetScrollView> */}
     </BottomSheetModal>
   );
 };

@@ -29,9 +29,6 @@ import GeneralHeader from '../../../../components/GeneralHeader';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {JoinAsPage} from '../JoinAs';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
-import {LoginPage} from '../Login';
-import {RootStackParamList} from '../../Navigator/AppNavigator/AppNavigator';
-import {RouteProp, useRoute} from '@react-navigation/native';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -44,11 +41,6 @@ export const Register = () => {
   const [registerUser, {isLoading: registerUserCIP, isError, error}] =
     useRegisterUserMutation();
   const [loginUser, {isLoading: loginUserCIP}] = useLoginUserMutation();
-  const {
-    data,
-    isLoading: userCIP,
-    isFetching: userFIP,
-  } = useGetUserSettingsQuery();
   const [isLogin, setIsLogin] = useState(true);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -214,7 +206,7 @@ export const Register = () => {
               marginBottom: 20,
             }}
             onPress={handleSubmit(onSubmit)}
-            isLoading={registerUserCIP || loginUserCIP || userFIP}>
+            isLoading={registerUserCIP || loginUserCIP}>
             {isLogin ? 'Login' : 'Register'}
           </Button>
 

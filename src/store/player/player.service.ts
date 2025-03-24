@@ -1,16 +1,22 @@
-import {GetPlayerResponse} from '../../types/player/player.response';
-import {Player} from '../../types/player/player.type';
+import {RegisterPlayerParams} from '../../types/player/player.params';
+import {registerPlayerResponse} from '../../types/player/player.response';
+import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
 
 export const playerApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
-    getPlayerSettings: builder.query<Player, undefined>({
-      query: id => ({
-        url: `/user/player/get-player`,
+    registerPlayer: builder.mutation<
+      registerPlayerResponse,
+      RegisterPlayerParams
+    >({
+      query: body => ({
+        url: `/user/player`,
+        method: 'POST',
+        body,
       }),
-      transformResponse: (response: GetPlayerResponse) => {
-        return response.player;
+      transformResponse: (response: registerPlayerResponse) => {
+        return response;
       },
 
       async onQueryStarted(args, {dispatch, queryFulfilled}) {
@@ -19,11 +25,15 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         try {
           const {data} = await queryFulfilled;
           // `onSuccess` side-effect
+
+          await updateUserTypeOnRegister({
+            userType: data.user.userType,
+          });
           dispatch(updateUser(data.user));
         } catch (err) {
           // `onError` side-effect
           console.log(
-            'Error while getting player settings : player.service.ts : Line 22',
+            'Error while registering player : fan.service.ts : Line 30',
             err,
           );
         }
@@ -32,4 +42,4 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
   }),
 });
 
-export const {useGetPlayerSettingsQuery} = playerApi;
+export const {useRegisterPlayerMutation} = playerApi;

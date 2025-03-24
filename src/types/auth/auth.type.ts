@@ -1,3 +1,5 @@
+import {Player} from '../player/player.type';
+
 export type User = {
   createdAt: string;
   deleted: boolean;
@@ -7,8 +9,9 @@ export type User = {
   id: string;
   profilePicUrl: string | null;
   updatedAt: string;
-  userType: number;
+  userType: number | null;
   username: string;
   fullName: string;
-  sportInterests: number[];
+  sportInterests: number[] | null;
+  player?: Player;
 };

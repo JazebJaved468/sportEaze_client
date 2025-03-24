@@ -354,9 +354,11 @@ export const CreatePost = () => {
               sheetTitle='Select Post Visibility'
               data={postVisibilityOptions}
               selectedItem={postVisibility}
-              // setSelectedItem={setPostVisibility}
               snapPoints={['25%']}
               onItemSelect={handlePostVisibilitySelection}
+              style={{
+                buttonWidth: 90,
+              }}
             />
 
             {/* <TouchableOpacity
