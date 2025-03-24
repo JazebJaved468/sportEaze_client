@@ -1,3 +1,4 @@
+import {AdditionalInfoIcon} from './svgs/AdditionalInfoIcon';
 import {ArrowDownIcon} from './svgs/ArrowDownIcon';
 import {ArrowRightIcon} from './svgs/ArrowRightIcon';
 import {AthleteIcon} from './svgs/AthleteIcon';
@@ -104,4 +105,5 @@ export {
   JoinAsPlayerIcon,
   JoinAsPatronIcon,
   PeopleConnectedIcon,
+  AdditionalInfoIcon,
 };
