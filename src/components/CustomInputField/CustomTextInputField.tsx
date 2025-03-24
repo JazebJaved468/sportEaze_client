@@ -7,10 +7,10 @@ import {
   View,
 } from 'react-native';
 import React, {ReactNode} from 'react';
-import {border} from 'native-base/lib/typescript/theme/styled-system';
 import {useColorModeValue} from 'native-base';
 import {appColors} from '../../constants/colors';
 import {fontBold, fontRegular} from '../../styles/fonts';
+import {ErrorMessage} from '../ErrorMessage';
 
 type CustomTextInputFieldProps = {
   value: string;
@@ -66,14 +66,14 @@ export const CustomTextInputField = ({
   isReadOnly = false,
   rightElement,
   isValid = true,
-  errorMessage,
+  errorMessage = '',
   label,
   customLabelStyles,
   autoCapitalize = 'sentences',
   height = 50,
   numberOfLines = 1,
   borderRadius = 12,
-  borderWidth = 1,
+  borderWidth = 0.5,
   onFocus,
   maxLength,
   textAlignVertical = 'center',
@@ -87,9 +87,8 @@ export const CustomTextInputField = ({
         <View>
           <Text
             style={[
-              fontBold(14),
+              fontBold(14, textColor),
               {
-                color: !isValid ? appColors.error : textColor,
                 marginBottom: 8,
               },
               customLabelStyles,
@@ -143,11 +142,8 @@ export const CustomTextInputField = ({
         </View>
       </View>
 
-      {!isValid ? (
-        <Text
-          style={{paddingVertical: 4, fontSize: 10, color: appColors.error}}>
-          {errorMessage}
-        </Text>
+      {!isValid && errorMessage ? (
+        <ErrorMessage message={errorMessage} />
       ) : null}
     </View>
   );
