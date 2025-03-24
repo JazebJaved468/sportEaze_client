@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Svg, {SvgProps, Path} from 'react-native-svg';
 export const ConnectionNetworkIcon = (props: SvgProps) => (
-  <Svg width={1024} height={1024} viewBox='0 0 768 768' {...props}>
+  <Svg
+    width={props.width ?? 1024}
+    height={props.height ?? 1024}
+    viewBox='0 0 768 768'
+    {...props}>
     <Path
       fill={props.color ?? '#000002'}
       fillRule='evenodd'
