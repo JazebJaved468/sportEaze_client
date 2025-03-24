@@ -1,11 +1,4 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import PageContainer from '../../../components/PageContainer';
@@ -14,18 +7,10 @@ import {
   usePageBackgroundColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
-import {
-  fontBold,
-  fontExtraBold,
-  fontLight,
-  fontRegular,
-} from '../../../styles/fonts';
+import {fontBold, fontRegular} from '../../../styles/fonts';
 import {appColors} from '../../../constants/colors';
 import {useContainerShadow} from '../../../utils/customHooks/customHooks';
-import {
-  ConnectionNetworkIcon,
-  UserPlaceholderIcon,
-} from '../../../assets/icons';
+import {PeopleConnectedIcon, UserPlaceholderIcon} from '../../../assets/icons';
 import {Button, FlatList} from 'native-base';
 import {USER_TYPE} from '../../../constants/enums';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
@@ -37,50 +22,46 @@ const Recommendations = () => {
   const textColor = useTextColor();
   return (
     <PageContainer>
-      <GeneralHeader title='Recommendations' showLeftElement={false} />
+      <GeneralHeader title='Recommended Players' showLeftElement={false} />
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <ConnectionNetworkIcon
-          width={100}
-          height={100}
+      <View style={styles.container}>
+        {/* <ConnectionNetworkIcon
+          width={140}
+          height={140}
+          color={appColors.warmRed}
+          style={{alignSelf: 'center'}}
+        /> */}
+        <PeopleConnectedIcon
+          width={150}
+          height={150}
           color={appColors.warmRed}
           style={{alignSelf: 'center'}}
         />
         <View
           style={{
-            paddingHorizontal: 16,
+            paddingHorizontal: 60,
           }}>
           <Text
             style={[
               fontRegular(14, textColor),
-              {marginTop: 20, marginBottom: 40},
+              {marginTop: 20, marginBottom: 20, textAlign: 'center'},
             ]}>
             Great Choice! Here’s Who You Should Follow And connect based on your
             interests
           </Text>
-          {/* <Text style={[fontLight(14, textColor), {marginBottom: 40}]}>
-            Based on your interests, we’ve found some amazing players, mentors,
-            and fans you might want to connect with. Start building your sports
-            community!
-          </Text> */}
         </View>
 
         {/* Recommended Players */}
 
-        <Text
-          style={[
-            fontExtraBold(18, appColors.warmRed),
-            {textAlign: 'left', paddingHorizontal: 16},
-          ]}>
-          Recommended Players
-        </Text>
-
         <FlatList
-          horizontal
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 20,
-            gap: 16,
           }}
           keyExtractor={(item, index) => item.username}
           data={[
@@ -103,8 +84,17 @@ const Recommendations = () => {
                 'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
             },
             {
-              name: 'Muazzam Khan',
+              name: 'Jazeb Javed',
               username: 'jazebjaved2',
+              userType: USER_TYPE.PLAYER,
+              followersCount: 123,
+              sportInterest: 'Cricket',
+              profilePicUrl:
+                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
+            },
+            {
+              name: 'Zohaib Ali',
+              username: 'jazebjaved3',
               userType: USER_TYPE.PLAYER,
               followersCount: 123,
               sportInterest: 'Cricket',
@@ -113,7 +103,7 @@ const Recommendations = () => {
             },
           ]}
           renderItem={({item}) => (
-            <View style={{marginVertical: 20}}>
+            <View style={{marginVertical: 12, marginHorizontal: 16}}>
               <RecommendedUserCard
                 userType={item.userType}
                 name={item.name}
@@ -125,77 +115,18 @@ const Recommendations = () => {
           )}
         />
 
-        {/* Recommended Mentors */}
-
-        <Text
-          style={[
-            fontExtraBold(18, appColors.warmRed),
-            {textAlign: 'left', paddingHorizontal: 16, marginTop: 30},
-          ]}>
-          Recommended Mentors
-        </Text>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-            gap: 16,
-          }}
-          keyExtractor={(item, index) => item.username}
-          data={[
-            {
-              name: 'Jazeb Javed',
-              userType: USER_TYPE.MENTOR,
-              username: 'jazebjaved',
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-            {
-              name: 'Zohaib Ali',
-              username: 'jazebjaved1',
-              userType: USER_TYPE.MENTOR,
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-            {
-              name: 'Muazzam Khan',
-              username: 'jazebjaved2',
-              userType: USER_TYPE.MENTOR,
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-          ]}
-          renderItem={({item}) => (
-            <View style={{marginVertical: 20}}>
-              <RecommendedUserCard
-                userType={item.userType}
-                name={item.name}
-                followersCount={item.followersCount}
-                sportInterest={item.sportInterest}
-                profilePicUrl={item.profilePicUrl}
-              />
-            </View>
-          )}
-        />
-
-        <PulseEffect onPress={() => navigation.navigate(FanRootPage)}>
-          <Button
-            style={{
-              marginHorizontal: 16,
-              height: 48,
-              borderRadius: BUTTON_BORDER_RADIUS,
-              marginTop: 40,
-            }}>
-            <Text style={fontRegular(16, appColors.white)}>Continue</Text>
-          </Button>
-        </PulseEffect>
-      </ScrollView>
+        <View style={styles.buttonContainer}>
+          <PulseEffect onPress={() => navigation.navigate(FanRootPage)}>
+            <Button
+              style={{
+                height: 48,
+                borderRadius: BUTTON_BORDER_RADIUS,
+              }}>
+              <Text style={fontRegular(16, appColors.white)}>Continue</Text>
+            </Button>
+          </PulseEffect>
+        </View>
+      </View>
     </PageContainer>
   );
 };
@@ -295,9 +226,12 @@ export default Recommendations;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
+    flex: 1,
     marginTop: 20,
-    paddingBottom: 40,
+  },
+  buttonContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    marginTop: 'auto',
   },
 });
