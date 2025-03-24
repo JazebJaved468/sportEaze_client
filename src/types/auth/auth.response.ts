@@ -4,25 +4,19 @@ export type RegisterUserResponse = {
   message: string;
   success: boolean;
   accessToken: string;
-  userType: number;
+  userType: null;
 };
 
 export type LoginUserResponse = {
   message: string;
   success: boolean;
   accessToken: string;
-  userType: number;
+  user: User;
 };
 
 export type GetUserSettingsResponse = {
   success: boolean;
   user: User;
-};
-
-export type onBecomingPlayerResponse = {
-  message: string;
-  player: User;
-  success: boolean;
 };
 
 export type UpdateUserResponse = {

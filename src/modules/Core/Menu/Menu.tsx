@@ -300,7 +300,6 @@ const Menu = () => {
                 }
                 onPress={async () => {
                   await onLogout();
-                  navigation.navigate(RegisterPage);
                 }}
               />
             </MenuSection>

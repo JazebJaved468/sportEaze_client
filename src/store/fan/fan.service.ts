@@ -1,7 +1,7 @@
 import {RegisterFanParams} from '../../types/fan/fan.params';
 import {RegisterFanResponse} from '../../types/fan/fan.response';
-import {GetPlayerResponse} from '../../types/player/player.response';
 import {Player} from '../../types/player/player.type';
+import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
 
@@ -23,6 +23,10 @@ export const fanApi = sporteazeBaseApi.injectEndpoints({
         try {
           const {data} = await queryFulfilled;
           // `onSuccess` side-effect
+          await updateUserTypeOnRegister({
+            userType: data.userType,
+          });
+
           dispatch(updateUser(data));
         } catch (err) {
           // `onError` side-effect

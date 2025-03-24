@@ -3,6 +3,7 @@ export enum USER_TYPE {
   PLAYER = 2,
   PATRON = 3,
   MENTOR = 4,
+  GENERAL = 0,
 }
 
 export enum GENDER {

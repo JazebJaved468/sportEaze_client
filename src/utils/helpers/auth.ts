@@ -3,11 +3,13 @@ import {authApi} from '../../store/auth/auth.service';
 import {
   removeUser,
   updateIsLoggedIn,
+  updateUser,
   updateUserToken,
   updateUserType,
 } from '../../store/auth/auth.slice';
 import {playerApi} from '../../store/player/player.service';
 import {store} from '../../store/store';
+import {User} from '../../types/auth/auth.type';
 import {
   multiRemoveFromLocalStorage,
   multiStoreInLocalStorage,
@@ -19,7 +21,7 @@ export const onLogout = async () => {
 
   dispatch(updateIsLoggedIn(false));
   dispatch(updateUserToken(''));
-  dispatch(updateUserType(0));
+  dispatch(updateUserType(USER_TYPE.GENERAL));
   dispatch(removeUser());
 
   await multiRemoveFromLocalStorage({
@@ -34,12 +36,7 @@ export const onRegisterUser = async (args: {
   const dispatch = store.dispatch;
 
   dispatch(updateUserToken(args.userToken));
-  dispatch(updateUserType(args.userType));
   dispatch(updateIsLoggedIn(true));
-
-  await dispatch(
-    authApi.endpoints.getUserSettings.initiate(undefined, {forceRefetch: true}),
-  );
 
   multiStoreInLocalStorage({
     keyValuePairs: [
@@ -49,36 +46,44 @@ export const onRegisterUser = async (args: {
   });
 };
 
-export const onLogin = async (args: {userType: number; userToken: string}) => {
+export const onLogin = async (args: {user: User; userToken: string}) => {
   const dispatch = store.dispatch;
 
   dispatch(updateUserToken(args.userToken));
-  await dispatch(
-    authApi.endpoints.getUserSettings.initiate(undefined, {forceRefetch: true}),
-  );
+  // await dispatch(
+  //   authApi.endpoints.getUserSettings.initiate(undefined, {forceRefetch: true}),
+  // );
 
-  dispatch(updateUserType(args.userType));
+  dispatch(updateUserType(args.user.userType || USER_TYPE.GENERAL));
   dispatch(updateIsLoggedIn(true));
+  dispatch(updateUser(args.user));
 
   await multiStoreInLocalStorage({
     keyValuePairs: [
       ['userToken', args.userToken],
-      ['userType', args.userType.toString()],
+      [
+        'userType',
+        args.user.userType
+          ? args.user.userType.toString()
+          : USER_TYPE.FAN.toString(),
+      ],
     ],
   });
 };
 
-export const onBecomingPlayer = async (args: {userType: number}) => {
+export const updateUserTypeOnRegister = async (args: {
+  userType: number | null;
+}) => {
   const dispatch = store.dispatch;
-  dispatch(updateUserType(args.userType));
-  const res = await dispatch(
-    playerApi.endpoints.getPlayerSettings.initiate(undefined, {
-      forceRefetch: true,
-    }),
-  );
 
-  await storeInLocalStorage({
-    key: 'userType',
-    value: args.userType.toString(),
+  dispatch(updateUserType(args.userType || USER_TYPE.FAN));
+
+  multiStoreInLocalStorage({
+    keyValuePairs: [
+      [
+        'userType',
+        args.userType ? args.userType.toString() : USER_TYPE.FAN.toString(),
+      ],
+    ],
   });
 };
