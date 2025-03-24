@@ -101,8 +101,6 @@ export const JoinAs = () => {
   const navigation = useAppNavigation();
   const textColor = useTextColor();
 
-  const [selectedOption, setSelectedOption] = useState<number>(0);
-
   const navigateToFanRegistration = useCallback(() => {
     navigation.navigate(FanRegistrationDetailsPage);
   }, [navigation]);
@@ -114,27 +112,27 @@ export const JoinAs = () => {
   const joiningOptions = useMemo(
     () => [
       {
-        id: 1,
+        id: 0,
         title: 'Fan',
         description: 'Stay connected with your favorite teams and athletes',
         icon: JoinAsFanIcon,
         onPress: navigateToFanRegistration,
       },
       {
-        id: 2,
+        id: 1,
         title: 'Player',
         description: 'Showcase your skills and grow your sports career',
         icon: JoinAsPlayerIcon,
         onPress: navigateToPlayerRegistration,
       },
       // {
-      //   id: 3,
+      //   id: 2,
       //   title: 'Patron',
       //   description: 'Support and invest in the future of sports',
       //   icon: JoinAsPatronIcon,
       // },
       // {
-      //   id: 4,
+      //   id: 3,
       //   title: 'Mentor',
       //   description: 'Guide and inspire the next generation of athletes',
       //   icon: JoinAsMentorIcon,
@@ -143,9 +141,17 @@ export const JoinAs = () => {
     [navigateToFanRegistration, navigateToPlayerRegistration],
   );
 
+  const [selectedOption, setSelectedOption] = useState<number>(
+    joiningOptions[0].id,
+  );
+
   return (
     <PageContainer applyGradient>
-      <GeneralHeader title='Join As' showRightElement={true} />
+      <GeneralHeader
+        showLeftElement={false}
+        title='Join As'
+        showRightElement={true}
+      />
       <View style={styles.container}>
         <Text
           style={[
