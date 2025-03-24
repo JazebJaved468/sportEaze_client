@@ -1,11 +1,10 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {ReactNode, useState} from 'react';
+import React from 'react';
 import {FemaleIcon, MaleIcon} from '../../assets/icons';
 import {useTextColor} from '../../utils/customHooks/colorHooks';
-import {id} from 'date-fns/locale';
-import {FlatList} from 'native-base';
 import {appColors} from '../../constants/colors';
 import {GENDER} from '../../constants/enums';
+import {fontBold} from '../../styles/fonts';
 
 type GenderPickerProps = {
   selectedGender: number | undefined;
@@ -31,11 +30,9 @@ const GenderPicker = ({
       {label ? (
         <Text
           style={[
+            fontBold(14, textColor),
             {
-              fontSize: 14,
-              color: !isValid ? appColors.error : textColor,
               marginBottom: 8,
-              fontWeight: 'bold',
             },
             customLabelStyles,
           ]}>

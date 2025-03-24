@@ -1,14 +1,13 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {CalenderIcon} from '../../assets/icons';
-import {Button} from 'native-base';
 
 import Picker from 'react-native-date-picker';
 import {useTextColor} from '../../utils/customHooks/colorHooks';
 import {appColors} from '../../constants/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {BUTTON_BORDER_RADIUS} from '../../constants/styles';
 import {format} from 'date-fns';
+import {fontBold} from '../../styles/fonts';
 
 type DateTimePickerProps = {
   label?: string;
@@ -41,11 +40,9 @@ const DateTimePicker = ({
       {label ? (
         <Text
           style={[
+            fontBold(14, textColor),
             {
-              fontSize: 14,
-              color: !isValid ? appColors.error : textColor,
               marginBottom: 8,
-              fontWeight: 'bold',
             },
             customLabelStyles,
           ]}>
