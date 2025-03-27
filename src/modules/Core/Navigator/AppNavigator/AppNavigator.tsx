@@ -191,7 +191,6 @@ export const AppNavigator = () => {
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />
-      {/* <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} /> */}
     </Stack.Navigator>
   );
 };
