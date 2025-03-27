@@ -1,5 +1,11 @@
-import {RegisterPlayerParams} from '../../types/player/player.params';
-import {registerPlayerResponse} from '../../types/player/player.response';
+import {
+  FollowPlayerParams,
+  RegisterPlayerParams,
+} from '../../types/player/player.params';
+import {
+  FollowPlayerResponse,
+  registerPlayerResponse,
+} from '../../types/player/player.response';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
@@ -39,7 +45,34 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    //
+    followPlayer: builder.mutation<FollowPlayerResponse, FollowPlayerParams>({
+      query: ({playerId}) => ({
+        url: `/network/follow/${playerId}`,
+        method: 'POST',
+      }),
+      transformResponse: (response: FollowPlayerResponse) => {
+        console.log('response - follow player', response);
+        return response;
+      },
+    }),
+
+    unfollowPlayer: builder.mutation<FollowPlayerResponse, FollowPlayerParams>({
+      query: ({playerId}) => ({
+        url: `/network/unfollow/${playerId}`,
+        method: 'DELETE',
+      }),
+      transformResponse: (response: FollowPlayerResponse) => {
+        console.log('response - unfollow player', response);
+        return response;
+      },
+    }),
   }),
 });
 
-export const {useRegisterPlayerMutation} = playerApi;
+export const {
+  useRegisterPlayerMutation,
+  useFollowPlayerMutation,
+  useUnfollowPlayerMutation,
+} = playerApi;
