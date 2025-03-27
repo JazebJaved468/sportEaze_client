@@ -1,7 +1,6 @@
 import {Button, StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
-import {PlayerProfilePage} from '../PlayerProfile';
 import {
   useAppDispatch,
   useAppSelector,
@@ -42,7 +41,7 @@ const PlayerHome = () => {
         <Button
           title={message}
           onPress={() => {
-            navigation.navigate(PlayerProfilePage);
+            // navigation.navigate(PlayerProfilePage);
           }}>
           {/* {message} */}
         </Button>
