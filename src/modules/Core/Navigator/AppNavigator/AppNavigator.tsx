@@ -1,7 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PlayerHome, {PlayerHomePage} from '../../../sample/PlayerHome';
-import PlayerProfile, {PlayerProfilePage} from '../../../sample/PlayerProfile';
 import FanRoot, {FanRootPage} from '../../../Fan/Root';
 import PlayerRoot, {PlayerRootPage} from '../../../Player/Root';
 import PatronRoot, {PatronRootPage} from '../../../Patron/Root';
@@ -34,10 +33,14 @@ import NotificationListing, {
 import PlayerRegistrationDetails, {
   PlayerRegistrationDetailsPage,
 } from '../../../Player/PlayerRegistrationDetails';
+import PlayerProfile, {PlayerProfilePage} from '../../../Player/PlayerProfile';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
-  PlayerProfilePage: undefined;
+  PlayerProfilePage: {
+    isVisitor: boolean;
+    userId: string;
+  };
   FanRootPage: undefined;
   PlayerRootPage: undefined;
   PatronRootPage: undefined;
@@ -61,7 +64,6 @@ export type RootStackParamList = {
   };
   RecommendationsPage: undefined;
   NotificationListingPage: undefined;
-
   PlayerRegistrationDetailsPage: undefined;
 };
 
@@ -179,6 +181,7 @@ export const AppNavigator = () => {
         name={PlayerRegistrationDetailsPage}
         component={PlayerRegistrationDetails}
       />
+      <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} />
 
       {/* Patron Screens */}
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />
@@ -188,7 +191,7 @@ export const AppNavigator = () => {
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />
-      <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} />
+      {/* <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} /> */}
     </Stack.Navigator>
   );
 };

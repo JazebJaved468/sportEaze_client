@@ -14,7 +14,6 @@ import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {
   useCardColor,
   useLightTextColor,
-  usePageBackgroundColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
 import {
@@ -30,22 +29,20 @@ import {
   TermsAndConditionsIcon,
   UserPlaceholderIcon,
 } from '../../../assets/icons';
-import {fontBold, fontExtraBold, fontRegular} from '../../../styles/fonts';
+import {fontBold, fontRegular} from '../../../styles/fonts';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../utils/customHooks/storeHooks';
-import {Button, Switch, useColorMode} from 'native-base';
+import {Switch, useColorMode} from 'native-base';
 import {Divider} from '../../../components/Divider';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {onLogout} from '../../../utils/helpers/auth';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
-import {LoginPage} from '../Auth/Login';
-import {RegisterPage} from '../Auth/Register';
-import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 import {LoginRequired} from '../../../components/LoginRequired';
 import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
-import {authApi} from '../../../store/auth/auth.service';
+import {USER_TYPE} from '../../../constants/enums';
+import {PlayerProfilePage} from '../../Player/PlayerProfile';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -120,8 +117,22 @@ const MenuSectionItem = ({
   );
 };
 
+const getTitle = (userType: number) => {
+  if (userType === USER_TYPE.FAN) {
+    return 'Fan Dashboard';
+  } else if (userType === USER_TYPE.PLAYER) {
+    return 'Player Dashboard';
+  } else if (userType === USER_TYPE.PATRON) {
+    return 'Patron Dashboard';
+  } else if (userType === USER_TYPE.MENTOR) {
+    return 'Mentor Dashboard';
+  } else {
+    return 'User Dashboard';
+  }
+};
+
 const Menu = () => {
-  const {user, isLoggedIn} = useAppSelector(state => state.auth);
+  const {user, isLoggedIn, userType} = useAppSelector(state => state.auth);
 
   const {colorMode, setColorMode, toggleColorMode} = useColorMode();
   const containerShadow = useContainerShadow(4);
@@ -143,7 +154,7 @@ const Menu = () => {
           width={24}
           height={24}
         />
-        <Text style={fontBold(18, appColors.white)}>Profile Dashboard</Text>
+        <Text style={fontBold(18, appColors.white)}>{getTitle(userType)}</Text>
       </View>
 
       <View
@@ -161,7 +172,16 @@ const Menu = () => {
             keyboardShouldPersistTaps='handled'
             contentContainerStyle={styles.scrollContainer}>
             {/* Profile Pic And Name */}
-            <TouchableOpacity activeOpacity={0.6} onPress={() => {}}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                if (user?.id)
+                  // If USerType = 2 =  is Player
+                  navigation.navigate(PlayerProfilePage, {
+                    isVisitor: false,
+                    userId: user?.id,
+                  });
+              }}>
               <View style={styles.picAndName}>
                 <View style={styles.profilePicContainer}>
                   {user?.profilePicUrl ? (
