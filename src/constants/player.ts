@@ -18,3 +18,9 @@ export const playingLevels: DropDownItemType[] = [
     value: PlayingLevel.PROFESSIONAL,
   },
 ];
+
+export const playerLevels: Record<string, string> = {
+  1: 'Beginner',
+  2: 'Amateur',
+  3: 'Professional',
+};

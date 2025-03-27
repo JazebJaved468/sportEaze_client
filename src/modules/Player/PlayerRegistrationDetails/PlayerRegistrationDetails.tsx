@@ -18,7 +18,7 @@ import {PulseEffect} from '../../../components/PulseEffect';
 import {Button, Switch} from 'native-base';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 import {appColors} from '../../../constants/colors';
-import {playingLevels} from '../../../constants/player';
+import {playerLevels} from '../../../constants/player';
 import {SportsPreferenceSelector} from '../../../components/SportsPreferenceSelector';
 import {CustomTextInputField} from '../../../components/CustomInputField';
 import {
@@ -34,6 +34,7 @@ import {useRegisterFanMutation} from '../../../store/fan/fan.service';
 import {useRegisterPlayerMutation} from '../../../store/player/player.service';
 import {RegisterPlayerParams} from '../../../types/player/player.params';
 import {PlayerRootPage} from '../Root';
+import {convertObjectIntoDropDownItemsArrayFormat} from '../../../utils/helpers/adapter';
 
 export type RegisterPlayerFormData = {
   profilePic?: ImageType | null;
@@ -602,19 +603,9 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
     },
   });
 
-  const convertSportsDataFormat = useMemo(() => {
-    return (data: Record<string, string>): DropDownItemType[] => {
-      return Object.entries(data).map(([key, value]) => ({
-        id: Number(key),
-        title: value,
-        value: Number(key),
-      }));
-    };
-  }, []); // No dependencies as the function itself never changes
-
   const sportsList = useMemo(() => {
-    return convertSportsDataFormat(sports || {});
-  }, [sports, convertSportsDataFormat]); // Only recalculate when sports data changes
+    return convertObjectIntoDropDownItemsArrayFormat(sports || {});
+  }, [sports]); // Only recalculate when sports data changes
 
   const onSubmit = async (data: SportsExperienceFormData) => {
     try {
@@ -709,7 +700,7 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
               }}
               buttonTitle='Select Play Level'
               sheetTitle='Select 1 Primary Sport '
-              data={playingLevels}
+              data={convertObjectIntoDropDownItemsArrayFormat(playerLevels)}
               selectedItem={value}
               onItemSelect={onChange}
               snapPoints={['30%']}

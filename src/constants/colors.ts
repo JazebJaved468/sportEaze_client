@@ -21,4 +21,6 @@ export const appColors = {
   dividerDark: '#ffffff10',
   gunmetal: '#2F2F2F',
   erieBlack: '#202020',
+  gold: '#E7CF27',
+  teal: '#008080',
 };

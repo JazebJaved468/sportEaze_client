@@ -1,6 +1,5 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {PlayerProfilePage} from '.';
 import {updateMessage} from '../../../store/sample/sample.slice';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PlayerHomePage} from '../PlayerHome';

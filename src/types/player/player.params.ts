@@ -16,3 +16,7 @@ export type RegisterPlayerParams = {
   instaLink?: string;
   xLink?: string;
 };
+
+export type FollowPlayerParams = {
+  playerId: string;
+};

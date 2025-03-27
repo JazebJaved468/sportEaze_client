@@ -53,6 +53,7 @@ type CustomTextInputFieldProps = {
   label?: string;
   customLabelStyles?: StyleProp<TextStyle>;
   onFocus?: () => void;
+  customTextInputStyles?: StyleProp<TextStyle>;
 };
 
 export const CustomTextInputField = ({
@@ -77,6 +78,7 @@ export const CustomTextInputField = ({
   onFocus,
   maxLength,
   textAlignVertical = 'center',
+  customTextInputStyles = {},
 }: CustomTextInputFieldProps) => {
   const inputborderColor = useColorModeValue(appColors.gray, appColors.gray);
   const textColor = useColorModeValue(appColors.black, appColors.white);
@@ -112,12 +114,16 @@ export const CustomTextInputField = ({
         }}>
         <TextInput
           onFocus={onFocus}
-          style={{
-            flex: 1,
-            ...fontRegular(14),
-            color: textColor,
-            textAlignVertical: 'center',
-          }}
+          style={[
+            {
+              flex: 1,
+              ...fontRegular(14),
+              color: textColor,
+              textAlignVertical: 'center',
+              // padding: 0,
+            },
+            customTextInputStyles,
+          ]}
           onChangeText={onChangeText}
           value={value}
           numberOfLines={numberOfLines}

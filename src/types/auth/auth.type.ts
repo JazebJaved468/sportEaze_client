@@ -13,5 +13,7 @@ export type User = {
   username: string;
   fullName: string;
   sportInterests: number[] | null;
+  isConnected?: boolean;
+  isFollowing?: boolean;
   player?: Player;
 };

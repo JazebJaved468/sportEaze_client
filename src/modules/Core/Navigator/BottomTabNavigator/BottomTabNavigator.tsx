@@ -5,7 +5,6 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import PlayerProfile from '../../../sample/PlayerProfile';
 import {appColors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
 import ChatListing from '../../Chat/ChatListing';
@@ -20,6 +19,8 @@ import {
 } from '../../../../assets/icons';
 import {useCardColor} from '../../../../utils/customHooks/colorHooks';
 import Menu from '../../Menu';
+import PlayerProfile from '../../../Player/PlayerProfile';
+import FanExplore from '../../../Fan/FanExplore';
 
 const TAB_ICONS_SIZE = 20;
 
@@ -192,7 +193,7 @@ export const FanBottomTabNavigator = () => {
         };
       }}>
       <Tab.Screen name={BottomTabNames.Feed} component={PostFeed} />
-      <Tab.Screen name={BottomTabNames.Explore} component={ChatListing} />
+      <Tab.Screen name={BottomTabNames.Explore} component={FanExplore} />
       <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
       {/* <Tab.Screen name={BottomTabNames.Profile} component={FanMenu} /> */}
       <Tab.Screen name={BottomTabNames.Profile} component={Menu} />

@@ -111,6 +111,20 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    getUserByIdService: builder.query<User, {userId: string; myId?: string}>({
+      query: ({userId, myId}) => ({
+        url: `/user/${userId}`,
+        params: myId
+          ? {
+              userId: myId,
+            }
+          : {},
+      }),
+      transformResponse: (response: User) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -120,4 +134,5 @@ export const {
   useLazyGetUserSettingsQuery,
   useGetUserSettingsQuery,
   useUpdateUserMutation,
+  useGetUserByIdServiceQuery,
 } = authApi;

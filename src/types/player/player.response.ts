@@ -11,3 +11,7 @@ export type registerPlayerResponse = {
   success: boolean;
   message: string;
 };
+export type FollowPlayerResponse = {
+  success: boolean;
+  message: string;
+};
