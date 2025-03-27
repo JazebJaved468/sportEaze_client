@@ -11,7 +11,7 @@ export const CrossIcon = (props: SvgProps) => (
       stroke={props.color ?? '#292D32'}
       strokeLinecap='round'
       strokeLinejoin='round'
-      strokeWidth={1.5}
+      strokeWidth={props.strokeWidth ?? 1.5}
       d='M1.001 1 15 15M1 15 14.999 1'
     />
   </Svg>
