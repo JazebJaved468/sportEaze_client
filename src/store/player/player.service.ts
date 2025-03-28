@@ -1,11 +1,15 @@
 import {
+  CreateMediaPostParams,
+  CreateTextPostParams,
   FollowPlayerParams,
   RegisterPlayerParams,
 } from '../../types/player/player.params';
 import {
+  CreateTextPostResponse,
   FollowPlayerResponse,
   registerPlayerResponse,
 } from '../../types/player/player.response';
+import {Post} from '../../types/player/player.type';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
@@ -46,7 +50,6 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    //
     followPlayer: builder.mutation<FollowPlayerResponse, FollowPlayerParams>({
       query: ({playerId}) => ({
         url: `/network/follow/${playerId}`,
@@ -68,6 +71,28 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         return response;
       },
     }),
+
+    createTextPost: builder.mutation<Post, CreateTextPostParams>({
+      query: body => ({
+        url: `/user/post/create-text-post`,
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (response: CreateTextPostResponse) => {
+        return response.post;
+      },
+    }),
+
+    createMediaPost: builder.mutation<Post, CreateMediaPostParams>({
+      query: body => ({
+        url: `/user/post/create-media-post`,
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (response: CreateTextPostResponse) => {
+        return response.post;
+      },
+    }),
   }),
 });
 
@@ -75,4 +100,6 @@ export const {
   useRegisterPlayerMutation,
   useFollowPlayerMutation,
   useUnfollowPlayerMutation,
+  useCreateTextPostMutation,
+  useCreateMediaPostMutation,
 } = playerApi;

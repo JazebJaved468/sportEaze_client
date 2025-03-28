@@ -5,20 +5,22 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import {CloudinaryUploadPresets} from '../../../constants/cloudinary';
-import {POST_MEDIA_LIMIT} from '../../../constants/media';
+import {
+  POST_MEDIA_LIMIT,
+  POST_PLACEHOLDER_IMAGE,
+} from '../../../constants/media';
 import {
   useUploadImageMutation,
   useUploadVideoMutation,
 } from '../../../store/postFeed/postFeed.service';
 import {SelectedImage, SelectedVideo} from '../../../types/postFeed/postFeed';
 import {openImageOrVideoPicker} from '../../../utils/helpers/mediaPicker';
-import {Button, CheckCircleIcon, Text, View} from 'native-base';
+import {Button, Text, View} from 'native-base';
 import {
-  ArrowDownIcon,
   CircularCheckIcon,
   CircularCrossIcon,
   CircularInfoIcon,
@@ -46,12 +48,17 @@ import {
 import {Part} from '@google/generative-ai';
 import RNFS from 'react-native-fs';
 import {getMediaType} from '../../../utils/helpers/media';
-import {MediaType, PostVisibility} from '../../../constants/enums';
+import {MediaType, PostVisibility, USER_TYPE} from '../../../constants/enums';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {MediaPreviewPage} from '../../../components/MediaPreview';
 import {CustomDropDown} from '../../../components/CustomDropDown';
 import {DropDownItemType} from '../../../components/CustomDropDown/CustomDropDown';
 import {PulseEffect} from '../../../components/PulseEffect';
+import {
+  useCreateMediaPostMutation,
+  useCreateTextPostMutation,
+} from '../../../store/player/player.service';
+import {PlayerProfilePage} from '../PlayerProfile';
 
 type GeminiAnalysisType = {
   response?: GeminiAnalysisResponse;
@@ -104,6 +111,11 @@ export const CreatePost = () => {
     useUploadImageMutation();
   const [uploadVideosToCloudinary, {isLoading: videoUploadCIP}] =
     useUploadVideoMutation();
+
+  const [createTextPost, {isLoading: textPostCreationCIP}] =
+    useCreateTextPostMutation();
+  const [createMediaPost, {isLoading: mediaPostCreationCIP}] =
+    useCreateMediaPostMutation();
 
   const selectMedia = async () => {
     const selectedFiles = await openImageOrVideoPicker();
@@ -214,6 +226,18 @@ export const CreatePost = () => {
     return uploadedVideos;
   };
 
+  const afterPostCreation = useCallback(() => {
+    cleanData();
+    if (user?.id) {
+      if (userType === USER_TYPE.PLAYER) {
+        navigation.navigate(PlayerProfilePage, {
+          isVisitor: false,
+          userId: user?.id,
+        });
+      }
+    }
+  }, [user?.id, userType, navigation]);
+
   const onSubmit = async (data: {caption: string}) => {
     try {
       const geminiRes: GeminiAnalysisResponse = await getGeminiResponse({
@@ -221,6 +245,18 @@ export const CreatePost = () => {
       });
 
       if (geminiRes && !geminiRes.is_sports_related) {
+        return;
+      }
+
+      // Text Only Post
+      if (!selectedMedia || selectedMedia?.length < 1) {
+        createTextPost({
+          textContent: data.caption,
+          visibility: postVisibility?.value || PostVisibility.PUBLIC,
+        });
+
+        afterPostCreation();
+
         return;
       }
 
@@ -246,10 +282,31 @@ export const CreatePost = () => {
         videoUploadPromise,
       ]);
 
-      console.log('Images Uploaded:', imageUploadResponse);
-      console.log('Videos Uploaded:', videoUploadResponse);
+      // console.log('Images Uploaded:', imageUploadResponse);
+      // console.log('Videos Uploaded:', videoUploadResponse);
 
-      cleanData();
+      // console.log('Selected Media:', selectedMedia);
+
+      const customizedMediaUploadResponse = [
+        ...(imageUploadResponse || []),
+        ...(videoUploadResponse || []),
+      ].map((item, index) => ({
+        mediaType: getMediaType(item?.data?.resource_type || 'image'),
+        mediaOrder: index + 1,
+        mediaLink: item?.data?.secure_url || POST_PLACEHOLDER_IMAGE,
+      }));
+      // console.log(
+      //   'Customized Media Upload Response:',
+      //   customizedMediaUploadResponse,
+      // );
+
+      createMediaPost({
+        textContent: data.caption,
+        visibility: postVisibility?.value || PostVisibility.PUBLIC,
+        media: customizedMediaUploadResponse,
+      });
+
+      afterPostCreation();
     } catch (e) {
       console.log(
         '-------xxxxxx----------Error while Post Submission: CreatePost.tsx',
@@ -291,6 +348,13 @@ export const CreatePost = () => {
     });
   };
 
+  const isPublishing =
+    imageUploadCIP ||
+    videoUploadCIP ||
+    geminiAnalysis.analysisCIP ||
+    textPostCreationCIP ||
+    mediaPostCreationCIP;
+
   return (
     <PageContainer>
       <GeneralHeader
@@ -301,9 +365,8 @@ export const CreatePost = () => {
           <PulseEffect>
             <Button
               onPress={handleSubmit(onSubmit)}
-              isLoading={
-                imageUploadCIP || videoUploadCIP || geminiAnalysis.analysisCIP
-              }
+              isLoading={isPublishing}
+              isDisabled={isPublishing}
               style={{
                 backgroundColor: appColors.warmRed,
                 borderRadius: 12,
@@ -438,6 +501,7 @@ export const CreatePost = () => {
             <Button
               onPress={generateHashTags}
               // isLoading={registerFanCIP || loginUserCIP}
+              isDisabled={isPublishing}
               style={{
                 backgroundColor: appColors.warmRed,
                 borderRadius: 12,

@@ -83,7 +83,12 @@ const PlayerProfile = () => {
     data: playerData,
     isLoading: playerDataCIP,
     isFetching: playerDataFIP,
-  } = useGetUserByIdServiceQuery({userId, myId: user?.id});
+  } = useGetUserByIdServiceQuery(
+    {userId, myId: user?.id},
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
   const [followPlayer, {isLoading: followCIP}] = useFollowPlayerMutation();
   const [unfollowPlayer, {isLoading: unfollowCIP}] =
@@ -151,7 +156,7 @@ const PlayerProfile = () => {
     <PageContainer>
       <GeneralHeader title='Player Profile' />
 
-      {playerDataCIP || !playerData ? (
+      {playerDataCIP || playerDataFIP || !playerData ? (
         <Loader />
       ) : (
         <ScrollView contentContainerStyle={styles.container}>

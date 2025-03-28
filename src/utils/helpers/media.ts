@@ -3,10 +3,10 @@ import {MediaType} from '../../constants/enums';
 export const getMediaType = (
   mimeType: string,
 ): MediaType.IMAGE | MediaType.VIDEO | MediaType.DOCUMENT => {
-  if (mimeType.startsWith('image/')) {
+  if (mimeType.startsWith('image/') || mimeType === 'image') {
     return MediaType.IMAGE;
   }
-  if (mimeType.startsWith('video/')) {
+  if (mimeType.startsWith('video/') || mimeType === 'video') {
     return MediaType.VIDEO;
   }
   if (
