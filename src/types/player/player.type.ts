@@ -12,3 +12,24 @@ export type Player = {
   xLink: string | null;
   availableForSponsorship: boolean;
 };
+
+export type Post = {
+  userId: string;
+  textContent: string;
+  visibility: number;
+  postType: number;
+  id: string;
+  shareCount: number;
+  createdAt: string;
+  updatedAt: string;
+  media?: Media[];
+};
+
+export type Media = {
+  mediaType: number;
+  mediaLink: string;
+  mediaOrder: number;
+  postId: string;
+  mediaThumbnail: string | null;
+  id: string;
+};

@@ -20,3 +20,19 @@ export type RegisterPlayerParams = {
 export type FollowPlayerParams = {
   playerId: string;
 };
+
+export type CreateTextPostParams = {
+  textContent: string;
+  visibility: number;
+};
+export type CreateMediaPostParams = {
+  textContent: string;
+  visibility: number;
+  media: MediaParam[];
+};
+
+export type MediaParam = {
+  mediaType: number;
+  mediaOrder: number;
+  mediaLink: string;
+};
