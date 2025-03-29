@@ -112,14 +112,9 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    getUserByIdService: builder.query<User, {userId: string; myId?: string}>({
-      query: ({userId, myId}) => ({
+    getUserByIdService: builder.query<User, {userId: string}>({
+      query: ({userId}) => ({
         url: `/user/${userId}`,
-        params: myId
-          ? {
-              userId: myId,
-            }
-          : {},
       }),
       transformResponse: (response: User) => {
         return response;
