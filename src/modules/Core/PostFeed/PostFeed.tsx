@@ -5,7 +5,6 @@ import UserPost from '../../../components/UserPost/UserPost';
 import {Button, FlatList, ScrollView} from 'native-base';
 import GeneralHeader from '../../../components/GeneralHeader';
 import VideoPlayer from '../../../components/VideoPlayer';
-import {useBecomePlayerMutation} from '../../../store/auth/auth.service';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {JoinAsPage} from '../Auth/JoinAs';
 
