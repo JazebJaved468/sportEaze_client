@@ -36,6 +36,7 @@ import {MaleIcon} from './svgs/MaleIcon';
 import {MessageIcon} from './svgs/MessageIcon';
 import {MessageSendIcon} from './svgs/MessageSendIcon';
 import {MoonIcon} from './svgs/MoonIcon';
+import {MultipleMediaIcon} from './svgs/MultipleMediaIcon';
 import {MuteIcon} from './svgs/MuteIcon';
 import {NotificationsIcon} from './svgs/NotificationsIcon';
 import {OpenEyeIcon} from './svgs/OpenEyeIcon';
@@ -44,6 +45,8 @@ import {PlayerModelIcon} from './svgs/PlayerModelIcon';
 import {PlayIcon} from './svgs/PlayIcon';
 import {PrivacyPolicyIcon} from './svgs/PrivacyPolicyIcon';
 import {ProfileIcon} from './svgs/ProfileIcon';
+import {SaveAddIcon} from './svgs/SaveAddIcon';
+import {SaveTickIcon} from './svgs/SaveTickIcon';
 import {ScarIcon} from './svgs/ScarIcon';
 import {SettingsIcon} from './svgs/SettingsIcon';
 import {ShareIcon} from './svgs/ShareIcon';
@@ -114,4 +117,7 @@ export {
   FlagIcon,
   CoachIcon,
   TeamIcon,
+  SaveTickIcon,
+  SaveAddIcon,
+  MultipleMediaIcon,
 };
