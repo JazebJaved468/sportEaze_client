@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import React from 'react';
@@ -18,7 +19,7 @@ import {
 } from '../../../assets/icons';
 import {appColors} from '../../../constants/colors';
 import {fontBold, fontRegular} from '../../../styles/fonts';
-import {Button, useColorMode, View} from 'native-base';
+import {Button, FlatList, useColorMode, View} from 'native-base';
 import {
   useTextColor,
   useLightTextColor,
@@ -30,7 +31,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../utils/customHooks/storeHooks';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
 import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
@@ -45,10 +45,12 @@ import {playerLevels} from '../../../constants/player';
 import {
   playerApi,
   useFollowPlayerMutation,
+  useGetPlayerPostsByPlayerIdServiceQuery,
   useUnfollowPlayerMutation,
 } from '../../../store/player/player.service';
 import {Toast} from '../../../components/Toast';
 import {updateToast} from '../../../store/core/core.slice';
+import {ViewPostPage} from '../../Core/ViewPost';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -70,9 +72,7 @@ const PlayerAchievements = () => (
 );
 
 const PlayerProfile = () => {
-  const {
-    params: {isVisitor, userId},
-  } = useRoute<PlayerProfilePageRouteProp>();
+  const {params} = useRoute<PlayerProfilePageRouteProp>();
 
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
@@ -84,9 +84,18 @@ const PlayerProfile = () => {
     isLoading: playerDataCIP,
     isFetching: playerDataFIP,
   } = useGetUserByIdServiceQuery(
-    {userId, myId: user?.id},
+    {userId: params.userId},
     {
-      refetchOnMountOrArgChange: true,
+      // refetchOnMountOrArgChange: true,
+    },
+  );
+
+  const {data: playerPosts} = useGetPlayerPostsByPlayerIdServiceQuery(
+    {
+      playerId: params.userId,
+    },
+    {
+      // refetchOnMountOrArgChange: true,
     },
   );
 
@@ -111,12 +120,12 @@ const PlayerProfile = () => {
     }
 
     try {
-      await followPlayer({playerId: userId}).unwrap();
+      await followPlayer({playerId: params.userId}).unwrap();
 
       dispatch(
         authApi.util.updateQueryData(
           'getUserByIdService',
-          {userId: userId, myId: user?.id},
+          {userId: params.userId},
           draft => {
             draft.isFollowing = true;
           },
@@ -129,12 +138,12 @@ const PlayerProfile = () => {
 
   const handleUnFollow = async () => {
     try {
-      await unfollowPlayer({playerId: userId}).unwrap();
+      await unfollowPlayer({playerId: params.userId}).unwrap();
 
       dispatch(
         authApi.util.updateQueryData(
           'getUserByIdService',
-          {userId: userId, myId: user?.id},
+          {userId: params.userId},
           draft => {
             draft.isFollowing = false;
           },
@@ -193,7 +202,7 @@ const PlayerProfile = () => {
               </View>
 
               {/* use isFollowing Bit for handling state */}
-              {isVisitor ? (
+              {params.isVisitor ? (
                 <PulseEffect>
                   <Button
                     style={{
@@ -318,6 +327,25 @@ const PlayerProfile = () => {
             <CountTile title='Posts' count={101} showSeparator />
             <CountTile title='Achievements' count={0} showSeparator={false} />
           </View>
+
+          {playerPosts && (
+            <View style={styles.postsContainer}>
+              {playerPosts.map((post, index) => (
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() =>
+                    navigation.navigate(ViewPostPage, {
+                      postId: post.id,
+                      playerName: playerData.fullName,
+                    })
+                  }
+                  key={post.id}
+                  style={styles.postWindow}>
+                  <Text>HEllo</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
           {/* Tab View */}
           {/* <TabView
@@ -478,5 +506,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+  },
+
+  postsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    alignItems: 'center',
+    rowGap: 9,
+    flexWrap: 'wrap',
+  },
+  postWindow: {
+    width: '31.4%', // Adjust based on your requirement
+    aspectRatio: 1, // Makes it a square
+    backgroundColor: '#add8e6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    overflow: 'hidden',
   },
 });
