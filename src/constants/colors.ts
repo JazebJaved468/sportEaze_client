@@ -23,4 +23,7 @@ export const appColors = {
   erieBlack: '#202020',
   gold: '#E7CF27',
   teal: '#008080',
+  offWhite: '#F8F9FA',
+  snowWhite: '#FAFAFA',
+  charcoalGray: '#383838',
 };

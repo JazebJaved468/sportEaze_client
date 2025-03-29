@@ -25,3 +25,7 @@ export const useLightTextColor = () => {
 export const useDividerColor = () => {
   return useColorModeValue(appColors.dividerLight, appColors.dividerDark);
 };
+
+export const usePostBackgroundColor = () => {
+  return useColorModeValue(appColors.offWhite, appColors.charcoalGray);
+};
