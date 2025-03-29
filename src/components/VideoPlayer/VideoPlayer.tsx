@@ -199,7 +199,6 @@ const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(
         onLayout={measureBox}
         ref={videoBoxRef}
         style={{
-          // marginHorizontal: 16,
           borderRadius: 16,
           overflow: 'hidden',
         }}
