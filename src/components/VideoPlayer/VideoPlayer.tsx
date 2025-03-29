@@ -36,6 +36,8 @@ export type VideoBoxRef = {
 type VideoProps = {
   url: string;
   id: number;
+  backgroundColor?: string;
+  showLoader?: boolean;
 };
 
 type LayoutPosition = {
@@ -47,325 +49,329 @@ type LayoutPosition = {
   pageY: number;
 };
 
-const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(({url, id}, ref) => {
-  const {appState} = useAppSelector(state => state.core);
+const VideoPlayer = forwardRef<VideoBoxRef, VideoProps>(
+  ({url, id, showLoader = true, backgroundColor = appColors.black}, ref) => {
+    const {appState} = useAppSelector(state => state.core);
 
-  const videoRef = useRef<VideoPlayerRef | null>(null);
-  const videoBoxRef = useRef(null);
+    const videoRef = useRef<VideoPlayerRef | null>(null);
+    const videoBoxRef = useRef(null);
 
-  // Video Active when inside viewable area of the screen
-  const [position, setPosition] = useState<LayoutPosition | null>(null);
-  const [isVideoActive, setIsVideoActive] = useState(false);
+    // Video Active when inside viewable area of the screen
+    const [position, setPosition] = useState<LayoutPosition | null>(null);
+    const [isVideoActive, setIsVideoActive] = useState(false);
 
-  // const [pause, setPause] = useState(false);
-  const [pause, setPause] = useState(true);
-  const [mute, setMute] = useState(false);
-  const [videoAspectRatio, setVideoAspectRatio] = useState(16 / 9); // Default aspect ratio
+    // const [pause, setPause] = useState(false);
+    const [pause, setPause] = useState(true);
+    const [mute, setMute] = useState(false);
+    const [videoAspectRatio, setVideoAspectRatio] = useState(16 / 9); // Default aspect ratio
 
-  // Loading time to calculate aspect ratio to render
-  const [renderLoading, setRenderLoading] = useState(true);
+    // Loading time to calculate aspect ratio to render
+    const [renderLoading, setRenderLoading] = useState(true);
 
-  const upperThresoldValue = 0.3; // Video 20% of the screen
-  const lowerThresoldValue = 0.9; // Video 90% on the screen
+    const upperThresoldValue = 0.3; // Video 20% of the screen
+    const lowerThresoldValue = 0.9; // Video 90% on the screen
 
-  const backgroundVideofadeAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0
-  const playButtonFadeAnim = useRef(new Animated.Value(pause ? 1 : 0)).current;
+    const backgroundVideofadeAnim = useState(new Animated.Value(0))[0]; // Initial opacity is 0
+    const playButtonFadeAnim = useRef(
+      new Animated.Value(pause ? 1 : 0),
+    ).current;
 
-  useEffect(() => {
-    Animated.timing(playButtonFadeAnim, {
-      toValue: pause ? 1 : 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  }, [pause]);
+    useEffect(() => {
+      Animated.timing(playButtonFadeAnim, {
+        toValue: pause ? 1 : 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }, [pause]);
 
-  const stopPlaying = () => {
-    if (videoRef?.current) {
-      videoRef?.current?.pause();
-      setPause(true);
-    }
-  };
+    const stopPlaying = () => {
+      if (videoRef?.current) {
+        videoRef?.current?.pause();
+        setPause(true);
+      }
+    };
 
-  const resumePlaying = () => {
-    if (pause) return;
+    const resumePlaying = () => {
+      if (pause) return;
 
-    if (videoRef?.current) {
+      if (videoRef?.current) {
+        videoRef?.current?.resume();
+        setPause(false);
+      }
+    };
+
+    const onPause = () => {
+      if (videoRef?.current && pause) {
+        videoRef?.current?.resume();
+        setPause(false);
+      } else {
+        videoRef?.current?.pause();
+        setPause(true);
+      }
+    };
+
+    const onEnd = () => {
+      // Auto replay
+      videoRef?.current?.seek(0);
       videoRef?.current?.resume();
-      setPause(false);
-    }
-  };
+    };
 
-  const onPause = () => {
-    if (videoRef?.current && pause) {
-      videoRef?.current?.resume();
-      setPause(false);
-    } else {
-      videoRef?.current?.pause();
-      setPause(true);
-    }
-  };
+    const onMutePress = () => {
+      if (videoRef?.current && mute) {
+        // videoRef?.current?.setVolume(1);
+        setMute(false);
+      } else {
+        // videoRef?.current?.setVolume(0);
+        setMute(true);
+      }
+    };
 
-  const onEnd = () => {
-    // Auto replay
-    videoRef?.current?.seek(0);
-    videoRef?.current?.resume();
-  };
+    const onVideoLoad = (data: any) => {
+      const {width, height} = data.naturalSize;
+      if (width && height) {
+        setVideoAspectRatio(width / height);
+      }
+      setRenderLoading(false); // Hide loader
+      Animated.timing(backgroundVideofadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    };
 
-  const onMutePress = () => {
-    if (videoRef?.current && mute) {
-      // videoRef?.current?.setVolume(1);
-      setMute(false);
-    } else {
-      // videoRef?.current?.setVolume(0);
-      setMute(true);
-    }
-  };
+    useEffect(() => {
+      // Pausing video when app goes to background
+      if (appState === AppStates.BACKGROUND && videoRef?.current) {
+        videoRef?.current?.pause();
+        setPause(true);
+      }
+    }, [appState]);
 
-  const onVideoLoad = (data: any) => {
-    const {width, height} = data.naturalSize;
-    if (width && height) {
-      setVideoAspectRatio(width / height);
-    }
-    setRenderLoading(false); // Hide loader
-    Animated.timing(backgroundVideofadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
+    const measureBox = () => {
+      videoBoxRef?.current?.measure(
+        (
+          x: number,
+          y: number,
+          width: number,
+          height: number,
+          pageX: number,
+          pageY: number,
+        ) => {
+          setPosition({x, y, width, height, pageX, pageY});
+        },
+      );
 
-  useEffect(() => {
-    // Pausing video when app goes to background
-    if (appState === AppStates.BACKGROUND && videoRef?.current) {
-      videoRef?.current?.pause();
-      setPause(true);
-    }
-  }, [appState]);
+      if (!position) return;
 
-  const measureBox = () => {
-    videoBoxRef?.current?.measure(
-      (
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        pageX: number,
-        pageY: number,
-      ) => {
-        setPosition({x, y, width, height, pageX, pageY});
-      },
-    );
+      if (
+        position?.pageY - APP_HEADER_HEIGHT < 0 &&
+        Math.abs(position?.pageY - APP_HEADER_HEIGHT) -
+          position?.height * upperThresoldValue >=
+          0
+      ) {
+        // console.log('------------ 👆above screen ');
+        setIsVideoActive(false);
+        stopPlaying();
+      } else if (
+        position?.pageY >
+        screenHeight -
+          APP_BOTTOM_BAR_HEIGHT -
+          position?.height * lowerThresoldValue
+      ) {
+        // console.log('------------ 👇🖐below screen ');
+        setIsVideoActive(false);
+        stopPlaying();
+      } else {
+        // console.log('------------ 🖐 inside screen ');
+        setIsVideoActive(true);
+        // resumePlaying();
+      }
+    };
 
-    if (!position) return;
+    // Expose the measure function to parent
+    useImperativeHandle(ref, () => ({
+      measureLayoutPosition: measureBox,
+    }));
 
-    if (
-      position?.pageY - APP_HEADER_HEIGHT < 0 &&
-      Math.abs(position?.pageY - APP_HEADER_HEIGHT) -
-        position?.height * upperThresoldValue >=
-        0
-    ) {
-      // console.log('------------ 👆above screen ');
-      setIsVideoActive(false);
-      stopPlaying();
-    } else if (
-      position?.pageY >
-      screenHeight -
-        APP_BOTTOM_BAR_HEIGHT -
-        position?.height * lowerThresoldValue
-    ) {
-      // console.log('------------ 👇🖐below screen ');
-      setIsVideoActive(false);
-      stopPlaying();
-    } else {
-      // console.log('------------ 🖐 inside screen ');
-      setIsVideoActive(true);
-      // resumePlaying();
-    }
-  };
-
-  // Expose the measure function to parent
-  useImperativeHandle(ref, () => ({
-    measureLayoutPosition: measureBox,
-  }));
-
-  // console.log('video ref', videoRef.current);
-  return (
-    <View
-      onLayout={measureBox}
-      ref={videoBoxRef}
-      style={{
-        marginHorizontal: 16,
-        borderRadius: 16,
-        overflow: 'hidden',
-      }}
-      // bg={isVideoActive ? 'green.600' : 'red.600'}
-    >
-      {renderLoading && (
-        <View
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.1)',
-            width: '100%',
-            height: 250,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 16,
-            // position: 'absolute',
-          }}>
-          <ActivityIndicator size='large' color='#000' />
-        </View>
-      )}
-
-      <View>
-        <Animated.View
-          style={{
-            opacity: backgroundVideofadeAnim,
-            borderRadius: 16,
-            overflow: 'hidden',
-          }}>
-          <Video
-            ref={(ref: VideoPlayerRef) => (videoRef.current = ref)}
-            source={{
-              // uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-              uri: url,
-            }}
-            // thumbnail={
-            //   {
-            //     // uri: 'https://res.cloudinary.com/dpe70dvug/image/upload/v1734864712/cld-sample-3.jpg',
-            //   }
-            // }
-            paused={pause}
-            autoplay
-            hideControlsOnStart
-            controls={false}
-            onLoad={onVideoLoad}
-            disableControlsAutoHide
-            muted={mute}
-            resizeMode={ResizeMode.CONTAIN}
-            style={{
-              width: '100%',
-              height: renderLoading ? 0 : screenWidth / videoAspectRatio, // Maintain aspect ratio
-              alignSelf: 'center',
-              backgroundColor: appColors.black,
-            }}
-            onEnd={onEnd}
-            onProgress={e => {}}
-            onError={e => {}}
-            onBuffer={e => {}}
-            // disableSeek
-            // defaultMuted={mute}
-            // playInBackground={false}
-            // disableFocus
-            // onLoadStart={async () => {
-            //   await setMute(true);
-            //   await setMute(true);
-            // }}
-            // volume={100}
-            // pauseOnPress
-            // showDuration
-            // onAspectRatio={aspectRatio => {
-            //   console.log('aspectRatio', aspectRatio);
-            // }}
-            // style={{
-            //   aspectRatio: 1 / 2,
-            //   width: '100%',
-            //   height: 400,
-            //   alignSelf: 'center',
-            //   backgroundColor: 'green',
-            // }}
-            // style={{...videoStyle, width: '100%'}}
-            // repeat={true}
-            // loop={true}
-            // paused={pause}
-            // endWithThumbnail
-            customStyles={{
-              wrapper: {},
-
-              controls: {
-                display: 'none',
-              },
-              seekBar: {
-                display: 'none',
-              },
-              playButton: {
-                display: 'none',
-              },
-            }}
-          />
-        </Animated.View>
-
-        <View
-          style={{
-            // backgroundColor: 'pink',
-            position: 'absolute',
-            width: '100%',
-            overflow: 'hidden',
-            height: renderLoading ? 0 : screenWidth / videoAspectRatio,
-          }}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              onPause();
-            }}>
-            <View
-              style={{
-                height: '100%',
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Animated.View
-                style={{
-                  width: 50,
-                  height: 50,
-                  // backgroundColor: appColors.richBlack,
-                  borderRadius: 100,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  opacity: playButtonFadeAnim,
-                }}>
-                <PlayIcon
-                  width={50}
-                  height={50}
-                  color={appColors.warmRed}
-                  stroke={appColors.richBlack}
-                />
-              </Animated.View>
-            </View>
-          </TouchableOpacity>
+    // console.log('video ref', videoRef.current);
+    return (
+      <View
+        onLayout={measureBox}
+        ref={videoBoxRef}
+        style={{
+          borderRadius: 16,
+          overflow: 'hidden',
+        }}
+        // bg={isVideoActive ? 'green.600' : 'red.600'}
+      >
+        {showLoader && renderLoading && (
           <View
             style={{
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              width: '100%',
+              height: 250,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 16,
+              // position: 'absolute',
+            }}>
+            <ActivityIndicator size='large' color={appColors.warmRed} />
+          </View>
+        )}
+
+        <View>
+          <Animated.View
+            style={{
+              opacity: backgroundVideofadeAnim,
+              borderRadius: 16,
+              overflow: 'hidden',
+            }}>
+            <Video
+              ref={(ref: VideoPlayerRef) => (videoRef.current = ref)}
+              source={{
+                // uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                uri: url,
+              }}
+              // thumbnail={
+              //   {
+              //     // uri: 'https://res.cloudinary.com/dpe70dvug/image/upload/v1734864712/cld-sample-3.jpg',
+              //   }
+              // }
+              paused={pause}
+              autoplay
+              hideControlsOnStart
+              controls={false}
+              onLoad={onVideoLoad}
+              disableControlsAutoHide
+              muted={mute}
+              resizeMode={ResizeMode.CONTAIN}
+              style={{
+                width: '100%',
+                // height: renderLoading ? 0 : screenWidth / videoAspectRatio, // Maintain aspect ratio
+                height: renderLoading ? 0 : '100%', // Maintain aspect ratio
+                alignSelf: 'center',
+                backgroundColor,
+              }}
+              onEnd={onEnd}
+              onProgress={e => {}}
+              onError={e => {}}
+              onBuffer={e => {}}
+              // disableSeek
+              // defaultMuted={mute}
+              // playInBackground={false}
+              // disableFocus
+              // onLoadStart={async () => {
+              //   await setMute(true);
+              //   await setMute(true);
+              // }}
+              // volume={100}
+              // pauseOnPress
+              // showDuration
+              // onAspectRatio={aspectRatio => {
+              //   console.log('aspectRatio', aspectRatio);
+              // }}
+              // style={{
+              //   aspectRatio: 1 / 2,
+              //   width: '100%',
+              //   height: 400,
+              //   alignSelf: 'center',
+              //   backgroundColor: 'green',
+              // }}
+              // style={{...videoStyle, width: '100%'}}
+              // repeat={true}
+              // loop={true}
+              // paused={pause}
+              // endWithThumbnail
+              customStyles={{
+                wrapper: {},
+
+                controls: {
+                  display: 'none',
+                },
+                seekBar: {
+                  display: 'none',
+                },
+                playButton: {
+                  display: 'none',
+                },
+              }}
+            />
+          </Animated.View>
+
+          <View
+            style={{
+              // backgroundColor: 'pink',
               position: 'absolute',
-              bottom: 0,
-              right: 0,
+              width: '100%',
+              overflow: 'hidden',
+              // height: renderLoading ? 0 : screenWidth / videoAspectRatio,
+              height: renderLoading ? 0 : '100%',
             }}>
             <TouchableOpacity
-              activeOpacity={0.8}
+              activeOpacity={1}
               onPress={() => {
-                onMutePress();
+                onPause();
               }}>
               <View
                 style={{
-                  width: 26,
-                  height: 26,
-                  margin: 6,
-                  backgroundColor: appColors.richBlack,
-                  borderRadius: 100,
+                  height: '100%',
+                  width: '100%',
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                {mute ? (
-                  <MuteIcon stroke={appColors.warmRed} />
-                ) : (
-                  <UnMuteIcon stroke={appColors.warmRed} />
-                )}
+                <Animated.View
+                  style={{
+                    width: 50,
+                    height: 50,
+                    // backgroundColor: appColors.richBlack,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    opacity: playButtonFadeAnim,
+                  }}>
+                  <PlayIcon
+                    width={50}
+                    height={50}
+                    color={appColors.warmRed}
+                    stroke={appColors.erieBlack}
+                  />
+                </Animated.View>
               </View>
             </TouchableOpacity>
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+              }}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  onMutePress();
+                }}>
+                <View
+                  style={{
+                    width: 26,
+                    height: 26,
+                    margin: 6,
+                    backgroundColor: `${appColors.black}80`,
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  {mute ? (
+                    <MuteIcon stroke={appColors.warmRed} />
+                  ) : (
+                    <UnMuteIcon stroke={appColors.warmRed} />
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 export default VideoPlayer;
 

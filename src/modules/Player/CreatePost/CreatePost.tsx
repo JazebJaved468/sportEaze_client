@@ -240,13 +240,13 @@ export const CreatePost = () => {
 
   const onSubmit = async (data: {caption: string}) => {
     try {
-      const geminiRes: GeminiAnalysisResponse = await getGeminiResponse({
-        caption: data.caption,
-      });
+      // const geminiRes: GeminiAnalysisResponse = await getGeminiResponse({
+      //   caption: data.caption,
+      // });
 
-      if (geminiRes && !geminiRes.is_sports_related) {
-        return;
-      }
+      // if (geminiRes && !geminiRes.is_sports_related) {
+      //   return;
+      // }
 
       // Text Only Post
       if (!selectedMedia || selectedMedia?.length < 1) {
