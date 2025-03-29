@@ -34,6 +34,7 @@ import PlayerRegistrationDetails, {
   PlayerRegistrationDetailsPage,
 } from '../../../Player/PlayerRegistrationDetails';
 import PlayerProfile, {PlayerProfilePage} from '../../../Player/PlayerProfile';
+import ViewPost, {ViewPostPage} from '../../ViewPost';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -65,6 +66,10 @@ export type RootStackParamList = {
   RecommendationsPage: undefined;
   NotificationListingPage: undefined;
   PlayerRegistrationDetailsPage: undefined;
+  ViewPostPage: {
+    postId: string;
+    playerName: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -160,6 +165,14 @@ export const AppNavigator = () => {
       <Stack.Screen
         name={MediaPreviewPage}
         component={MediaPreview}
+        options={{
+          animation: 'fade',
+        }}
+      />
+
+      <Stack.Screen
+        name={ViewPostPage}
+        component={ViewPost}
         options={{
           animation: 'fade',
         }}
