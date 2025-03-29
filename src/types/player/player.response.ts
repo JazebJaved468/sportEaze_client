@@ -1,5 +1,5 @@
 import {User} from '../auth/auth.type';
-import {Player, Post} from './player.type';
+import {Player, CreatePost, Post} from './player.type';
 
 export type GetPlayerResponse = {
   player: Player;
@@ -18,5 +18,15 @@ export type FollowPlayerResponse = {
 
 export type CreateTextPostResponse = {
   success: boolean;
+  post: CreatePost;
+};
+
+export type GetPostsByPlayerIdResponse = {
+  posts: Post[];
+  success: boolean;
+};
+
+export type GetPostIdResponse = {
   post: Post;
+  success: boolean;
 };

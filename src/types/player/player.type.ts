@@ -1,3 +1,5 @@
+import {User} from '../auth/auth.type';
+
 export type Player = {
   id: string;
   primarySport: number;
@@ -13,7 +15,7 @@ export type Player = {
   availableForSponsorship: boolean;
 };
 
-export type Post = {
+export type CreatePost = {
   userId: string;
   textContent: string;
   visibility: number;
@@ -32,4 +34,21 @@ export type Media = {
   postId: string;
   mediaThumbnail: string | null;
   id: string;
+};
+export type Post = {
+  id: string;
+  userId: string;
+  textContent: string;
+  visibility: number;
+  shareCount: number;
+  postType: number;
+  createdAt: string;
+  updatedAt: string;
+  media: Media[];
+  likes: any[];
+  user: User;
+  comments: any[];
+  likeCount: number;
+  // reactions:    Reactions;
+  commentCount: number;
 };

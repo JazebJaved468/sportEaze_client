@@ -7,9 +7,11 @@ import {
 import {
   CreateTextPostResponse,
   FollowPlayerResponse,
+  GetPostIdResponse,
+  GetPostsByPlayerIdResponse,
   registerPlayerResponse,
 } from '../../types/player/player.response';
-import {Post} from '../../types/player/player.type';
+import {CreatePost, Post} from '../../types/player/player.type';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
@@ -72,7 +74,7 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    createTextPost: builder.mutation<Post, CreateTextPostParams>({
+    createTextPost: builder.mutation<CreatePost, CreateTextPostParams>({
       query: body => ({
         url: `/user/post/create-text-post`,
         method: 'POST',
@@ -83,13 +85,35 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    createMediaPost: builder.mutation<Post, CreateMediaPostParams>({
+    createMediaPost: builder.mutation<CreatePost, CreateMediaPostParams>({
       query: body => ({
         url: `/user/post/create-media-post`,
         method: 'POST',
         body,
       }),
       transformResponse: (response: CreateTextPostResponse) => {
+        return response.post;
+      },
+    }),
+
+    getPlayerPostsByPlayerIdService: builder.query<Post[], {playerId: string}>({
+      query: ({playerId}) => ({
+        url: `/user/post/get-posts/${playerId}`,
+        params: {
+          pageNo: 1,
+          pageSize: 15,
+        },
+      }),
+      transformResponse: (response: GetPostsByPlayerIdResponse) => {
+        return response.posts;
+      },
+    }),
+
+    getPostByIdService: builder.query<Post, {postId: string}>({
+      query: ({postId}) => ({
+        url: `/user/post/get-post/${postId}`,
+      }),
+      transformResponse: (response: GetPostIdResponse) => {
         return response.post;
       },
     }),
@@ -102,4 +126,6 @@ export const {
   useUnfollowPlayerMutation,
   useCreateTextPostMutation,
   useCreateMediaPostMutation,
+  useGetPlayerPostsByPlayerIdServiceQuery,
+  useGetPostByIdServiceQuery,
 } = playerApi;
