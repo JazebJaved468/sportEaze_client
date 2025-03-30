@@ -1,7 +1,12 @@
 import * as React from 'react';
 import Svg, {SvgProps, Path} from 'react-native-svg';
 export const MessageSendIcon = (props: SvgProps) => (
-  <Svg width={20} height={20} fill='none' viewBox='0 0 24 24' {...props}>
+  <Svg
+    width={props.width ?? 20}
+    height={props.height ?? 20}
+    fill='none'
+    viewBox='0 0 24 24'
+    {...props}>
     <Path
       stroke={props.color ?? '#000'}
       strokeLinecap='round'
