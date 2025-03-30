@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Dimensions,
   FlatList,
   Image,
@@ -6,7 +7,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {appColors} from '../../constants/colors';
 import {
   CommentIcon,
@@ -15,11 +16,12 @@ import {
   ShareIcon,
   SaveAddIcon,
   MultipleMediaIcon,
+  MessageSendIcon,
 } from '../../assets/icons';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomBottomSheet from '../CustomBottomSheet';
-import {useColorModeValue, View} from 'native-base';
+import {Button, useColorModeValue, View} from 'native-base';
 import {
   useCardColor,
   useLightTextColor,
@@ -32,6 +34,17 @@ import {format} from 'date-fns';
 import {FallBackPostImage} from '../FallBackPostImage';
 import {MediaType} from '../../constants/enums';
 import VideoPlayer from '../VideoPlayer';
+import {CustomTextInputField} from '../CustomInputField';
+import {Controller, useForm} from 'react-hook-form';
+import {useAppNavigation} from '../../utils/customHooks/navigator';
+import {
+  useCreateCommentMutation,
+  useCreateLikeOrUnLikeMutation,
+  useLazyGetCommentsByPostIdServiceQuery,
+  useLazyGetLikesByPostIdServiceQuery,
+} from '../../store/player/player.service';
+import {Loader} from '../Loader';
+import {color} from 'native-base/lib/typescript/theme/styled-system';
 
 const UserPost = ({post}: {post: Post}) => {
   return (
@@ -223,25 +236,128 @@ const FOOTER_VERTICAL_PADDING = 14;
 const FOOTER_ACTIONS_BUTTON_GAP = 12;
 
 const PostFooter = ({post}: {post: Post}) => {
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const navigation = useAppNavigation();
 
-  const openBottomSheet = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.present();
-    }
-  };
-  const closeBottomSheet = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.close();
-    }
-  };
+  const [
+    getCommentsOnPost,
+    {
+      data: commentsData,
+      isLoading: commentsDataCIP,
+      isFetching: commentsDataFIP,
+    },
+  ] = useLazyGetCommentsByPostIdServiceQuery();
+
+  const [
+    getLikesOnPost,
+    {data: likesData, isLoading: likesDataCIP, isFetching: likesDataFIP},
+  ] = useLazyGetLikesByPostIdServiceQuery();
+
+  const [createComment, {isLoading: createCommentCIP}] =
+    useCreateCommentMutation();
+  const [createLikeOrUnlike, {isLoading: createLikeOrUnlikeCIP}] =
+    useCreateLikeOrUnLikeMutation();
+
+  const commentsBottomSheetRef = useRef<BottomSheetModal>(null);
+  const likesBottomSheetRef = useRef<BottomSheetModal>(null);
+  const isBottomSheetOpen = useRef(false);
 
   const iconColor = useColorModeValue(appColors.black, appColors.white);
   const textColor = useColorModeValue(appColors.black, appColors.white);
   const heartColor = appColors.warmRed;
-
+  const lightTextColor = useLightTextColor();
   // favorite state will be handled through dispatch and making update in api data
   const [isFavourite, setIsFavourite] = useState(false);
+
+  console.log('post data', post);
+
+  const {
+    handleSubmit,
+    control,
+    formState: {errors},
+    setValue,
+    getValues,
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      new_comment: '',
+    },
+  });
+
+  const openCommentsBottomSheet = () => {
+    if (commentsBottomSheetRef.current) {
+      commentsBottomSheetRef.current.present();
+      isBottomSheetOpen.current = true;
+    }
+  };
+  const closeCommentsBottomSheet = () => {
+    if (commentsBottomSheetRef.current) {
+      commentsBottomSheetRef.current.close();
+      isBottomSheetOpen.current = false;
+    }
+  };
+
+  const openLikesBottomSheet = () => {
+    if (likesBottomSheetRef.current) {
+      likesBottomSheetRef.current.present();
+      isBottomSheetOpen.current = true;
+    }
+  };
+  const closeLikesBottomSheet = () => {
+    if (likesBottomSheetRef.current) {
+      likesBottomSheetRef.current.close();
+      isBottomSheetOpen.current = false;
+    }
+  };
+
+  // Handle hardware back button press
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (isBottomSheetOpen.current) {
+          closeCommentsBottomSheet();
+          closeLikesBottomSheet();
+          return true;
+        }
+
+        return false; // return true to prevent default behavior
+      },
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const addComment = async () => {
+    // console.log('Comment Data : ', data.new_comment);
+
+    try {
+      await createComment({
+        content: getValues('new_comment'),
+        parentCommentId: null,
+        postId: post.id,
+      });
+      // Call your API to add the comment here
+      // After successful submission, you can reset the input field
+      await getCommentsOnPost({
+        postId: post.id,
+      });
+      setValue('new_comment', '');
+    } catch (error) {
+      console.log('Error While Commenting', error);
+    }
+  };
+
+  const handlelikeOrUnlikePost = async () => {
+    try {
+      await createLikeOrUnlike({
+        unLike: isFavourite,
+        postId: post.id,
+      });
+    } catch (error) {
+      console.log('Error While Commenting', error);
+    }
+  };
+
   return (
     <>
       <View style={styles.postFooter}>
@@ -250,6 +366,7 @@ const PostFooter = ({post}: {post: Post}) => {
             style={styles.heart}
             activeOpacity={0.4}
             onPress={() => {
+              handlelikeOrUnlikePost();
               setIsFavourite(prev => !prev);
             }}>
             <HeartIcon
@@ -264,16 +381,29 @@ const PostFooter = ({post}: {post: Post}) => {
             style={styles.likeCount}
             activeOpacity={0.4}
             onPress={() => {
-              console.log('Open Like bottom sheet : POST ID -->', post.id);
+              getLikesOnPost({
+                postId: post.id,
+              });
+              openLikesBottomSheet();
+              // console.log('Open Like bottom sheet : POST ID -->', post.id);
             }}>
             <Text style={fontRegular(14, textColor)}>{post.likeCount}</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={openBottomSheet} activeOpacity={0.4}>
+        <TouchableOpacity
+          onPress={() => {
+            getCommentsOnPost({
+              postId: post.id,
+            });
+            openCommentsBottomSheet();
+          }}
+          activeOpacity={0.4}>
           <View style={styles.footerActionsWrapper}>
             <CommentIcon width={22} height={22} color={iconColor} />
-            <Text style={fontRegular(14, textColor)}>{post.commentCount}</Text>
+            <Text style={fontRegular(14, textColor)}>
+              {commentsData?.commentCount ?? post.commentCount}
+            </Text>
           </View>
         </TouchableOpacity>
 
@@ -294,25 +424,195 @@ const PostFooter = ({post}: {post: Post}) => {
             onPress={() => {
               console.log('Open Share bottom sheet : POST ID -->', post.id);
             }}>
-            <Text style={fontRegular(14, textColor)}>{post.likeCount}</Text>
+            <Text style={fontRegular(14, textColor)}>{post.shareCount}</Text>
           </TouchableOpacity>
         </View>
 
         {/*  */}
       </View>
 
+      {/* like sheet */}
+      {/* comment bottom sheet */}
       <CustomBottomSheet
-        bottomSheetRef={bottomSheetRef}
-        customSnapPoints={['75%', '100%']}>
+        bottomSheetRef={likesBottomSheetRef}
+        customSnapPoints={['50%']}>
         <View
           style={{
-            flex: 1,
-            backgroundColor: 'red',
-            justifyContent: 'center',
-            alignItems: 'center',
+            marginTop: 16,
+            marginBottom: 20,
+            marginHorizontal: 16,
           }}>
-          <Text style={{fontSize: 30, color: textColor}}>Comment Section</Text>
+          <Text style={[fontBold(18, textColor)]}>
+            Post Likes ({likesData?.likeCount ?? post.likeCount})
+          </Text>
         </View>
+
+        {likesDataCIP || !likesData ? (
+          <Loader />
+        ) : (
+          <BottomSheetScrollView
+            contentContainerStyle={{
+              paddingBottom: 40,
+            }}>
+            {likesData?.users?.map((user, index) => (
+              <View style={styles.commentContainer} key={user.id}>
+                <View style={styles.commentHeader}>
+                  <View style={[styles.picName]}>
+                    <View style={styles.commentProfilePicContainer}>
+                      {user.profilePicUrl ? (
+                        <Image
+                          source={{uri: user.profilePicUrl}}
+                          style={{
+                            width: 36,
+                            height: 36,
+                            objectFit: 'contain',
+                            borderRadius: 200,
+                          }}
+                        />
+                      ) : (
+                        <UserPlaceholderIcon
+                          width={36}
+                          height={36}
+                          color={textColor}
+                        />
+                      )}
+                    </View>
+                    <View style={{gap: 2}}>
+                      <Text style={fontRegular(14, textColor)}>
+                        {user.fullName}
+                      </Text>
+
+                      <Text style={fontRegular(10, lightTextColor)}>
+                        {user.username}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </BottomSheetScrollView>
+        )}
+      </CustomBottomSheet>
+
+      {/*  */}
+
+      {/* comment bottom sheet */}
+      <CustomBottomSheet
+        bottomSheetRef={commentsBottomSheetRef}
+        customSnapPoints={['80%']}>
+        <View
+          style={{
+            marginTop: 16,
+            marginHorizontal: 16,
+          }}>
+          <Text style={[fontBold(18, textColor)]}>
+            Post Comments ({commentsData?.commentCount ?? post.commentCount})
+          </Text>
+        </View>
+
+        <View
+          style={{
+            marginVertical: 20,
+            marginHorizontal: 16,
+          }}>
+          <Controller
+            name='new_comment'
+            control={control}
+            rules={{}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <CustomTextInputField
+                height={46}
+                borderRadius={14}
+                placeholder='Write a comment...'
+                placeholderTextColor={appColors.whisperGray}
+                value={value}
+                onChangeText={onChange}
+                maxLength={500}
+                autoCapitalize='none'
+                rightElement={
+                  <Button
+                    style={styles.commentSend}
+                    isDisabled={getValues('new_comment').trim().length === 0}
+                    isLoading={
+                      (createCommentCIP || commentsDataFIP) && !commentsDataCIP
+                    }
+                    _spinner={{
+                      color: appColors.warmRed,
+                    }}
+                    onPress={addComment}>
+                    <MessageSendIcon
+                      width={26}
+                      height={26}
+                      color={appColors.warmRed}
+                    />
+                  </Button>
+                }
+                customTextInputStyles={{
+                  ...fontRegular(13, textColor),
+                }}
+              />
+            )}
+          />
+        </View>
+
+        {commentsDataCIP || !commentsData ? (
+          <Loader />
+        ) : (
+          <BottomSheetScrollView
+            contentContainerStyle={{
+              paddingBottom: 40,
+            }}>
+            {commentsData?.comments.map((comment, index) => (
+              <View style={styles.commentContainer} key={comment.id}>
+                <View style={styles.commentHeader}>
+                  <View style={[styles.picName]}>
+                    <View style={styles.commentProfilePicContainer}>
+                      {comment.user.profilePicUrl ? (
+                        <Image
+                          source={{uri: comment.user.profilePicUrl}}
+                          style={{
+                            width: 36,
+                            height: 36,
+                            objectFit: 'contain',
+                            borderRadius: 200,
+                          }}
+                        />
+                      ) : (
+                        <UserPlaceholderIcon
+                          width={36}
+                          height={36}
+                          color={textColor}
+                        />
+                      )}
+                    </View>
+                    <View style={{gap: 2}}>
+                      <Text style={fontRegular(14, textColor)}>
+                        {comment.user.fullName}
+                      </Text>
+
+                      <Text style={fontRegular(10, lightTextColor)}>
+                        {comment.user.username}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={fontRegular(10, lightTextColor)}>
+                    {format(comment.createdAt, 'MMM d')}
+                  </Text>
+                </View>
+                <Text
+                  style={[
+                    fontRegular(12, textColor),
+                    {
+                      marginVertical: 6,
+                      marginLeft: 52,
+                    },
+                  ]}>
+                  {comment.content}
+                </Text>
+              </View>
+            ))}
+          </BottomSheetScrollView>
+        )}
       </CustomBottomSheet>
     </>
   );
@@ -430,4 +730,78 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     zIndex: 1,
   },
+  commentProfilePicContainer: {
+    width: 36,
+    height: 36,
+    backgroundColor: `${appColors.whisperGray}90`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 200,
+    overflow: 'hidden',
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  commentContainer: {
+    paddingVertical: 14,
+    marginHorizontal: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: appColors.whisperGray,
+  },
+  commentSend: {
+    width: 40,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: 'transparent',
+  },
 });
+
+const mockComments = [
+  {
+    id: 1,
+    username: 'JohnDoe',
+    avatar: 'https://example.com/avatar1.jpg',
+    comment: 'This is an amazing post! Thanks for sharing.',
+    timestamp: '2025-03-30T12:34:56Z',
+    likes: 15,
+    replies: [
+      {
+        id: 101,
+        username: 'JaneSmith',
+        avatar: 'https://example.com/avatar2.jpg',
+        comment: 'I agree! Really insightful.',
+        timestamp: '2025-03-30T13:00:00Z',
+        likes: 5,
+      },
+    ],
+  },
+  {
+    id: 2,
+    username: 'AliceW',
+    avatar: 'https://example.com/avatar3.jpg',
+    comment: 'I have a different perspective on this topic.',
+    timestamp: '2025-03-30T14:10:30Z',
+    likes: 8,
+    replies: [],
+  },
+  {
+    id: 3,
+    username: 'CharlieP',
+    avatar: 'https://example.com/avatar4.jpg',
+    comment: 'Does anyone have more resources on this?',
+    timestamp: '2025-03-30T15:20:45Z',
+    likes: 3,
+    replies: [
+      {
+        id: 102,
+        username: 'SamG',
+        avatar: 'https://example.com/avatar5.jpg',
+        comment: 'Check out this article: https://example.com/resource',
+        timestamp: '2025-03-30T16:00:00Z',
+        likes: 7,
+      },
+    ],
+  },
+];
