@@ -268,8 +268,6 @@ const PostFooter = ({post}: {post: Post}) => {
   // favorite state will be handled through dispatch and making update in api data
   const [isFavourite, setIsFavourite] = useState(false);
 
-  console.log('post data', post);
-
   const {
     handleSubmit,
     control,
