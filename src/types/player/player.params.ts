@@ -36,3 +36,13 @@ export type MediaParam = {
   mediaOrder: number;
   mediaLink: string;
 };
+
+export type CreateCommentOnPostParams = {
+  content: string;
+  parentCommentId: string | null;
+  postId: string;
+};
+export type CreateLikeOnPostParams = {
+  unLike: boolean;
+  postId: string;
+};
