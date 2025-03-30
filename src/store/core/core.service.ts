@@ -1,5 +1,5 @@
 import {AvailableSportsResponse} from '../../types/core/core.response';
-import {SearchedUser} from '../../types/core/core.type';
+import {UserWindow} from '../../types/core/core.type';
 import {sporteazeBaseApi} from '../baseApi.service';
 
 export const coreApi = sporteazeBaseApi.injectEndpoints({
@@ -13,11 +13,11 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    getSearchedUsers: builder.query<SearchedUser[], string>({
+    getSearchedUsers: builder.query<UserWindow[], string>({
       query: body => ({
         url: `/user/search/${body}`,
       }),
-      transformResponse: (response: SearchedUser[]) => {
+      transformResponse: (response: UserWindow[]) => {
         return response;
       },
     }),

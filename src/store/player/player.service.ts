@@ -1,14 +1,20 @@
 import {
+  CreateCommentOnPostParams,
+  CreateLikeOnPostParams,
   CreateMediaPostParams,
   CreateTextPostParams,
   FollowPlayerParams,
   RegisterPlayerParams,
 } from '../../types/player/player.params';
 import {
+  CommmentsByPostIdResponse,
+  CreateCommentOnPostResponse,
+  CreateLikeOnPostResponse,
   CreateTextPostResponse,
   FollowPlayerResponse,
   GetPostIdResponse,
   GetPostsByPlayerIdResponse,
+  LikesByPostIdResponse,
   registerPlayerResponse,
 } from '../../types/player/player.response';
 import {CreatePost, Post} from '../../types/player/player.type';
@@ -117,6 +123,147 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         return response.post;
       },
     }),
+
+    getCommentsByPostIdService: builder.query<
+      CommmentsByPostIdResponse,
+      {postId: string}
+    >({
+      query: ({postId}) => ({
+        url: `/user/post/comments/${postId}`,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+
+          dispatch(
+            playerApi.util.updateQueryData(
+              'getPostByIdService',
+              {postId: args.postId},
+              draft => {
+                // console.log('draft --->', draft);
+                draft.commentCount = data.commentCount;
+              },
+            ),
+          );
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while commenting post : player.service.ts : Line 155',
+            err,
+          );
+        }
+      },
+
+      transformResponse: (response: CommmentsByPostIdResponse) => {
+        return response;
+      },
+    }),
+
+    createComment: builder.mutation<
+      CreateCommentOnPostResponse,
+      CreateCommentOnPostParams
+    >({
+      query: ({content, postId, parentCommentId}) => ({
+        url: `/user/post/comment/${postId}`,
+        method: 'POST',
+        body: {
+          content,
+          parentCommentId,
+        },
+      }),
+      transformResponse: (response: CreateCommentOnPostResponse) => {
+        return response;
+      },
+    }),
+
+    getLikesByPostIdService: builder.query<
+      LikesByPostIdResponse,
+      {postId: string}
+    >({
+      query: ({postId}) => ({
+        url: `/user/post/likes/${postId}`,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        try {
+          const {data} = await queryFulfilled;
+
+          dispatch(
+            playerApi.util.updateQueryData(
+              'getPostByIdService',
+              {postId: args.postId},
+              draft => {
+                draft.likeCount = data.likeCount;
+              },
+            ),
+          );
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while registering player : fan.service.ts : Line 30',
+            err,
+          );
+        }
+      },
+
+      transformResponse: (response: LikesByPostIdResponse) => {
+        return response;
+      },
+    }),
+
+    createLikeOrUnLike: builder.mutation<
+      CreateLikeOnPostResponse,
+      CreateLikeOnPostParams
+    >({
+      query: ({postId, unLike}) => ({
+        url: `/user/post/like/${postId}`,
+        method: 'POST',
+        body: {
+          unLike,
+        },
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        try {
+          dispatch(
+            playerApi.util.updateQueryData(
+              'getPostByIdService',
+              {postId: args.postId},
+              draft => {
+                draft.likeCount = args.unLike
+                  ? draft.likeCount - 1
+                  : draft.likeCount + 1;
+              },
+            ),
+          );
+          const {data} = await queryFulfilled;
+
+          // fall back update
+          dispatch(
+            playerApi.util.updateQueryData(
+              'getPostByIdService',
+              {postId: args.postId},
+              draft => {
+                draft.likeCount = data.likeCount;
+              },
+            ),
+          );
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while registering player : fan.service.ts : Line 30',
+            err,
+          );
+        }
+      },
+      transformResponse: (response: CreateLikeOnPostResponse) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -128,4 +275,9 @@ export const {
   useCreateMediaPostMutation,
   useGetPlayerPostsByPlayerIdServiceQuery,
   useGetPostByIdServiceQuery,
+  useGetCommentsByPostIdServiceQuery,
+  useLazyGetCommentsByPostIdServiceQuery,
+  useCreateCommentMutation,
+  useLazyGetLikesByPostIdServiceQuery,
+  useCreateLikeOrUnLikeMutation,
 } = playerApi;

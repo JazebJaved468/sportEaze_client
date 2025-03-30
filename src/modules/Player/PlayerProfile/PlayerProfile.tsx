@@ -165,7 +165,7 @@ const PlayerProfile = () => {
     <PageContainer>
       <GeneralHeader title='Player Profile' />
 
-      {playerDataCIP || playerDataFIP || !playerData ? (
+      {playerDataCIP || playerDataFIP || !playerData?.player ? (
         <Loader />
       ) : (
         <ScrollView contentContainerStyle={styles.container}>
@@ -323,7 +323,10 @@ const PlayerProfile = () => {
               styles.countsContainer,
               {backgroundColor: cardColor},
             ]}>
-            <CountTile title='Followers' count={0} />
+            <CountTile
+              title='Followers'
+              count={playerData.player?.followerCount}
+            />
             <CountTile title='Posts' count={101} showSeparator />
             <CountTile title='Achievements' count={0} showSeparator={false} />
           </View>

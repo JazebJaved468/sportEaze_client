@@ -1,5 +1,6 @@
 import {User} from '../auth/auth.type';
-import {Player, CreatePost, Post} from './player.type';
+import {UserWindow} from '../core/core.type';
+import {Player, CreatePost, Post, Comment, CreateComment} from './player.type';
 
 export type GetPlayerResponse = {
   player: Player;
@@ -29,4 +30,27 @@ export type GetPostsByPlayerIdResponse = {
 export type GetPostIdResponse = {
   post: Post;
   success: boolean;
+};
+
+export type CommmentsByPostIdResponse = {
+  commentCount: number;
+  currentPage: number;
+  totalPages: number;
+  comments: Comment[];
+};
+export type LikesByPostIdResponse = {
+  success: boolean;
+  likeCount: number;
+  users: UserWindow[];
+};
+
+export type CreateCommentOnPostResponse = {
+  success: boolean;
+  message: string;
+  comment: CreateComment;
+};
+export type CreateLikeOnPostResponse = {
+  success: boolean;
+  liked: boolean;
+  likeCount: number;
 };

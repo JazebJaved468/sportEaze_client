@@ -1,4 +1,5 @@
 import {User} from '../auth/auth.type';
+import {UserWindow} from '../core/core.type';
 
 export type Player = {
   id: string;
@@ -13,6 +14,7 @@ export type Player = {
   instaLink: string | null;
   xLink: string | null;
   availableForSponsorship: boolean;
+  followerCount: number;
 };
 
 export type CreatePost = {
@@ -51,4 +53,21 @@ export type Post = {
   likeCount: number;
   // reactions:    Reactions;
   commentCount: number;
+};
+
+export type Comment = {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: UserWindow;
+};
+
+export type CreateComment = {
+  userId: string;
+  postId: string;
+  content: string;
+  parentComment: string | null;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
 };

@@ -3,7 +3,7 @@ export type ToastType = {
   isVisible: boolean;
 };
 
-export type SearchedUser = {
+export type UserWindow = {
   id: string;
   profilePicUrl: string;
   fullName: string;
