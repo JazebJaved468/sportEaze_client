@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {appColors} from '../../constants/colors';
@@ -19,7 +20,6 @@ import {
   MessageSendIcon,
 } from '../../assets/icons';
 import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomBottomSheet from '../CustomBottomSheet';
 import {Button, useColorModeValue, View} from 'native-base';
 import {
@@ -44,7 +44,6 @@ import {
   useLazyGetLikesByPostIdServiceQuery,
 } from '../../store/player/player.service';
 import {Loader} from '../Loader';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
 
 const UserPost = ({post}: {post: Post}) => {
   return (
@@ -131,12 +130,38 @@ const TextOnlyContent = ({content}: {content: string}) => {
 const screenWidth = Dimensions.get('window').width;
 
 const TextWithMediaContent = ({post}: {post: Post}) => {
+  const [createLikeOrUnlike] = useCreateLikeOrUnLikeMutation();
+
   const textColor = useTextColor();
   const postBackgroundColor = usePostBackgroundColor();
 
+  const lastPress = useRef(0);
+
+  const handleDoublePress = () => {
+    const timeNow = Date.now();
+    if (timeNow - lastPress.current < 300) {
+      // 300ms threshold for double press
+      handlelikeOrUnlikePost();
+    }
+    lastPress.current = timeNow;
+  };
+
+  const handlelikeOrUnlikePost = async () => {
+    try {
+      await createLikeOrUnlike({
+        unLike: post.isLiked,
+        postId: post.id,
+      });
+    } catch (error) {
+      console.log('Error While Commenting', error);
+    }
+  };
+
   const renderItem = ({item}: {item: Media}) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={handleDoublePress}
+        activeOpacity={1}
         style={{
           width: screenWidth - 64,
           height: 600,
@@ -169,11 +194,9 @@ const TextWithMediaContent = ({post}: {post: Post}) => {
             id={1}
           />
         )}
-      </View>
+      </TouchableOpacity>
     );
   };
-
-  console.log('Post Media : ', post.media.length);
 
   return (
     <View
@@ -254,8 +277,7 @@ const PostFooter = ({post}: {post: Post}) => {
 
   const [createComment, {isLoading: createCommentCIP}] =
     useCreateCommentMutation();
-  const [createLikeOrUnlike, {isLoading: createLikeOrUnlikeCIP}] =
-    useCreateLikeOrUnLikeMutation();
+  const [createLikeOrUnlike] = useCreateLikeOrUnLikeMutation();
 
   const commentsBottomSheetRef = useRef<BottomSheetModal>(null);
   const likesBottomSheetRef = useRef<BottomSheetModal>(null);
@@ -348,7 +370,7 @@ const PostFooter = ({post}: {post: Post}) => {
   const handlelikeOrUnlikePost = async () => {
     try {
       await createLikeOrUnlike({
-        unLike: isFavourite,
+        unLike: post.isLiked,
         postId: post.id,
       });
     } catch (error) {
@@ -370,8 +392,8 @@ const PostFooter = ({post}: {post: Post}) => {
             <HeartIcon
               width={20}
               height={20}
-              fill={isFavourite ? heartColor : 'none'}
-              color={isFavourite ? heartColor : iconColor}
+              fill={post.isLiked ? heartColor : 'none'}
+              color={post.isLiked ? heartColor : iconColor}
             />
           </TouchableOpacity>
 
