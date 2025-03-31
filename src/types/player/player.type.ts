@@ -53,6 +53,7 @@ export type Post = {
   likeCount: number;
   // reactions:    Reactions;
   commentCount: number;
+  isLiked: boolean;
 };
 
 export type Comment = {

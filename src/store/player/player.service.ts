@@ -234,9 +234,7 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
               'getPostByIdService',
               {postId: args.postId},
               draft => {
-                draft.likeCount = args.unLike
-                  ? draft.likeCount - 1
-                  : draft.likeCount + 1;
+                draft.isLiked = !draft.isLiked;
               },
             ),
           );
