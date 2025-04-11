@@ -1,12 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, FlatList} from 'react-native';
 import React, {MutableRefObject, useRef} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import UserPost from '../../../components/UserPost/UserPost';
-import {Button, FlatList, ScrollView} from 'native-base';
 import GeneralHeader from '../../../components/GeneralHeader';
-import VideoPlayer from '../../../components/VideoPlayer';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
-import {JoinAsPage} from '../Auth/JoinAs';
+import {useGetPostFeedInfiniteQuery} from '../../../store/core/core.service';
+import PullToRefresh from '../../../components/PullToRefresh';
+import {Loader} from '../../../components/Loader';
+import {Button} from 'native-base';
+import {PulseEffect} from '../../../components/PulseEffect';
+import {appColors} from '../../../constants/colors';
+import {fontRegular} from '../../../styles/fonts';
+import {useTextColor} from '../../../utils/customHooks/colorHooks';
 
 export const PostFeed = () => {
   // const onScroll = (event: any) => {
@@ -34,7 +39,7 @@ export const PostFeed = () => {
   };
 
   // Set these refs only for Videos posts
-  const setChildRef = (id: number) => (ref: ChildRef | null) => {
+  const setChildRef = (id: number | string) => (ref: ChildRef | null) => {
     if (ref) {
       childRefs.current[id] = ref;
     }
@@ -42,20 +47,75 @@ export const PostFeed = () => {
 
   const navigation = useAppNavigation();
 
+  const {
+    data: posts,
+    isLoading: postsCIP,
+    isFetching: postsFIP,
+    isFetchingNextPage: postsNextPageFIP,
+    fetchNextPage,
+    refetch: refetchPostFeed,
+  } = useGetPostFeedInfiniteQuery();
+
+  const mergedData = {
+    posts: posts?.pages.flatMap(page => page) ?? [],
+  };
+
+  // const numberOfPages = posts?.pages.length ?? 0;
+
+  const textColor = useTextColor();
+
+  const handleFetchMore = () => {
+    if (postsCIP) return;
+    fetchNextPage();
+  };
+
   return (
     <PageContainer>
       <GeneralHeader showLeftElement={false} titleAlign='left' />
 
-      <FlatList
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        data={[1]}
-        renderItem={({item}) => {
-          return (
-            <VideoPlayer key={item} ref={setChildRef(item)} url='' id={item} />
-          );
-        }}
-      />
+      {postsCIP ? (
+        <Loader />
+      ) : (
+        <FlatList
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          data={mergedData.posts}
+          refreshControl={
+            <PullToRefresh
+              onRefresh={async () => {
+                refetchPostFeed();
+              }}
+            />
+          }
+          renderItem={({item}) => {
+            return (
+              // <VideoPlayer
+              //   key={item.id}
+              //   ref={setChildRef(item.id)}
+              //   url=''
+              //   id={item.id}
+              // />
+
+              <UserPost post={item} />
+            );
+          }}
+          ListFooterComponent={
+            <PulseEffect>
+              <Button
+                isDisabled={postsCIP || postsNextPageFIP || postsFIP}
+                onPress={handleFetchMore}
+                isLoading={postsNextPageFIP || postsFIP}
+                _spinner={{
+                  color: appColors.warmRed,
+                }}
+                style={styles.seeMore}
+                _text={fontRegular(12, textColor)}>
+                See More
+              </Button>
+            </PulseEffect>
+          }
+        />
+      )}
 
       {/* <ScrollView onScroll={handleScroll}>
         {[1, 2, 3].map(id => (
@@ -83,4 +143,11 @@ export const PostFeed = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  seeMore: {
+    height: 40,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    backgroundColor: `${appColors.warmRed}30`,
+  },
+});

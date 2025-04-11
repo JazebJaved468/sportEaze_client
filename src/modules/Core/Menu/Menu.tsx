@@ -178,7 +178,6 @@ const Menu = () => {
                 if (user?.id)
                   // If USerType = 2 =  is Player
                   navigation.navigate(PlayerProfilePage, {
-                    isVisitor: false,
                     userId: user?.id,
                   });
               }}>

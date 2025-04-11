@@ -21,6 +21,7 @@ import {CreatePost, Post} from '../../types/player/player.type';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
+import {coreApi} from '../core/core.service';
 
 export const playerApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
@@ -144,10 +145,25 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
               'getPostByIdService',
               {postId: args.postId},
               draft => {
-                // console.log('draft --->', draft);
                 draft.commentCount = data.commentCount;
               },
             ),
+          );
+
+          dispatch(
+            coreApi.util.updateQueryData('getPostFeed', undefined, draft => {
+              draft.pages.forEach((postPage, index) => {
+                const postIndex = postPage.findIndex(
+                  post => post.id === args.postId,
+                );
+
+                if (postIndex !== -1) {
+                  const draftPost = postPage[postIndex];
+                  draftPost.commentCount = data.commentCount;
+                  return;
+                }
+              });
+            }),
           );
         } catch (err) {
           // `onError` side-effect
@@ -201,6 +217,22 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
               },
             ),
           );
+
+          dispatch(
+            coreApi.util.updateQueryData('getPostFeed', undefined, draft => {
+              draft.pages.forEach((postPage, index) => {
+                const postIndex = postPage.findIndex(
+                  post => post.id === args.postId,
+                );
+
+                if (postIndex !== -1) {
+                  const draftPost = postPage[postIndex];
+                  draftPost.likeCount = data.likeCount;
+                  return;
+                }
+              });
+            }),
+          );
         } catch (err) {
           // `onError` side-effect
           console.log(
@@ -229,27 +261,9 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
 
       async onQueryStarted(args, {dispatch, queryFulfilled}) {
         try {
-          dispatch(
-            playerApi.util.updateQueryData(
-              'getPostByIdService',
-              {postId: args.postId},
-              draft => {
-                draft.isLiked = !draft.isLiked;
-              },
-            ),
-          );
           const {data} = await queryFulfilled;
 
           // fall back update
-          dispatch(
-            playerApi.util.updateQueryData(
-              'getPostByIdService',
-              {postId: args.postId},
-              draft => {
-                draft.likeCount = data.likeCount;
-              },
-            ),
-          );
         } catch (err) {
           // `onError` side-effect
           console.log(

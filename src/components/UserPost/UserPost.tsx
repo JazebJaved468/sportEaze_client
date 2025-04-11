@@ -3,7 +3,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -32,7 +31,7 @@ import {Media, Post} from '../../types/player/player.type';
 import {fontBold, fontRegular} from '../../styles/fonts';
 import {format} from 'date-fns';
 import {FallBackPostImage} from '../FallBackPostImage';
-import {MediaType} from '../../constants/enums';
+import {MediaType, USER_TYPE} from '../../constants/enums';
 import VideoPlayer from '../VideoPlayer';
 import {CustomTextInputField} from '../CustomInputField';
 import {Controller, useForm} from 'react-hook-form';
@@ -44,24 +43,39 @@ import {
   useLazyGetLikesByPostIdServiceQuery,
 } from '../../store/player/player.service';
 import {Loader} from '../Loader';
+import {PlayerProfilePage} from '../../modules/Player/PlayerProfile';
 
 const UserPost = ({post}: {post: Post}) => {
+  const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
+  const [likeCount, setLikeCount] = useState(post.likeCount ?? 0);
   return (
-    <ScrollView
+    <View
       // contentContainerStyle={{
       //   flexGrow: 1,
       // }}
       style={styles.postContainer}>
       <PostHeader post={post} />
-      <PostContent post={post} />
-      <PostFooter post={post} />
-    </ScrollView>
+      <PostContent
+        post={post}
+        setIsLiked={setIsLiked}
+        setLikeCount={setLikeCount}
+        isLiked={isLiked}
+      />
+      <PostFooter
+        post={post}
+        setIsLiked={setIsLiked}
+        setLikeCount={setLikeCount}
+        isLiked={isLiked}
+        likeCount={likeCount}
+      />
+    </View>
   );
 };
 
 const PostHeader = ({post}: {post: Post}) => {
-  const textColor = useTextColor();
+  const navigation = useAppNavigation();
 
+  const textColor = useTextColor();
   const lightTextColor = useLightTextColor();
 
   const handleSavePost = () => {
@@ -70,29 +84,39 @@ const PostHeader = ({post}: {post: Post}) => {
 
   return (
     <View style={styles.postHeader}>
-      <View style={styles.picName}>
-        <View style={styles.profilePicContainer}>
-          {post.user.profilePicUrl ? (
-            <Image
-              source={{uri: post.user.profilePicUrl}}
-              style={{
-                width: 50,
-                height: 50,
-                objectFit: 'contain',
-                borderRadius: 200,
-              }}
-            />
-          ) : (
-            <UserPlaceholderIcon width={40} height={40} color={textColor} />
-          )}
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => {
+          if (post.user.userType === USER_TYPE.PLAYER) {
+            navigation.navigate(PlayerProfilePage, {
+              userId: post.user.id,
+            });
+          }
+        }}>
+        <View style={styles.picName}>
+          <View style={styles.profilePicContainer}>
+            {post.user.profilePicUrl ? (
+              <Image
+                source={{uri: post.user.profilePicUrl}}
+                style={{
+                  width: 50,
+                  height: 50,
+                  objectFit: 'contain',
+                  borderRadius: 200,
+                }}
+              />
+            ) : (
+              <UserPlaceholderIcon width={40} height={40} color={textColor} />
+            )}
+          </View>
+          <View style={{gap: 4}}>
+            <Text style={fontBold(14, textColor)}>{post.user.fullName}</Text>
+            <Text style={fontRegular(10, lightTextColor)}>
+              {format(post.createdAt, 'MMM d h:mm aaa')}
+            </Text>
+          </View>
         </View>
-        <View style={{gap: 4}}>
-          <Text style={fontBold(14, textColor)}>{post.user.fullName}</Text>
-          <Text style={fontRegular(10, lightTextColor)}>
-            {format(post.createdAt, 'MMM d h:mm aaa')}
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
 
       <TouchableOpacity activeOpacity={0.4} onPress={handleSavePost}>
         {/* <SaveTickIcon width={20} height={20} style={{marginLeft: 'auto'}} /> */}
@@ -129,7 +153,17 @@ const TextOnlyContent = ({content}: {content: string}) => {
 
 const screenWidth = Dimensions.get('window').width;
 
-const TextWithMediaContent = ({post}: {post: Post}) => {
+const TextWithMediaContent = ({
+  post,
+  isLiked,
+  setLikeCount,
+  setIsLiked,
+}: {
+  post: Post;
+  isLiked: boolean;
+  setLikeCount: React.Dispatch<React.SetStateAction<number>>;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [createLikeOrUnlike] = useCreateLikeOrUnLikeMutation();
 
   const textColor = useTextColor();
@@ -148,8 +182,10 @@ const TextWithMediaContent = ({post}: {post: Post}) => {
 
   const handlelikeOrUnlikePost = async () => {
     try {
+      setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
+      setIsLiked(prev => !prev);
       await createLikeOrUnlike({
-        unLike: post.isLiked,
+        unLike: isLiked ?? true,
         postId: post.id,
       });
     } catch (error) {
@@ -232,7 +268,18 @@ const TextWithMediaContent = ({post}: {post: Post}) => {
   );
 };
 
-const PostContent = ({post}: {post: Post}) => {
+const PostContent = ({
+  post,
+  isLiked,
+  setLikeCount,
+  setIsLiked,
+}: {
+  post: Post;
+
+  isLiked: boolean;
+  setLikeCount: React.Dispatch<React.SetStateAction<number>>;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const imagePlaceholderColor = useColorModeValue(
     appColors.white,
     appColors.black,
@@ -243,24 +290,58 @@ const PostContent = ({post}: {post: Post}) => {
     appColors.gray,
   );
 
+  const postBackgroundColor = usePostBackgroundColor();
+
   const cardColor = useCardColor();
 
   const isTextPost = post.media.length === 0;
 
-  return isTextPost ? (
-    <TextOnlyContent content={post.textContent} />
-  ) : (
-    <TextWithMediaContent post={post} />
+  return (
+    <View
+      style={{
+        backgroundColor: postBackgroundColor,
+        marginHorizontal: 16,
+        borderRadius: 10,
+      }}>
+      {isTextPost ? (
+        <TextOnlyContent content={post.textContent} />
+      ) : (
+        <TextWithMediaContent
+          post={post}
+          setIsLiked={setIsLiked}
+          setLikeCount={setLikeCount}
+          isLiked={isLiked}
+        />
+      )}
+      {/* <PostFooter post={post} /> */}
+    </View>
   );
+
+  // return isTextPost ? (
+  //   <TextOnlyContent content={post.textContent} />
+  // ) : (
+  //   <TextWithMediaContent post={post} />
+  // );
 };
 
 const FOOTER_HORIZONTAL_PADDING = 30;
 const FOOTER_VERTICAL_PADDING = 14;
 const FOOTER_ACTIONS_BUTTON_GAP = 12;
 
-const PostFooter = ({post}: {post: Post}) => {
-  const navigation = useAppNavigation();
+const PostFooter = ({
+  post,
+  isLiked,
+  likeCount,
+  setLikeCount,
+  setIsLiked,
+}: {
+  post: Post;
 
+  isLiked: boolean;
+  likeCount: number;
+  setLikeCount: React.Dispatch<React.SetStateAction<number>>;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [
     getCommentsOnPost,
     {
@@ -287,8 +368,6 @@ const PostFooter = ({post}: {post: Post}) => {
   const textColor = useColorModeValue(appColors.black, appColors.white);
   const heartColor = appColors.warmRed;
   const lightTextColor = useLightTextColor();
-  // favorite state will be handled through dispatch and making update in api data
-  const [isFavourite, setIsFavourite] = useState(false);
 
   const {
     handleSubmit,
@@ -369,8 +448,10 @@ const PostFooter = ({post}: {post: Post}) => {
 
   const handlelikeOrUnlikePost = async () => {
     try {
+      setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
+      setIsLiked(prev => !prev);
       await createLikeOrUnlike({
-        unLike: post.isLiked,
+        unLike: isLiked ?? true,
         postId: post.id,
       });
     } catch (error) {
@@ -378,22 +459,31 @@ const PostFooter = ({post}: {post: Post}) => {
     }
   };
 
+  useEffect(() => {
+    setLikeCount(post.likeCount ?? 0);
+  }, [post.likeCount]);
+
   return (
     <>
-      <View style={styles.postFooter}>
+      <View
+        style={[
+          styles.postFooter,
+          {
+            marginBottom: 4,
+          },
+        ]}>
         <View style={styles.likesWrapper}>
           <TouchableOpacity
             style={styles.heart}
             activeOpacity={0.4}
             onPress={() => {
               handlelikeOrUnlikePost();
-              setIsFavourite(prev => !prev);
             }}>
             <HeartIcon
               width={20}
               height={20}
-              fill={post.isLiked ? heartColor : 'none'}
-              color={post.isLiked ? heartColor : iconColor}
+              fill={isLiked ? heartColor : 'none'}
+              color={isLiked ? heartColor : iconColor}
             />
           </TouchableOpacity>
 
@@ -407,7 +497,7 @@ const PostFooter = ({post}: {post: Post}) => {
               openLikesBottomSheet();
               // console.log('Open Like bottom sheet : POST ID -->', post.id);
             }}>
-            <Text style={fontRegular(14, textColor)}>{post.likeCount}</Text>
+            <Text style={fontRegular(14, textColor)}>{likeCount}</Text>
           </TouchableOpacity>
         </View>
 
@@ -643,7 +733,7 @@ export default UserPost;
 const styles = StyleSheet.create({
   postContainer: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 24,
   },
   postHeader: {
     width: '100%',
@@ -735,7 +825,6 @@ const styles = StyleSheet.create({
   contentView: {
     marginHorizontal: 16,
     paddingVertical: 16,
-    paddingHorizontal: 16,
     borderRadius: 10,
   },
   multipleMediaIconWrapper: {

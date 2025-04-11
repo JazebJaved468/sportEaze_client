@@ -231,7 +231,6 @@ export const CreatePost = () => {
     if (user?.id) {
       if (userType === USER_TYPE.PLAYER) {
         navigation.navigate(PlayerProfilePage, {
-          isVisitor: false,
           userId: user?.id,
         });
       }
