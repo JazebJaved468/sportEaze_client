@@ -39,7 +39,6 @@ import ViewPost, {ViewPostPage} from '../../ViewPost';
 export type RootStackParamList = {
   PlayerHomePage: undefined;
   PlayerProfilePage: {
-    isVisitor: boolean;
     userId: string;
   };
   FanRootPage: undefined;

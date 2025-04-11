@@ -25,8 +25,6 @@ const ViewPost = () => {
     postId: params.postId,
   });
 
-  console.log('ViewPostPage ------------> Post:', post);
-
   return (
     <PageContainer>
       <GeneralHeader title={`${params.playerName}'s Post`} />

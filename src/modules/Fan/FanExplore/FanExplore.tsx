@@ -316,7 +316,6 @@ const UserWindow: React.FC<UserWindowProps> = memo(
         onPress={() => {
           if (userType === USER_TYPE.PLAYER) {
             navigation.navigate(PlayerProfilePage, {
-              isVisitor: true,
               userId: userId,
             });
           }
