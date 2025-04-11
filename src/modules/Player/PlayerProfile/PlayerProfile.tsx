@@ -78,6 +78,8 @@ const PlayerProfile = () => {
   const dispatch = useAppDispatch();
 
   const {user, isLoggedIn, userType} = useAppSelector(state => state.auth);
+
+  const isVisitor = user?.id !== params.userId;
   const {data: sports} = useGetAvailableSportsQuery();
   const {
     data: playerData,
@@ -202,7 +204,7 @@ const PlayerProfile = () => {
               </View>
 
               {/* use isFollowing Bit for handling state */}
-              {params.isVisitor ? (
+              {isVisitor ? (
                 <PulseEffect>
                   <Button
                     style={{
