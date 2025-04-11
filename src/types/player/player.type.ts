@@ -38,8 +38,8 @@ export type Media = {
   id: string;
 };
 export type Post = {
+  isLiked?: boolean;
   id: string;
-  userId: string;
   textContent: string;
   visibility: number;
   shareCount: number;
@@ -47,13 +47,9 @@ export type Post = {
   createdAt: string;
   updatedAt: string;
   media: Media[];
-  likes: any[];
-  user: User;
-  comments: any[];
+  user: UserWindow;
   likeCount: number;
-  // reactions:    Reactions;
   commentCount: number;
-  isLiked: boolean;
 };
 
 export type Comment = {
