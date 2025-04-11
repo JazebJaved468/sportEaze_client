@@ -35,7 +35,7 @@ export type VideoBoxRef = {
 
 type VideoProps = {
   url: string;
-  id: number;
+  id: number | string;
   backgroundColor?: string;
   showLoader?: boolean;
 };
