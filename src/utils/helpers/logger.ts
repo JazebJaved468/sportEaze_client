@@ -9,7 +9,7 @@ export const apiStatusLogger = store => next => action => {
   const dispatch = store.dispatch;
   if (showApiPendingStatusLogs && isPending(action)) {
     console.log(
-      `PENDING ----> ENDPOINT = ${action.meta.arg.endpointName} | PAYLOAD = ${JSON.stringify(action.payload)} | TYPE = ${action.type} | STATUS = ${action.meta.requestStatus} | REMAINING = ${action}`,
+      `PENDING ----> ENDPOINT = ${action.meta.arg.endpointName} | PAYLOAD = ${JSON.stringify(action.meta.arg.originalArgs)} | TYPE = ${action.type} | STATUS = ${action.meta.requestStatus} | REMAINING = ${action}`,
     );
   } else if (showApiFulfilledStatusLogs && isFulfilled(action)) {
     console.log(
