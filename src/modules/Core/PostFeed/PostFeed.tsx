@@ -1,5 +1,5 @@
 import {StyleSheet, FlatList} from 'react-native';
-import React, {MutableRefObject, useRef} from 'react';
+import React, {MutableRefObject, useEffect, useRef} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import UserPost from '../../../components/UserPost/UserPost';
 import GeneralHeader from '../../../components/GeneralHeader';
@@ -12,8 +12,10 @@ import {PulseEffect} from '../../../components/PulseEffect';
 import {appColors} from '../../../constants/colors';
 import {fontRegular} from '../../../styles/fonts';
 import {useTextColor} from '../../../utils/customHooks/colorHooks';
+import {useAppSelector} from '../../../utils/customHooks/storeHooks';
 
 export const PostFeed = () => {
+  const {user, isLoggedIn} = useAppSelector(state => state.auth);
   // const onScroll = (event: any) => {
 
   //   if (childRef.current) {
@@ -52,9 +54,15 @@ export const PostFeed = () => {
     isLoading: postsCIP,
     isFetching: postsFIP,
     isFetchingNextPage: postsNextPageFIP,
+
     fetchNextPage,
     refetch: refetchPostFeed,
   } = useGetPostFeedInfiniteQuery();
+
+  useEffect(() => {
+    // Refresh feed when user account changes
+    refetchPostFeed();
+  }, [isLoggedIn]);
 
   const mergedData = {
     posts: posts?.pages.flatMap(page => page) ?? [],
@@ -73,7 +81,7 @@ export const PostFeed = () => {
     <PageContainer>
       <GeneralHeader showLeftElement={false} titleAlign='left' />
 
-      {postsCIP ? (
+      {postsCIP || postsFIP ? (
         <Loader />
       ) : (
         <FlatList
