@@ -1,5 +1,4 @@
 import {USER_TYPE} from '../../constants/enums';
-import {authApi} from '../../store/auth/auth.service';
 import {
   removeUser,
   updateIsLoggedIn,
@@ -7,13 +6,11 @@ import {
   updateUserToken,
   updateUserType,
 } from '../../store/auth/auth.slice';
-import {playerApi} from '../../store/player/player.service';
 import {store} from '../../store/store';
 import {User} from '../../types/auth/auth.type';
 import {
   multiRemoveFromLocalStorage,
   multiStoreInLocalStorage,
-  storeInLocalStorage,
 } from './asyncStorage';
 
 export const onLogout = async () => {

@@ -10,3 +10,8 @@ export type UserWindow = {
   username: string;
   userType: number;
 };
+
+export type PendingConnections = {
+  totalConnectionCount: number;
+  connections: UserWindow[];
+};
