@@ -35,10 +35,14 @@ import PlayerRegistrationDetails, {
 } from '../../../Player/PlayerRegistrationDetails';
 import PlayerProfile, {PlayerProfilePage} from '../../../Player/PlayerProfile';
 import ViewPost, {ViewPostPage} from '../../ViewPost';
+import FanProfile, {FanProfilePage} from '../../../Fan/FanProfile';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
   PlayerProfilePage: {
+    userId: string;
+  };
+  FanProfilePage: {
     userId: string;
   };
   FanRootPage: undefined;
@@ -185,6 +189,7 @@ export const AppNavigator = () => {
       />
       <Stack.Screen name={'GeminiPage'} component={Gemini} />
       <Stack.Screen name={RecommendationsPage} component={Recommendations} />
+      <Stack.Screen name={FanProfilePage} component={FanProfile} />
 
       {/* Player Screens */}
       <Stack.Screen name={PlayerRootPage} component={PlayerRoot} />

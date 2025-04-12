@@ -13,7 +13,13 @@ export type User = {
   username: string;
   fullName: string;
   sportInterests: number[] | null;
-  isConnected?: boolean;
+  connection: Connection;
   isFollowing?: boolean;
   player?: Player;
+};
+
+export type Connection = {
+  id?: string;
+  status: number;
+  receiverId?: string;
 };
