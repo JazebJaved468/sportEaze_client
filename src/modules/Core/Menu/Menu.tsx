@@ -44,10 +44,7 @@ import {LoginRequired} from '../../../components/LoginRequired';
 import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {USER_TYPE} from '../../../constants/enums';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
-import {
-  AcceptedConnectionsPage,
-  PendingConnectionsPage,
-} from '../ConnectionLisitng';
+import {AcceptedConnectionsPage, PendingConnectionsPage} from '../Networking';
 
 const {height: screenHeight} = Dimensions.get('window');
 

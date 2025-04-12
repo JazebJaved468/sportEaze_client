@@ -39,9 +39,9 @@ import FanProfile, {FanProfilePage} from '../../../Fan/FanProfile';
 import {
   AcceptedConnectionsPage,
   PendingConnectionsPage,
-} from '../../ConnectionLisitng';
-import PendingConnections from '../../ConnectionLisitng/PendingConnections';
-import AcceptedConnections from '../../ConnectionLisitng/AcceptedConnections';
+} from '../../Networking';
+import PendingConnections from '../../Networking/PendingConnections';
+import AcceptedConnections from '../../Networking/AcceptedConnections';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
