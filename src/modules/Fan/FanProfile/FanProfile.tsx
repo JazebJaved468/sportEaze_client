@@ -1,63 +1,40 @@
 import {
-  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
 } from 'react-native';
 import React from 'react';
 import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {
-  CoachIcon,
   CrossIcon,
-  FlagIcon,
   SettingsIcon,
-  TeamIcon,
   TickIcon,
   UserPlaceholderIcon,
 } from '../../../assets/icons';
 import {appColors} from '../../../constants/colors';
 import {fontBold, fontRegular} from '../../../styles/fonts';
-import {Button, FlatList, useColorMode, View} from 'native-base';
+import {Button, View} from 'native-base';
 import {
   useTextColor,
   useLightTextColor,
   useCardColor,
 } from '../../../utils/customHooks/colorHooks';
 import {useContainerShadow} from '../../../utils/customHooks/customHooks';
-import {useAppNavigation} from '../../../utils/customHooks/navigator';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '../../../utils/customHooks/storeHooks';
+import {useAppSelector} from '../../../utils/customHooks/storeHooks';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
 import {
-  useConnetUserMutation,
   useGetAvailableSportsQuery,
   useRemoveConnectionMutation,
+  useRequestConnectUserMutation,
   useRespondConnectionRequestMutation,
 } from '../../../store/core/core.service';
 import {PulseEffect} from '../../../components/PulseEffect';
-import {TabView, SceneMap} from 'react-native-tab-view';
-import {
-  authApi,
-  useGetUserByIdServiceQuery,
-} from '../../../store/auth/auth.service';
+import {useGetUserByIdServiceQuery} from '../../../store/auth/auth.service';
 import {Loader} from '../../../components/Loader';
-import {playerLevels} from '../../../constants/player';
-import {
-  playerApi,
-  useFollowPlayerMutation,
-  useGetPlayerPostsByPlayerIdServiceQuery,
-  useUnfollowPlayerMutation,
-} from '../../../store/player/player.service';
-import {Toast} from '../../../components/Toast';
-import {updateToast} from '../../../store/core/core.slice';
-import {ViewPostPage} from '../../Core/ViewPost';
 import {
   ConnectionReqResponse,
   ConnectionStatus,
@@ -70,8 +47,6 @@ export type PlayerProfilePageRouteProp = RouteProp<
 
 export const FanProfile = () => {
   const {params} = useRoute<PlayerProfilePageRouteProp>();
-  const navigation = useAppNavigation();
-  const dispatch = useAppDispatch();
 
   const {user, isLoggedIn, userType} = useAppSelector(state => state.auth);
 
@@ -88,78 +63,19 @@ export const FanProfile = () => {
     {refetchOnMountOrArgChange: true},
   );
 
-  const {data: playerPosts} = useGetPlayerPostsByPlayerIdServiceQuery(
-    {
-      playerId: params.userId,
-    },
-    {
-      // refetchOnMountOrArgChange: true,
-    },
-  );
-
   const [requestConnection, {isLoading: requestConnectionCIP}] =
-    useConnetUserMutation();
+    useRequestConnectUserMutation();
 
   const [removeConnection, {isLoading: removeConnectionCIP}] =
     useRemoveConnectionMutation();
 
   const [respondConnectionRequest, {isLoading: respondConnectionRequestCIP}] =
     useRespondConnectionRequestMutation();
-  const [unfollowPlayer, {isLoading: unfollowCIP}] =
-    useUnfollowPlayerMutation();
 
   const containerShadow = useContainerShadow(4);
   const textColor = useTextColor();
   const lightTextColor = useLightTextColor();
   const cardColor = useCardColor();
-
-  console.log('fanData', fanData);
-
-  //   const handleFollow = async () => {
-  //     if (!isLoggedIn) {
-  //       dispatch(
-  //         updateToast({
-  //           isVisible: true,
-  //           message: 'Please login to follow players',
-  //         }),
-  //       );
-  //       return;
-  //     }
-
-  //     try {
-  //       await followPlayer({playerId: params.userId}).unwrap();
-
-  //       dispatch(
-  //         authApi.util.updateQueryData(
-  //           'getUserByIdService',
-  //           {userId: params.userId},
-  //           draft => {
-  //             draft.isFollowing = true;
-  //           },
-  //         ),
-  //       );
-  //     } catch (err) {
-  //       console.log('error while following player', err);
-  //     }
-  //   };
-
-  //   const handleUnFollow = async () => {
-  //     try {
-  //       await unfollowPlayer({playerId: params.userId}).unwrap();
-
-  //       dispatch(
-  //         authApi.util.updateQueryData(
-  //           'getUserByIdService',
-  //           {userId: params.userId},
-  //           draft => {
-  //             draft.isFollowing = false;
-  //           },
-  //         ),
-  //       );
-  //     } catch (err) {
-  //       console.log('error while un-following player', err);
-  //     }
-  //   };
 
   const handleRemoveConnection = async () => {
     handleCancelConnectionRequest();
@@ -443,25 +359,6 @@ export const FanProfile = () => {
             <CountTile title='Posts' count={101} />
             <CountTile title='Connections' count={10} showSeparator={false} />
           </View>
-
-          {/* {playerPosts && (
-            <View style={styles.postsContainer}>
-              {playerPosts.map((post, index) => (
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() =>
-                    navigation.navigate(ViewPostPage, {
-                      postId: post.id,
-                      playerName: fanData.fullName,
-                    })
-                  }
-                  key={post.id}
-                  style={styles.postWindow}>
-                  <Text>HEllo</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )} */}
 
           <View style={{height: 40}} />
         </ScrollView>

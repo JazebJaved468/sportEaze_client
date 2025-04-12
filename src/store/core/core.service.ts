@@ -33,7 +33,10 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    connetUser: builder.mutation<ConnectUserResponse, ConnectUserParams>({
+    requestConnectUser: builder.mutation<
+      ConnectUserResponse,
+      ConnectUserParams
+    >({
       query: ({receiverId}) => ({
         url: `/network/connect`,
         method: 'POST',
@@ -168,7 +171,7 @@ export const {
   useLazyGetAvailableSportsQuery,
   useLazyGetSearchedUsersQuery,
   useGetPostFeedInfiniteQuery,
-  useConnetUserMutation,
   useRemoveConnectionMutation,
   useRespondConnectionRequestMutation,
+  useRequestConnectUserMutation,
 } = coreApi;
