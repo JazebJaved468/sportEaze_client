@@ -10,6 +10,7 @@ import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {
   CrossIcon,
+  RemoveUserIcon,
   SettingsIcon,
   TickIcon,
   UserPlaceholderIcon,
@@ -133,10 +134,10 @@ export const FanProfile = () => {
             isDisabled={requestConnectionCIP}
             isLoading={requestConnectionCIP}
             _spinner={{
-              color: textColor,
+              color: appColors.white,
               size: 'sm',
             }}>
-            <Text style={[fontRegular(14, textColor)]}>{'Connect'}</Text>
+            <Text style={[fontRegular(14, appColors.white)]}>{'Connect'}</Text>
           </Button>
         </PulseEffect>
       );
@@ -146,31 +147,37 @@ export const FanProfile = () => {
     ) {
       return (
         <View style={styles.acceptRejectButtonContainer}>
-          <View style={styles.connected}>
-            <Text style={fontRegular(14, textColor)}>Connected</Text>
-          </View>
           <PulseEffect>
             <Button
               style={{
                 backgroundColor: appColors.transparent,
                 borderWidth: 1,
                 borderColor: appColors.warmRed,
-                width: 36,
+                width: 82,
                 height: 32,
               }}
               onPress={handleRemoveConnection}
               isDisabled={removeConnectionCIP}
               isLoading={removeConnectionCIP}
               _spinner={{
-                color: appColors.white,
+                color: appColors.warmRed,
                 size: 'sm',
               }}>
-              <CrossIcon
-                width={10}
-                height={10}
-                strokeWidth={2}
-                color={appColors.warmRed}
-              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingHorizontal: 8,
+                  gap: 4,
+                }}>
+                <RemoveUserIcon
+                  width={16}
+                  height={16}
+                  color={appColors.warmRed}
+                />
+                <Text style={[fontRegular(12, appColors.warmRed)]}>Remove</Text>
+              </View>
             </Button>
           </PulseEffect>
         </View>
@@ -189,7 +196,6 @@ export const FanProfile = () => {
             <PulseEffect>
               <Button
                 style={{
-                  backgroundColor: appColors.warmRed,
                   width: 50,
                   height: 32,
                 }}
@@ -225,7 +231,7 @@ export const FanProfile = () => {
                 isDisabled={respondConnectionRequestCIP}
                 isLoading={respondConnectionRequestCIP}
                 _spinner={{
-                  color: appColors.white,
+                  color: appColors.warmRed,
                   size: 'sm',
                 }}>
                 <CrossIcon
@@ -257,7 +263,7 @@ export const FanProfile = () => {
                 isDisabled={removeConnectionCIP}
                 isLoading={removeConnectionCIP}
                 _spinner={{
-                  color: appColors.white,
+                  color: appColors.warmRed,
                   size: 'sm',
                 }}>
                 <CrossIcon
