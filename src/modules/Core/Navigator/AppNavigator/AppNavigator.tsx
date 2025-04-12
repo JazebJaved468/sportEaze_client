@@ -36,6 +36,12 @@ import PlayerRegistrationDetails, {
 import PlayerProfile, {PlayerProfilePage} from '../../../Player/PlayerProfile';
 import ViewPost, {ViewPostPage} from '../../ViewPost';
 import FanProfile, {FanProfilePage} from '../../../Fan/FanProfile';
+import {
+  AcceptedConnectionsPage,
+  PendingConnectionsPage,
+} from '../../ConnectionLisitng';
+import PendingConnections from '../../ConnectionLisitng/PendingConnections';
+import AcceptedConnections from '../../ConnectionLisitng/AcceptedConnections';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -73,6 +79,8 @@ export type RootStackParamList = {
     postId: string;
     playerName: string;
   };
+  PendingConnectionsPage: undefined;
+  AcceptedConnectionsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -161,6 +169,15 @@ export const AppNavigator = () => {
       <Stack.Screen name={RegisterPage} component={Register} />
       <Stack.Screen name={LoginPage} component={Login} />
       <Stack.Screen name={JoinAsPage} component={JoinAs} />
+      <Stack.Screen
+        name={PendingConnectionsPage}
+        component={PendingConnections}
+      />
+      <Stack.Screen
+        name={AcceptedConnectionsPage}
+        component={AcceptedConnections}
+      />
+
       <Stack.Screen
         name={NotificationListingPage}
         component={NotificationListing}
