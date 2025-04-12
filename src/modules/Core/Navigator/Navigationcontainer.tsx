@@ -13,7 +13,6 @@ import {
 import {updateAppState, updateFirstVisit} from '../../../store/core/core.slice';
 import {
   updateIsLoggedIn,
-  updateUser,
   updateUserToken,
   updateUserType,
 } from '../../../store/auth/auth.slice';
@@ -25,6 +24,7 @@ import {
   disconnectSocket,
 } from '../../../store/socket/socket.service';
 import {useLazyGetAvailableSportsQuery} from '../../../store/core/core.service';
+import {navigationRef} from '../../../utils/helpers/navigation';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -157,7 +157,7 @@ export const Navigationcontainer: React.FC = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <AppNavigator />
       <Toast />
     </NavigationContainer>
