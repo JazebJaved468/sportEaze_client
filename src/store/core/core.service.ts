@@ -7,9 +7,12 @@ import {
 import {
   AvailableSportsResponse,
   ConnectUserResponse,
+  GetAcceptedConnectionsResponse,
+  GetPendingConnectionsResponse,
 } from '../../types/core/core.response';
 import {UserWindow} from '../../types/core/core.type';
 import {Post} from '../../types/player/player.type';
+import {RootState} from '../../utils/customHooks/storeHooks';
 import {authApi} from '../auth/auth.service';
 import {sporteazeBaseApi} from '../baseApi.service';
 
@@ -87,7 +90,7 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         },
       }),
 
-      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+      async onQueryStarted(args, {dispatch, queryFulfilled, getState}) {
         try {
           const {data} = await queryFulfilled;
 
@@ -106,6 +109,17 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
               },
             ),
           );
+
+          dispatch(
+            coreApi.util.updateQueryData(
+              'getPendingConnections',
+              {userId: (getState() as RootState).auth?.user?.id},
+              draft => {
+                draft = draft.filter(item => item.user.id !== args.requesterId);
+                return draft;
+              },
+            ),
+          );
         } catch (err) {
           console.log(
             'Error while Updating user data : auth.service.ts : Line 66',
@@ -121,10 +135,9 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         method: 'DELETE',
       }),
 
-      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+      async onQueryStarted(args, {dispatch, queryFulfilled, getState}) {
         try {
           const {data} = await queryFulfilled;
-          console.log('response - remove connection', data);
           dispatch(
             authApi.util.updateQueryData(
               'getUserByIdService',
@@ -136,12 +149,49 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
               },
             ),
           );
+
+          dispatch(
+            coreApi.util.updateQueryData(
+              'getAcceptedConnections',
+              {userId: (getState() as RootState).auth?.user?.id},
+              draft => {
+                draft.connections.connections =
+                  draft.connections.connections.filter(
+                    item => item.id !== args.connectionId,
+                  );
+                return draft;
+              },
+            ),
+          );
         } catch (err) {
           console.log(
             'Error while Updating user data : auth.service.ts : Line 66',
             err,
           );
         }
+      },
+    }),
+
+    getPendingConnections: builder.query<
+      GetPendingConnectionsResponse,
+      {userId?: string}
+    >({
+      query: () => ({
+        url: `/network/connect/pending`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
+    getAcceptedConnections: builder.query<
+      GetAcceptedConnectionsResponse,
+      {userId?: string}
+    >({
+      query: () => ({
+        url: `/network/connect/get-all-connections`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
       },
     }),
 
@@ -174,4 +224,6 @@ export const {
   useRemoveConnectionMutation,
   useRespondConnectionRequestMutation,
   useRequestConnectUserMutation,
+  useGetPendingConnectionsQuery,
+  useGetAcceptedConnectionsQuery,
 } = coreApi;

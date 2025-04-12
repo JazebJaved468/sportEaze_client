@@ -18,6 +18,7 @@ import {
 } from '../../../utils/customHooks/colorHooks';
 import {
   ArrowRightIcon,
+  ConnectionRequestIcon,
   ConnectionsIcon,
   DashboardIcon,
   EditProfileIcon,
@@ -43,6 +44,10 @@ import {LoginRequired} from '../../../components/LoginRequired';
 import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {USER_TYPE} from '../../../constants/enums';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
+import {
+  AcceptedConnectionsPage,
+  PendingConnectionsPage,
+} from '../ConnectionLisitng';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -217,18 +222,35 @@ const Menu = () => {
             <MenuSection>
               <MenuSectionHeader title='Network' />
               <MenuSectionItem
-                title='Connections'
-                leftIcon={
-                  <ConnectionsIcon width={20} height={20} color={textColor} />
-                }
-                onPress={() => {}}
-              />
-              <MenuSectionItem
                 title='Followings'
                 leftIcon={
                   <FollowingsIcon width={20} height={20} color={textColor} />
                 }
                 onPress={() => {}}
+              />
+              <MenuSectionItem
+                title='Connections'
+                leftIcon={
+                  <ConnectionsIcon width={20} height={20} color={textColor} />
+                }
+                onPress={() => {
+                  navigation.navigate(AcceptedConnectionsPage);
+                }}
+              />
+
+              <MenuSectionItem
+                title='Connection Requests'
+                leftIcon={
+                  <ConnectionRequestIcon
+                    width={20}
+                    height={20}
+                    color={textColor}
+                    strokeWidth={1.1}
+                  />
+                }
+                onPress={() => {
+                  navigation.navigate(PendingConnectionsPage);
+                }}
               />
             </MenuSection>
 
