@@ -31,7 +31,7 @@ import {Media, Post} from '../../types/player/player.type';
 import {fontBold, fontRegular} from '../../styles/fonts';
 import {format} from 'date-fns';
 import {FallBackPostImage} from '../FallBackPostImage';
-import {MediaType, USER_TYPE} from '../../constants/enums';
+import {MediaType} from '../../constants/enums';
 import VideoPlayer from '../VideoPlayer';
 import {CustomTextInputField} from '../CustomInputField';
 import {Controller, useForm} from 'react-hook-form';
@@ -43,7 +43,7 @@ import {
   useLazyGetLikesByPostIdServiceQuery,
 } from '../../store/player/player.service';
 import {Loader} from '../Loader';
-import {PlayerProfilePage} from '../../modules/Player/PlayerProfile';
+import {navigateToProfilePage} from '../../utils/helpers/navigation';
 
 const UserPost = ({post}: {post: Post}) => {
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
@@ -87,11 +87,10 @@ const PostHeader = ({post}: {post: Post}) => {
       <TouchableOpacity
         activeOpacity={0.5}
         onPress={() => {
-          if (post.user.userType === USER_TYPE.PLAYER) {
-            navigation.navigate(PlayerProfilePage, {
-              userId: post.user.id,
-            });
-          }
+          navigateToProfilePage({
+            userId: post.user.id,
+            userType: post.user.userType,
+          });
         }}>
         <View style={styles.picName}>
           <View style={styles.profilePicContainer}>
