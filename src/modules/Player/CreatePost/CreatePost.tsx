@@ -48,7 +48,7 @@ import {
 import {Part} from '@google/generative-ai';
 import RNFS from 'react-native-fs';
 import {getMediaType} from '../../../utils/helpers/media';
-import {MediaType, PostVisibility, USER_TYPE} from '../../../constants/enums';
+import {MediaType, PostVisibility} from '../../../constants/enums';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {MediaPreviewPage} from '../../../components/MediaPreview';
 import {CustomDropDown} from '../../../components/CustomDropDown';
@@ -58,8 +58,6 @@ import {
   useCreateMediaPostMutation,
   useCreateTextPostMutation,
 } from '../../../store/player/player.service';
-import {PlayerProfilePage} from '../PlayerProfile';
-import {FanProfilePage} from '../../Fan/FanProfile';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
 
 type GeminiAnalysisType = {
