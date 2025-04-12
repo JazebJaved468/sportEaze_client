@@ -27,6 +27,7 @@ import {appColors} from '../../../constants/colors';
 import {useLazyGetSearchedUsersQuery} from '../../../store/core/core.service';
 import {USER_TYPE} from '../../../constants/enums';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
+import {UserTypeBadge} from '../../../components/UserTypeBadge';
 
 const FanExplore = () => {
   const textColor = useTextColor();
@@ -234,76 +235,6 @@ const UserWindow: React.FC<UserWindowProps> = memo(
     const lightTextColor = useLightTextColor();
     const navigation = useAppNavigation();
 
-    const getBadge = (userType: number) => {
-      switch (userType) {
-        case USER_TYPE.PLAYER:
-          return (
-            <Text
-              style={[
-                fontRegular(12, appColors.white),
-                styles.badge,
-                {
-                  backgroundColor: `${appColors.warmRed}90`,
-                },
-              ]}>
-              Player
-            </Text>
-          );
-        case USER_TYPE.FAN:
-          return (
-            <Text
-              style={[
-                fontRegular(12, appColors.white),
-                styles.badge,
-                {
-                  backgroundColor: `${appColors.success}90`,
-                },
-              ]}>
-              Fan
-            </Text>
-          );
-        case USER_TYPE.PATRON:
-          return (
-            <Text
-              style={[
-                fontRegular(12, appColors.white),
-                styles.badge,
-                {
-                  backgroundColor: `${appColors.gold}90`,
-                },
-              ]}>
-              Patron
-            </Text>
-          );
-        case USER_TYPE.MENTOR:
-          return (
-            <Text
-              style={[
-                fontRegular(12, appColors.white),
-                styles.badge,
-                {
-                  backgroundColor: `${appColors.teal}90`,
-                },
-              ]}>
-              Mentor
-            </Text>
-          );
-        default:
-          return (
-            <Text
-              style={[
-                fontRegular(12, appColors.white),
-                styles.badge,
-                {
-                  backgroundColor: `${appColors.success}90`,
-                },
-              ]}>
-              Fan
-            </Text>
-          );
-      }
-    };
-
     return (
       <TouchableOpacity
         activeOpacity={0.6}
@@ -335,7 +266,7 @@ const UserWindow: React.FC<UserWindowProps> = memo(
               <Text style={fontRegular(12, lightTextColor)}>{username}</Text>
             </View>
           </View>
-          {getBadge(userType)}
+          <UserTypeBadge userType={userType} />
         </View>
       </TouchableOpacity>
     );
