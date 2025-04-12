@@ -42,7 +42,7 @@ import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {LoginRequired} from '../../../components/LoginRequired';
 import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {USER_TYPE} from '../../../constants/enums';
-import {PlayerProfilePage} from '../../Player/PlayerProfile';
+import {navigateToProfilePage} from '../../../utils/helpers/navigation';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -175,11 +175,12 @@ const Menu = () => {
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => {
-                if (user?.id)
-                  // If USerType = 2 =  is Player
-                  navigation.navigate(PlayerProfilePage, {
-                    userId: user?.id,
+                if (user?.id) {
+                  navigateToProfilePage({
+                    userId: user.id,
+                    userType: user.userType,
                   });
+                }
               }}>
               <View style={styles.picAndName}>
                 <View style={styles.profilePicContainer}>

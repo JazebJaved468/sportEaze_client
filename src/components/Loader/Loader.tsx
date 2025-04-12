@@ -2,7 +2,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {appColors} from '../../constants/colors';
 
-const Loader = () => {
+const Loader = ({size = 'large'}: {size?: number | 'large' | 'small'}) => {
   return (
     <View
       style={{
@@ -10,7 +10,7 @@ const Loader = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <ActivityIndicator size={'large'} color={appColors.warmRed} />
+      <ActivityIndicator size={size} color={appColors.warmRed} />
     </View>
   );
 };

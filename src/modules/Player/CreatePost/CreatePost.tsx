@@ -48,7 +48,7 @@ import {
 import {Part} from '@google/generative-ai';
 import RNFS from 'react-native-fs';
 import {getMediaType} from '../../../utils/helpers/media';
-import {MediaType, PostVisibility, USER_TYPE} from '../../../constants/enums';
+import {MediaType, PostVisibility} from '../../../constants/enums';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {MediaPreviewPage} from '../../../components/MediaPreview';
 import {CustomDropDown} from '../../../components/CustomDropDown';
@@ -58,7 +58,7 @@ import {
   useCreateMediaPostMutation,
   useCreateTextPostMutation,
 } from '../../../store/player/player.service';
-import {PlayerProfilePage} from '../PlayerProfile';
+import {navigateToProfilePage} from '../../../utils/helpers/navigation';
 
 type GeminiAnalysisType = {
   response?: GeminiAnalysisResponse;
@@ -228,12 +228,12 @@ export const CreatePost = () => {
 
   const afterPostCreation = useCallback(() => {
     cleanData();
+
     if (user?.id) {
-      if (userType === USER_TYPE.PLAYER) {
-        navigation.navigate(PlayerProfilePage, {
-          userId: user?.id,
-        });
-      }
+      navigateToProfilePage({
+        userId: user.id,
+        userType: user.userType,
+      });
     }
   }, [user?.id, userType, navigation]);
 

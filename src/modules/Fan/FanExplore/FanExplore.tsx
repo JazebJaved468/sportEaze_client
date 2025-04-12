@@ -12,13 +12,10 @@ import GeneralHeader from '../../../components/GeneralHeader';
 import {Controller, useForm, useWatch} from 'react-hook-form';
 import {CustomTextInputField} from '../../../components/CustomInputField';
 import {
-  useCardColor,
   useLightTextColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
 import {
-  OpenEyeIcon,
-  CloseEyeIcon,
   ExploreIcon,
   UserPlaceholderIcon,
   CrossIcon,
@@ -26,11 +23,10 @@ import {
 import {View} from 'native-base';
 import {fontBold, fontRegular} from '../../../styles/fonts';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
-import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
-import {PlayerProfilePage} from '../../Player/PlayerProfile';
 import {appColors} from '../../../constants/colors';
 import {useLazyGetSearchedUsersQuery} from '../../../store/core/core.service';
 import {USER_TYPE} from '../../../constants/enums';
+import {navigateToProfilePage} from '../../../utils/helpers/navigation';
 
 const FanExplore = () => {
   const textColor = useTextColor();
@@ -67,10 +63,10 @@ const FanExplore = () => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
-      if (searchQuery.length > 0) {
+      if (searchQuery.trim().length > 0) {
         // fetchSearchResults(query);
         try {
-          const res = await getSearchedUsers(searchQuery, true).unwrap();
+          const res = await getSearchedUsers(searchQuery.trim()).unwrap();
           console.log('res:', res);
         } catch (error) {
           console.log('error while searching users:', error);
@@ -99,9 +95,7 @@ const FanExplore = () => {
               borderRadius={14}
               placeholder='Search for players, fans, patrons, mentors'
               value={value}
-              onChangeText={val => {
-                onChange(val.trim());
-              }}
+              onChangeText={onChange}
               maxLength={50}
               isValid={true}
               autoCapitalize='none'
@@ -314,11 +308,10 @@ const UserWindow: React.FC<UserWindowProps> = memo(
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={() => {
-          if (userType === USER_TYPE.PLAYER) {
-            navigation.navigate(PlayerProfilePage, {
-              userId: userId,
-            });
-          }
+          navigateToProfilePage({
+            userId,
+            userType,
+          });
         }}>
         <View style={styles.picAndName}>
           <View style={{flexDirection: 'row', gap: 20, alignItems: 'center'}}>

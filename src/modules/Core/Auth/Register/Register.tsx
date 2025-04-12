@@ -56,7 +56,7 @@ export const Register = () => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      email: 'jazeb.player.back@gmail.com',
+      email: 'jazeb.fan@gmail.com',
       password: 'SecurePassword!123',
     },
   });
