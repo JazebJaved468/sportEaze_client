@@ -460,8 +460,11 @@ const PostFooter = ({
 
   useEffect(() => {
     setLikeCount(post.likeCount ?? 0);
+  }, [post.likeCount]);
+
+  useEffect(() => {
     setIsLiked(post.isLiked ?? false);
-  }, [post.isLiked, post.likeCount]);
+  }, [post.isLiked]);
 
   return (
     <>
