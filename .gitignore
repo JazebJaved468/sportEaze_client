@@ -75,5 +75,5 @@ yarn-error.log
 
 # Environment Variable
 # .env
-
+apks/
 keystore_info/
