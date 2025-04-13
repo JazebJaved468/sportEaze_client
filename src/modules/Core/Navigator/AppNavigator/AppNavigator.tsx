@@ -38,10 +38,12 @@ import ViewPost, {ViewPostPage} from '../../ViewPost';
 import FanProfile, {FanProfilePage} from '../../../Fan/FanProfile';
 import {
   AcceptedConnectionsPage,
+  FollowingListingPage,
   PendingConnectionsPage,
 } from '../../Networking';
 import PendingConnections from '../../Networking/PendingConnections';
 import AcceptedConnections from '../../Networking/AcceptedConnections';
+import FollowingListing from '../../Networking/FollowingListing';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -81,6 +83,7 @@ export type RootStackParamList = {
   };
   PendingConnectionsPage: undefined;
   AcceptedConnectionsPage: undefined;
+  FollowingListingPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -177,6 +180,7 @@ export const AppNavigator = () => {
         name={AcceptedConnectionsPage}
         component={AcceptedConnections}
       />
+      <Stack.Screen name={FollowingListingPage} component={FollowingListing} />
 
       <Stack.Screen
         name={NotificationListingPage}
