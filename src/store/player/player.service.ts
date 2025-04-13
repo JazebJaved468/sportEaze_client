@@ -5,6 +5,7 @@ import {
   CreateTextPostParams,
   FollowPlayerParams,
   RegisterPlayerParams,
+  SharePostParams,
 } from '../../types/player/player.params';
 import {
   CommmentsByPostIdResponse,
@@ -16,6 +17,7 @@ import {
   GetPostsByPlayerIdResponse,
   LikesByPostIdResponse,
   registerPlayerResponse,
+  SharePostResponse,
 } from '../../types/player/player.response';
 import {CreatePost, Post} from '../../types/player/player.type';
 import {RootState} from '../../utils/customHooks/storeHooks';
@@ -337,6 +339,59 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         return response;
       },
     }),
+
+    sharePost: builder.mutation<SharePostResponse, SharePostParams>({
+      query: ({originalPostId, shareMessage}) => ({
+        url: `/user/post/shared-posts`,
+        method: 'POST',
+        body: {
+          originalPostId,
+          shareMessage,
+        },
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        try {
+          const {data} = await queryFulfilled;
+
+          dispatch(
+            coreApi.util.updateQueryData('getPostFeed', undefined, draft => {
+              draft.pages.forEach((postPage, index) => {
+                const postIndex = postPage.findIndex(
+                  post => post.id === args.originalPostId,
+                );
+
+                if (postIndex !== -1) {
+                  const draftPost = postPage[postIndex];
+                  draftPost.shareCount =
+                    data.sharedPost.originalPost.shareCount;
+
+                  return;
+                }
+              });
+            }),
+          );
+
+          dispatch(
+            playerApi.util.updateQueryData(
+              'getPostByIdService',
+              {postId: args.originalPostId},
+              draft => {
+                draft.shareCount = data.sharedPost.originalPost.shareCount;
+              },
+            ),
+          );
+
+          // fall back update
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while sharing post : fan.service.ts : Line 30',
+            err,
+          );
+        }
+      },
+    }),
   }),
 });
 
@@ -353,4 +408,5 @@ export const {
   useCreateCommentMutation,
   useLazyGetLikesByPostIdServiceQuery,
   useCreateLikeOrUnLikeMutation,
+  useSharePostMutation,
 } = playerApi;
