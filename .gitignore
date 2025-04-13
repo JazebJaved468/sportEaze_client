@@ -75,4 +75,5 @@ yarn-error.log
 
 # Environment Variable
 # .env
-keystore_info
+
+keystore_info/

@@ -9,8 +9,10 @@
     "start": "react-native start",
     "test": "jest",
     "clean:android": "cd android && ./gradlew clean && cd ../",
-    "yarn:clean": "rm -rf node_modules && yarn cache clean --force && yarn install",
-    "ios:clean": "cd ios && xcodebuild clean && rm -rf ~/Library/Caches/CocoaPods && rm -rf Pods && rm -rf ~/Library/Developer/Xcode/DerivedData/* && pod cache clean --all && pod deintegrate && pod setup && pod install && cd .."
+    "yarn:clean": "rm -rf node_modules && yarn cache clean && yarn install",
+    "ios:clean": "cd ios && xcodebuild clean && rm -rf ~/Library/Caches/CocoaPods && rm -rf Pods && rm -rf ~/Library/Developer/Xcode/DerivedData/* && pod cache clean --all && pod deintegrate && pod setup && pod install && cd ..",
+    "android:release:aab": "npx react-native build-android --mode=release",
+    "android:release:apk": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
