@@ -14,6 +14,7 @@ export const sporteazeBaseApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ['MyFollowings'],
 
   endpoints: builder => ({}),
 });
