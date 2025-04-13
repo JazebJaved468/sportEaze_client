@@ -25,6 +25,7 @@ import {
 } from '../../../store/socket/socket.service';
 import {useLazyGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {navigationRef} from '../../../utils/helpers/navigation';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -158,8 +159,10 @@ export const Navigationcontainer: React.FC = () => {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <AppNavigator />
-      <Toast />
+      <BottomSheetModalProvider>
+        <AppNavigator />
+        <Toast />
+      </BottomSheetModalProvider>
     </NavigationContainer>
   );
 };
