@@ -46,8 +46,9 @@ import {USER_TYPE} from '../../../constants/enums';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
 import {
   AcceptedConnectionsPage,
+  FollowingListingPage,
   PendingConnectionsPage,
-} from '../ConnectionLisitng';
+} from '../Networking';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -226,7 +227,9 @@ const Menu = () => {
                 leftIcon={
                   <FollowingsIcon width={20} height={20} color={textColor} />
                 }
-                onPress={() => {}}
+                onPress={() => {
+                  navigation.navigate(FollowingListingPage);
+                }}
               />
               <MenuSectionItem
                 title='Connections'

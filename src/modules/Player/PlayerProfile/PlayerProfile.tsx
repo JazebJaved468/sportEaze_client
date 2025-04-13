@@ -11,8 +11,10 @@ import React from 'react';
 import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {
+  AddUserIcon,
   CoachIcon,
   FlagIcon,
+  RemoveUserIcon,
   SettingsIcon,
   TeamIcon,
   UserPlaceholderIcon,
@@ -141,16 +143,6 @@ const PlayerProfile = () => {
   const handleUnFollow = async () => {
     try {
       await unfollowPlayer({playerId: params.userId}).unwrap();
-
-      dispatch(
-        authApi.util.updateQueryData(
-          'getUserByIdService',
-          {userId: params.userId},
-          draft => {
-            draft.isFollowing = false;
-          },
-        ),
-      );
     } catch (err) {
       console.log('error while un-following player', err);
     }
@@ -226,23 +218,37 @@ const PlayerProfile = () => {
                       color: unfollowCIP ? appColors.warmRed : appColors.white,
                       size: 'sm',
                     }}>
-                    {playerData.isFollowing ? (
-                      <Text
-                        style={[
-                          fontRegular(
-                            14,
-                            playerData.isFollowing
-                              ? appColors.warmRed
-                              : appColors.white,
-                          ),
-                        ]}>
-                        UnFollow
-                      </Text>
-                    ) : (
-                      <Text style={[fontRegular(14, appColors.white)]}>
-                        Follow
-                      </Text>
-                    )}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 4,
+                      }}>
+                      {playerData.isFollowing ? (
+                        <>
+                          <RemoveUserIcon
+                            width={16}
+                            height={16}
+                            color={appColors.warmRed}
+                          />
+                          <Text style={[fontRegular(12, appColors.warmRed)]}>
+                            Unfollow
+                          </Text>
+                        </>
+                      ) : (
+                        <>
+                          <AddUserIcon
+                            width={16}
+                            height={16}
+                            color={appColors.white}
+                          />
+                          <Text style={[fontRegular(12, appColors.white)]}>
+                            Follow
+                          </Text>
+                        </>
+                      )}
+                    </View>
                   </Button>
                 </PulseEffect>
               ) : (

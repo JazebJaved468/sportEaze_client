@@ -18,7 +18,9 @@ import {
   registerPlayerResponse,
 } from '../../types/player/player.response';
 import {CreatePost, Post} from '../../types/player/player.type';
+import {RootState} from '../../utils/customHooks/storeHooks';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
+import {authApi} from '../auth/auth.service';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
 import {coreApi} from '../core/core.service';
@@ -64,6 +66,7 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         url: `/network/follow/${playerId}`,
         method: 'POST',
       }),
+      invalidatesTags: ['MyFollowings'],
       transformResponse: (response: FollowPlayerResponse) => {
         console.log('response - follow player', response);
         return response;
@@ -75,8 +78,38 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         url: `/network/unfollow/${playerId}`,
         method: 'DELETE',
       }),
+      async onQueryStarted(args, {dispatch, queryFulfilled, getState}) {
+        try {
+          const {data} = await queryFulfilled;
+          dispatch(
+            authApi.util.updateQueryData(
+              'getUserByIdService',
+              {userId: args.playerId},
+              draft => {
+                draft.isFollowing = false;
+              },
+            ),
+          );
+
+          dispatch(
+            coreApi.util.updateQueryData(
+              'getMyFollowings',
+              {userId: (getState() as RootState).auth.user?.id},
+              draft => {
+                draft = draft.filter(item => item.id !== args.playerId);
+                return draft;
+              },
+            ),
+          );
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while unfollowing player : fan.service.ts : Line 92',
+            err,
+          );
+        }
+      },
       transformResponse: (response: FollowPlayerResponse) => {
-        console.log('response - unfollow player', response);
         return response;
       },
     }),
@@ -262,6 +295,34 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
       async onQueryStarted(args, {dispatch, queryFulfilled}) {
         try {
           const {data} = await queryFulfilled;
+
+          dispatch(
+            coreApi.util.updateQueryData('getPostFeed', undefined, draft => {
+              draft.pages.forEach((postPage, index) => {
+                const postIndex = postPage.findIndex(
+                  post => post.id === args.postId,
+                );
+
+                if (postIndex !== -1) {
+                  const draftPost = postPage[postIndex];
+                  draftPost.likeCount = data.likeCount;
+                  draftPost.isLiked = data.liked;
+                  return;
+                }
+              });
+            }),
+          );
+
+          dispatch(
+            playerApi.util.updateQueryData(
+              'getPostByIdService',
+              {postId: args.postId},
+              draft => {
+                draft.likeCount = data.likeCount;
+                draft.isLiked = data.liked;
+              },
+            ),
+          );
 
           // fall back update
         } catch (err) {

@@ -8,127 +8,140 @@ import {
 } from 'react-native';
 import React, {memo} from 'react';
 import {
-  useGetAcceptedConnectionsQuery,
+  useGetMyFollowingsQuery,
   useGetPendingConnectionsQuery,
   useRemoveConnectionMutation,
-  useRespondConnectionRequestMutation,
 } from '../../../store/core/core.service';
 import {
+  useCardColor,
   useLightTextColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
 import {useAppSelector} from '../../../utils/customHooks/storeHooks';
-import GeneralHeader from '../../../components/GeneralHeader';
 import PageContainer from '../../../components/PageContainer';
-import {Loader} from '../../../components/Loader';
 import {
   ConnectionRequestIcon,
-  ConnectionsIcon,
-  CrossIcon,
+  FollowingsIcon,
   RemoveUserIcon,
-  TickIcon,
   UserPlaceholderIcon,
 } from '../../../assets/icons';
+import GeneralHeader from '../../../components/GeneralHeader';
+import {Loader} from '../../../components/Loader';
 import PullToRefresh from '../../../components/PullToRefresh';
 import {appColors} from '../../../constants/colors';
 import {fontRegular, fontBold} from '../../../styles/fonts';
-import {Button} from 'native-base';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {UserTypeBadge} from '../../../components/UserTypeBadge';
-import {ConnectionReqResponse} from '../../../constants/enums';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
+import {Button} from 'native-base';
+import {useUnfollowPlayerMutation} from '../../../store/player/player.service';
+import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 
-const AcceptedConnections = () => {
+const FollowingListing = () => {
   const {user} = useAppSelector(state => state.auth);
   const {
-    data: acceptedConnections,
-    isLoading: acceptedConnectionsCIP,
-    isFetching: acceptedConnectionsFIP,
-    refetch: refetchAcceptedConnections,
-  } = useGetAcceptedConnectionsQuery({userId: user?.id});
+    data: myFollowings,
+    isLoading: myFollowingsCIP,
+    isFetching: myFollowingsFIP,
+    refetch: refetchMyFollowings,
+  } = useGetMyFollowingsQuery({userId: user?.id});
 
   const textColor = useTextColor();
+  const containerShadow = useContainerShadow();
+  const cardColor = useCardColor();
 
   const onRefresh = async () => {
-    await refetchAcceptedConnections();
+    await refetchMyFollowings();
   };
 
-  const totalCount = acceptedConnections?.connections.connections.length;
-  const connections = acceptedConnections?.connections.connections;
   return (
     <PageContainer>
-      <GeneralHeader title='Your Connections' showRightElement={false} />
+      <GeneralHeader title='My Followings' showRightElement={false} />
 
-      {acceptedConnectionsCIP || !acceptedConnections ? (
+      {myFollowingsCIP || !myFollowings ? (
         <Loader />
       ) : (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps='handled'
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            flexGrow: 1,
-            gap: 26,
-            paddingBottom: 50,
-          }}
-          data={connections ?? []}
-          ListHeaderComponent={
-            totalCount === 0 ? null : (
-              <View style={{marginTop: 20, marginBottom: 4}}>
-                <Text style={[fontRegular(16, textColor)]}>
-                  You have
-                  <Text style={fontBold(16, appColors.warmRed)}>
-                    {`  ${totalCount}  `}
+        <>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps='handled'
+            contentContainerStyle={[
+              {
+                paddingHorizontal: 20,
+                flexGrow: 1,
+                gap: 26,
+                paddingBottom: 50,
+              },
+            ]}
+            data={myFollowings ?? []}
+            ListHeaderComponent={
+              myFollowings.length === 0 ? null : (
+                <View
+                  style={[
+                    {
+                      marginTop: 16,
+                      marginBottom: 4,
+                      backgroundColor: cardColor,
+                      padding: 16,
+                      borderRadius: 16,
+                    },
+                    containerShadow,
+                  ]}>
+                  <Text style={[fontRegular(16, textColor)]}>
+                    You are following
+                    <Text style={fontBold(16, appColors.warmRed)}>
+                      {`  ${myFollowings.length}  `}
+                    </Text>
+                    player(s)
                   </Text>
-                  Connection (s) in your network
+                </View>
+              )
+            }
+            refreshControl={<PullToRefresh onRefresh={onRefresh} />}
+            renderItem={({item, index}) => (
+              <FollowedPlayer
+                userId={item.id}
+                fullName={item.fullName}
+                username={item.username}
+                profilePicUrl={item.profilePicUrl}
+                userType={item.userType}
+              />
+            )}
+            keyExtractor={item => item.id.toString()}
+            ListEmptyComponent={
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <FollowingsIcon
+                  width={120}
+                  height={120}
+                  color={textColor}
+                  strokeWidth={0.8}
+                />
+                <Text style={[fontBold(16, textColor), {marginTop: 16}]}>
+                  You haven't follow any players yet
+                </Text>
+                <Text
+                  style={[
+                    fontRegular(14, textColor),
+                    {marginTop: 10, width: '80%', textAlign: 'center'},
+                  ]}>
+                  {`Discover and connect with players!`}
                 </Text>
               </View>
-            )
-          }
-          refreshControl={<PullToRefresh onRefresh={onRefresh} />}
-          renderItem={({item, index}) => (
-            <ConnectedUser
-              userId={item.id}
-              fullName={item.fullName}
-              username={item.username}
-              profilePicUrl={item.profilePicUrl}
-              userType={item.userType}
-            />
-          )}
-          keyExtractor={item => item.id.toString()}
-          ListEmptyComponent={
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <ConnectionsIcon
-                width={120}
-                height={120}
-                color={textColor}
-                strokeWidth={0.8}
-              />
-              <Text style={[fontBold(16, textColor), {marginTop: 16}]}>
-                No Connections Found
-              </Text>
-              <Text
-                style={[
-                  fontRegular(14, textColor),
-                  {marginTop: 10, width: '80%', textAlign: 'center'},
-                ]}>
-                {`Ready to build your network? \n Send a connection request to get started!`}
-              </Text>
-            </View>
-          }
-        />
+            }
+          />
+        </>
       )}
     </PageContainer>
   );
 };
 
-type ConnectedUserProps = {
+type FollowedPlayerProps = {
   userId: string;
   fullName: string;
   username: string;
@@ -136,26 +149,20 @@ type ConnectedUserProps = {
   userType: number;
 };
 
-const ConnectedUser: React.FC<ConnectedUserProps> = memo(
+const FollowedPlayer: React.FC<FollowedPlayerProps> = memo(
   ({fullName, profilePicUrl, userId, userType, username}) => {
-    const [removeConnection, {isLoading: removeConnectionCIP}] =
-      useRemoveConnectionMutation();
+    const [unfollowPlayer, {isLoading: unfollowCIP}] =
+      useUnfollowPlayerMutation();
 
     const textColor = useTextColor();
     const lightTextColor = useLightTextColor();
     const navigation = useAppNavigation();
 
-    const handleRemoveConnection = async () => {
+    const handleUnFollowPlayer = async () => {
       try {
-        removeConnection({
-          connectionId: userId,
-        }).unwrap();
+        await unfollowPlayer({playerId: userId}).unwrap();
       } catch (err) {
-        console.log('error while canceling connection request ', err);
-      }
-      try {
-      } catch (err) {
-        console.log('error while removing connection', err);
+        console.log('error while un-following player', err);
       }
     };
 
@@ -229,9 +236,9 @@ const ConnectedUser: React.FC<ConnectedUserProps> = memo(
                 height: 30,
                 width: 82,
               }}
-              onPress={handleRemoveConnection}
-              isDisabled={removeConnectionCIP}
-              isLoading={removeConnectionCIP}
+              onPress={handleUnFollowPlayer}
+              isDisabled={unfollowCIP}
+              isLoading={unfollowCIP}
               _spinner={{
                 color: appColors.warmRed,
                 size: 'sm',
@@ -248,7 +255,9 @@ const ConnectedUser: React.FC<ConnectedUserProps> = memo(
                   height={16}
                   color={appColors.warmRed}
                 />
-                <Text style={[fontRegular(12, appColors.warmRed)]}>Remove</Text>
+                <Text style={[fontRegular(12, appColors.warmRed)]}>
+                  Unfollow
+                </Text>
               </View>
             </Button>
           </PulseEffect>
@@ -258,7 +267,7 @@ const ConnectedUser: React.FC<ConnectedUserProps> = memo(
   },
 );
 
-export default AcceptedConnections;
+export default FollowingListing;
 
 const styles = StyleSheet.create({
   picAndName: {

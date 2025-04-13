@@ -183,6 +183,7 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         return `${endpointName}-${queryArgs.userId}`;
       },
     }),
+
     getAcceptedConnections: builder.query<
       GetAcceptedConnectionsResponse,
       {userId?: string}
@@ -193,6 +194,16 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
       serializeQueryArgs: ({queryArgs, endpointName}) => {
         return `${endpointName}-${queryArgs.userId}`;
       },
+    }),
+
+    getMyFollowings: builder.query<UserWindow[], {userId?: string}>({
+      query: ({userId}) => ({
+        url: `/network/following/${userId}`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+      providesTags: ['MyFollowings'],
     }),
 
     getPostFeed: builder.infiniteQuery<Post[], void, number>({
@@ -226,4 +237,5 @@ export const {
   useRequestConnectUserMutation,
   useGetPendingConnectionsQuery,
   useGetAcceptedConnectionsQuery,
+  useGetMyFollowingsQuery,
 } = coreApi;
