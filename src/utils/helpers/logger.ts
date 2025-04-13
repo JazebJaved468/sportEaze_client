@@ -17,7 +17,7 @@ export const apiStatusLogger = store => next => action => {
     );
   } else if (isRejected(action)) {
     console.log(
-      `REJECTED ----> ENDPOINT = ${action.meta.arg.endpointName} | PAYLOAD = ${JSON.stringify(action.payload)} | ERROR = ${action.error} | TYPE = ${action.type} | STATUS = ${action.meta.requestStatus} | REMAINING = ${action}`,
+      `REJECTED ----> ENDPOINT = ${action.meta.arg.endpointName} | PAYLOAD = ${JSON.stringify(action.payload)} | ERROR = ${JSON.stringify(action.error)} | TYPE = ${action.type} | STATUS = ${action.meta.requestStatus} | REMAINING = ${action}`,
     );
 
     const error = action?.payload?.data?.message;
