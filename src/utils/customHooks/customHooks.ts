@@ -24,12 +24,15 @@ export const useDidUpdateEffect = (
   }, deps);
 };
 
-export const useContainerShadow = (elevation: number = 3) => {
+export const useContainerShadow = (
+  elevation: number = 3,
+  shadowColor: string = 'rgba(35, 36, 35, 0.4)',
+) => {
   const {colorMode} = useColorMode();
 
   if (colorMode === 'light') {
     return {
-      shadowColor: 'rgba(35, 36, 35, 0.4)',
+      shadowColor: shadowColor,
       // shadowColor: appColors.black,
       shadowOffset: {
         width: 0,

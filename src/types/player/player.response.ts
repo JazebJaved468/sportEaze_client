@@ -1,6 +1,13 @@
 import {User} from '../auth/auth.type';
 import {UserWindow} from '../core/core.type';
-import {Player, CreatePost, Post, Comment, CreateComment} from './player.type';
+import {
+  Player,
+  CreatePost,
+  Post,
+  Comment,
+  CreateComment,
+  SharedPost,
+} from './player.type';
 
 export type GetPlayerResponse = {
   player: Player;
@@ -49,8 +56,13 @@ export type CreateCommentOnPostResponse = {
   message: string;
   comment: CreateComment;
 };
+
 export type CreateLikeOnPostResponse = {
   success: boolean;
   liked: boolean;
   likeCount: number;
+};
+export type SharePostResponse = {
+  success: boolean;
+  sharedPost: SharedPost;
 };

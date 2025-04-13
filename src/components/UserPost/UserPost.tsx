@@ -44,6 +44,7 @@ import {
 } from '../../store/player/player.service';
 import {Loader} from '../Loader';
 import {navigateToProfilePage} from '../../utils/helpers/navigation';
+import {SharePost} from '../SharePost';
 
 const UserPost = ({post}: {post: Post}) => {
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
@@ -361,6 +362,7 @@ const PostFooter = ({
 
   const commentsBottomSheetRef = useRef<BottomSheetModal>(null);
   const likesBottomSheetRef = useRef<BottomSheetModal>(null);
+  const shareBottomSheetRef = useRef<BottomSheetModal>(null);
   const isBottomSheetOpen = useRef(false);
 
   const iconColor = useColorModeValue(appColors.black, appColors.white);
@@ -406,6 +408,18 @@ const PostFooter = ({
       isBottomSheetOpen.current = false;
     }
   };
+  const openShareBottomSheet = () => {
+    if (shareBottomSheetRef.current) {
+      shareBottomSheetRef.current.present();
+      isBottomSheetOpen.current = true;
+    }
+  };
+  const closeShareBottomSheet = () => {
+    if (shareBottomSheetRef.current) {
+      shareBottomSheetRef.current.close();
+      isBottomSheetOpen.current = false;
+    }
+  };
 
   // Handle hardware back button press
   useEffect(() => {
@@ -415,6 +429,7 @@ const PostFooter = ({
         if (isBottomSheetOpen.current) {
           closeCommentsBottomSheet();
           closeLikesBottomSheet();
+          closeShareBottomSheet();
           return true;
         }
 
@@ -527,6 +542,7 @@ const PostFooter = ({
             activeOpacity={0.4}
             onPress={() => {
               console.log('Share Post : POST ID -->', post.id);
+              openShareBottomSheet();
             }}>
             <ShareIcon width={20} height={20} color={iconColor} />
           </TouchableOpacity>
@@ -726,6 +742,30 @@ const PostFooter = ({
             ))}
           </BottomSheetScrollView>
         )}
+      </CustomBottomSheet>
+
+      {/* Share Bottom Sheet */}
+      <CustomBottomSheet
+        bottomSheetRef={shareBottomSheetRef}
+        customSnapPoints={['80%']}>
+        <View
+          style={{
+            marginTop: 16,
+            marginBottom: 20,
+            marginHorizontal: 16,
+          }}>
+          <Text
+            style={[
+              fontBold(18, textColor),
+            ]}>{`Sharing ${post.user.fullName}'s Post`}</Text>
+        </View>
+
+        <BottomSheetScrollView keyboardShouldPersistTaps='handled'>
+          <SharePost
+            postId={post.id}
+            closeBottomSheet={closeShareBottomSheet}
+          />
+        </BottomSheetScrollView>
       </CustomBottomSheet>
     </>
   );

@@ -42,7 +42,13 @@ export type CreateCommentOnPostParams = {
   parentCommentId: string | null;
   postId: string;
 };
+
 export type CreateLikeOnPostParams = {
   unLike: boolean;
   postId: string;
+};
+
+export type SharePostParams = {
+  shareMessage: string;
+  originalPostId: string;
 };
