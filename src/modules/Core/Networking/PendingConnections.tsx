@@ -15,6 +15,7 @@ import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {Loader} from '../../../components/Loader';
 import {
+  useCardColor,
   useLightTextColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
@@ -34,6 +35,7 @@ import {UserTypeBadge} from '../../../components/UserTypeBadge';
 import {useAppSelector} from '../../../utils/customHooks/storeHooks';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {Button} from 'native-base';
+import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 
 const PendingConnections = () => {
   const {user} = useAppSelector(state => state.auth);
@@ -45,13 +47,15 @@ const PendingConnections = () => {
   } = useGetPendingConnectionsQuery({userId: user?.id});
 
   const textColor = useTextColor();
+  const containerShadow = useContainerShadow();
+  const cardColor = useCardColor();
 
   const onRefresh = async () => {
     await refetchPendingConnectionRequests();
   };
   return (
     <PageContainer>
-      <GeneralHeader title='Connection Requests' showRightElement={false} />
+      <GeneralHeader title='My Connection Requests' showRightElement={false} />
 
       {pendingConnectionsCIP || !pendingConnections ? (
         <Loader />
@@ -68,7 +72,17 @@ const PendingConnections = () => {
           data={pendingConnections ?? []}
           ListHeaderComponent={
             pendingConnections.length === 0 ? null : (
-              <View style={{marginTop: 20, marginBottom: 4}}>
+              <View
+                style={[
+                  {
+                    marginTop: 16,
+                    marginBottom: 4,
+                    backgroundColor: cardColor,
+                    padding: 16,
+                    borderRadius: 16,
+                  },
+                  containerShadow,
+                ]}>
                 <Text style={[fontRegular(16, textColor)]}>
                   <Text style={fontBold(16, appColors.warmRed)}>
                     {` ${pendingConnections.length}   `}

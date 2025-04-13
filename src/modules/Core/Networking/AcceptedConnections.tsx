@@ -9,11 +9,10 @@ import {
 import React, {memo} from 'react';
 import {
   useGetAcceptedConnectionsQuery,
-  useGetPendingConnectionsQuery,
   useRemoveConnectionMutation,
-  useRespondConnectionRequestMutation,
 } from '../../../store/core/core.service';
 import {
+  useCardColor,
   useLightTextColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
@@ -22,11 +21,8 @@ import GeneralHeader from '../../../components/GeneralHeader';
 import PageContainer from '../../../components/PageContainer';
 import {Loader} from '../../../components/Loader';
 import {
-  ConnectionRequestIcon,
   ConnectionsIcon,
-  CrossIcon,
   RemoveUserIcon,
-  TickIcon,
   UserPlaceholderIcon,
 } from '../../../assets/icons';
 import PullToRefresh from '../../../components/PullToRefresh';
@@ -35,9 +31,9 @@ import {fontRegular, fontBold} from '../../../styles/fonts';
 import {Button} from 'native-base';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {UserTypeBadge} from '../../../components/UserTypeBadge';
-import {ConnectionReqResponse} from '../../../constants/enums';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
+import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 
 const AcceptedConnections = () => {
   const {user} = useAppSelector(state => state.auth);
@@ -49,6 +45,8 @@ const AcceptedConnections = () => {
   } = useGetAcceptedConnectionsQuery({userId: user?.id});
 
   const textColor = useTextColor();
+  const containerShadow = useContainerShadow();
+  const cardColor = useCardColor();
 
   const onRefresh = async () => {
     await refetchAcceptedConnections();
@@ -58,7 +56,7 @@ const AcceptedConnections = () => {
   const connections = acceptedConnections?.connections.connections;
   return (
     <PageContainer>
-      <GeneralHeader title='Your Connections' showRightElement={false} />
+      <GeneralHeader title='My Connections' showRightElement={false} />
 
       {acceptedConnectionsCIP || !acceptedConnections ? (
         <Loader />
@@ -75,7 +73,17 @@ const AcceptedConnections = () => {
           data={connections ?? []}
           ListHeaderComponent={
             totalCount === 0 ? null : (
-              <View style={{marginTop: 20, marginBottom: 4}}>
+              <View
+                style={[
+                  {
+                    marginTop: 16,
+                    marginBottom: 4,
+                    backgroundColor: cardColor,
+                    padding: 16,
+                    borderRadius: 16,
+                  },
+                  containerShadow,
+                ]}>
                 <Text style={[fontRegular(16, textColor)]}>
                   You have
                   <Text style={fontBold(16, appColors.warmRed)}>
