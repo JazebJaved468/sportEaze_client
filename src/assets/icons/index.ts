@@ -1,4 +1,5 @@
 import {AdditionalInfoIcon} from './svgs/AdditionalInfoIcon';
+import {AddUserIcon} from './svgs/AddUserIcon';
 import {ArrowDownIcon} from './svgs/ArrowDownIcon';
 import {ArrowRightIcon} from './svgs/ArrowRightIcon';
 import {AthleteIcon} from './svgs/AthleteIcon';
@@ -124,4 +125,5 @@ export {
   MultipleMediaIcon,
   ConnectionRequestIcon,
   RemoveUserIcon,
+  AddUserIcon,
 };
