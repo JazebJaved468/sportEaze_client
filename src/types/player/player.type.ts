@@ -68,3 +68,9 @@ export type CreateComment = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type SharedPost = {
+  shareMessage: string;
+  visibility: number;
+  originalPost: Post;
+};

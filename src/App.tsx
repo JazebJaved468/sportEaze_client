@@ -14,9 +14,7 @@ export const App: React.FC = () => {
     <Provider store={store}>
       <NativeBaseProvider theme={theme}>
         <GestureHandlerRootView style={{flex: 1}}>
-          <BottomSheetModalProvider>
-            <Navigationcontainer />
-          </BottomSheetModalProvider>
+          <Navigationcontainer />
         </GestureHandlerRootView>
       </NativeBaseProvider>
     </Provider>
