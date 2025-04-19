@@ -44,6 +44,9 @@ import {
 import PendingConnections from '../../Networking/PendingConnections';
 import AcceptedConnections from '../../Networking/AcceptedConnections';
 import FollowingListing from '../../Networking/FollowingListing';
+import MentorRegistrationDetails, {
+  MentorRegistrationDetailsPage,
+} from '../../../Mentor/MentorRegistrationDetails.tsx';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -84,6 +87,7 @@ export type RootStackParamList = {
   PendingConnectionsPage: undefined;
   AcceptedConnectionsPage: undefined;
   FollowingListingPage: undefined;
+  MentorRegistrationDetailsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -226,6 +230,10 @@ export const AppNavigator = () => {
 
       {/* Mentor Screens */}
       <Stack.Screen name={MentorRootPage} component={MentorRoot} />
+      <Stack.Screen
+        name={MentorRegistrationDetailsPage}
+        component={MentorRegistrationDetails}
+      />
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />

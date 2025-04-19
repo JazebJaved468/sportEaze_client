@@ -19,6 +19,7 @@ import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
 import {fontBold} from '../../../../styles/fonts';
 import {RecommendationsPage} from '../../../Fan/Recommendations';
 import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationDetails';
+import {MentorRegistrationDetailsPage} from '../../../Mentor/MentorRegistrationDetails.tsx';
 
 type OptionCardProps = {
   id: number;
@@ -109,6 +110,10 @@ export const JoinAs = () => {
     navigation.navigate(PlayerRegistrationDetailsPage);
   }, [navigation]);
 
+  const navigateToMentorRegistration = useCallback(() => {
+    navigation.navigate(MentorRegistrationDetailsPage);
+  }, [navigation]);
+
   const joiningOptions = useMemo(
     () => [
       {
@@ -130,15 +135,21 @@ export const JoinAs = () => {
       //   title: 'Patron',
       //   description: 'Support and invest in the future of sports',
       //   icon: JoinAsPatronIcon,
+      //   onPress: navigateToPlayerRegistration,
       // },
-      // {
-      //   id: 3,
-      //   title: 'Mentor',
-      //   description: 'Guide and inspire the next generation of athletes',
-      //   icon: JoinAsMentorIcon,
-      // },
+      {
+        id: 3,
+        title: 'Mentor',
+        description: 'Guide and inspire the next generation of athletes',
+        icon: JoinAsMentorIcon,
+        onPress: navigateToMentorRegistration,
+      },
     ],
-    [navigateToFanRegistration, navigateToPlayerRegistration],
+    [
+      navigateToFanRegistration,
+      navigateToPlayerRegistration,
+      navigateToMentorRegistration,
+    ],
   );
 
   const [selectedOption, setSelectedOption] = useState<number>(
@@ -186,7 +197,7 @@ export const JoinAs = () => {
             marginBottom: 20,
             marginHorizontal: 16,
           }}
-          onPress={joiningOptions[selectedOption].onPress}>
+          onPress={joiningOptions[selectedOption]?.onPress}>
           Next
         </Button>
       </View>
