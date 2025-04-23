@@ -1,3 +1,4 @@
+import {Mentor} from '../mentor/mentor.type';
 import {Player} from '../player/player.type';
 
 export type User = {
@@ -16,6 +17,7 @@ export type User = {
   connection: Connection;
   isFollowing?: boolean;
   player?: Player;
+  mentor?: Mentor;
 };
 
 export type Connection = {
