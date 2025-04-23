@@ -130,13 +130,13 @@ export const JoinAs = () => {
         icon: JoinAsPlayerIcon,
         onPress: navigateToPlayerRegistration,
       },
-      // {
-      //   id: 2,
-      //   title: 'Patron',
-      //   description: 'Support and invest in the future of sports',
-      //   icon: JoinAsPatronIcon,
-      //   onPress: navigateToPlayerRegistration,
-      // },
+      {
+        id: 2,
+        title: 'Patron',
+        description: 'Support and invest in the future of sports',
+        icon: JoinAsPatronIcon,
+        onPress: navigateToPlayerRegistration,
+      },
       {
         id: 3,
         title: 'Mentor',
