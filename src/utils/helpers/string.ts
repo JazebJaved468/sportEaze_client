@@ -33,3 +33,9 @@ export const isValidTwitterProfileUrl = (url: string) => {
 
   return twitterRegex.test(url) || 'Please enter a valid X profile URL.';
 };
+
+export const isValidWebsiteUrl = (url: string) => {
+  const websiteRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+
+  return websiteRegex.test(url) || 'Please enter a valid website URL.';
+};

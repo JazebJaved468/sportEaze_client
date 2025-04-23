@@ -4,7 +4,7 @@ import {Image as ImageType} from 'react-native-image-crop-picker';
 import GeneralHeader from '../../../components/GeneralHeader';
 import PageContainer from '../../../components/PageContainer';
 import {RegistrationGeneralDetails} from '../../../components/RegistrationGeneralDetails';
-import {fontBold, fontRegular} from '../../../styles/fonts';
+import {fontBold} from '../../../styles/fonts';
 import {
   useCardColor,
   useTextColor,
@@ -15,58 +15,57 @@ import {CustomDropDown} from '../../../components/CustomDropDown';
 import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {DropDownItemType} from '../../../components/CustomDropDown/CustomDropDown';
 import {PulseEffect} from '../../../components/PulseEffect';
-import {Button, Switch} from 'native-base';
+import {Button} from 'native-base';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 import {appColors} from '../../../constants/colors';
-import {playerLevels} from '../../../constants/player';
 import {SportsPreferenceSelector} from '../../../components/SportsPreferenceSelector';
 import {CustomTextInputField} from '../../../components/CustomInputField';
 import {
   isValidFacebookProfileUrl,
   isValidInstagramProfileUrl,
   isValidTwitterProfileUrl,
+  isValidWebsiteUrl,
 } from '../../../utils/helpers/string';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {AdditionalInfoIcon} from '../../../assets/icons';
 import {CloudinaryUploadPresets} from '../../../constants/cloudinary';
 import {useUploadImageMutation} from '../../../store/postFeed/postFeed.service';
-import {useRegisterFanMutation} from '../../../store/fan/fan.service';
-import {useRegisterPlayerMutation} from '../../../store/player/player.service';
-import {RegisterPlayerParams} from '../../../types/player/player.params';
-import {PlayerRootPage} from '../Root';
+import {MentorRootPage} from '../Root';
 import {convertObjectIntoDropDownItemsArrayFormat} from '../../../utils/helpers/adapter';
+import {useRegisterMentorMutation} from '../../../store/mentor/mentor.service';
+import {MentorRoles} from '../../../constants/mentor';
+import {RegisterMentorParams} from '../../../types/mentor/mentor.params';
 
-export type RegisterPlayerFormData = {
+export type RegisterMentorFormData = {
   profilePic?: ImageType | null;
   fullName?: string;
   username?: string;
   dob?: string;
   gender?: number;
-  secondarySports?: number[];
-  primarySport?: number;
-  playingLevel?: number;
-  currentTeam?: string;
-  coachName?: string;
-  playerBio?: string;
-  trainingLocation?: string;
+  sportInterests?: number[];
+  role?: number; // 1: FITNESS_TRAINER, 2: COACH, 3: SPORTS_PSYCHOLOGIST
+  currentAffiliation?: string;
+  yearsOfExperience?: string;
+  website?: string;
+  linkedIn?: string;
   fbLink?: string;
   instaLink?: string;
   xLink?: string;
-  availableForSponsorship?: boolean;
+  mentorBio?: string;
+  primarySport?: number;
 };
 
-const PlayerRegistrationDetails = () => {
+const MentorRegistrationDetails = () => {
   const navigation = useAppNavigation();
 
   const [registrationStep, setRegistrationStep] = useState(1);
-  const [formData, setFormData] = useState<RegisterPlayerFormData>({});
+  const [formData, setFormData] = useState<RegisterMentorFormData>({});
   const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
 
   const [uploadImagesToCloudinary, {isLoading: imageUploadCIP}] =
     useUploadImageMutation();
 
-  const [registerPlayer, {isLoading: registerPlayerCIP}] =
-    useRegisterPlayerMutation();
+  const [registerMentor, {isLoading: registerMentorCIP}] =
+    useRegisterMentorMutation();
 
   const textColor = useTextColor();
 
@@ -83,9 +82,9 @@ const PlayerRegistrationDetails = () => {
       case 1:
         return 'Kindly let us know you more';
       case 2:
-        return 'Sports & Experience';
+        return 'Sports & Profession';
       case 3:
-        return 'About You & Sponsorship';
+        return 'About You & Experience';
       case 4:
         return 'Social Media Links';
     }
@@ -108,37 +107,39 @@ const PlayerRegistrationDetails = () => {
     return '';
   };
 
-  const submitForm = async (data: RegisterPlayerFormData) => {
+  const submitForm = async (data: RegisterMentorFormData) => {
     try {
       // console.log('formData - submit - formdata', formData);
       // console.log('formData - submit  -data ', data);
       const imageUrl = await uploadToCloudinary();
 
-      const apiData: RegisterPlayerParams = {
+      const apiData: RegisterMentorParams = {
         profilePicUrl: imageUrl ? imageUrl : '',
         fullName: data.fullName as string,
         username: data.username?.toLowerCase() as string,
         dob: data.dob as string,
         gender: data.gender as number,
+        role: data.role as number,
+        sportInterests: data.sportInterests as number[],
+        yearsOfExperience: data.yearsOfExperience as string,
+        bio: data.mentorBio as string,
         primarySport: data.primarySport as number,
-        secondarySports: data.secondarySports as number[],
-        availableForSponsorship: data.availableForSponsorship as boolean,
-        playingLevel: data.playingLevel as number,
-        playerBio: data.playerBio as string,
-        ...(data.currentTeam && {currentTeam: data.currentTeam}),
-        ...(data.coachName && {coachName: data.coachName}),
+        ...(data.website && {website: data.website}),
+        ...(data.currentAffiliation && {
+          currentAffiliation: data.currentAffiliation,
+        }),
         ...(data.fbLink && {fbLink: data.fbLink}),
         ...(data.instaLink && {instaLink: data.instaLink}),
         ...(data.xLink && {xLink: data.xLink}),
       };
-      await registerPlayer(apiData).unwrap();
+      await registerMentor(apiData).unwrap();
       navigation.reset({
         index: 0,
-        routes: [{name: PlayerRootPage}],
+        routes: [{name: MentorRootPage}],
       });
     } catch (error) {
       console.log(
-        '-------xxxxxx----------Error while Registering  Player : PlayerRegistrationDetails.tsx',
+        '-------xxxxxx----------Error while Registering  Mentor : PlayerRegistrationDetails.tsx',
         error,
       );
     }
@@ -146,7 +147,7 @@ const PlayerRegistrationDetails = () => {
 
   return (
     <PageContainer applyGradient>
-      <GeneralHeader title='Player Details' backHandler={handleBackPress} />
+      <GeneralHeader title='Mentor Details' backHandler={handleBackPress} />
 
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
@@ -182,7 +183,7 @@ const PlayerRegistrationDetails = () => {
 
               case 3:
                 return (
-                  <PlayerBioAndSponsorship
+                  <MentorBioAndExperience
                     formData={formData}
                     setFormData={setFormData}
                     setRegistrationStep={setRegistrationStep}
@@ -195,7 +196,7 @@ const PlayerRegistrationDetails = () => {
                     setFormData={setFormData}
                     setRegistrationStep={setRegistrationStep}
                     onSubmitForm={submitForm}
-                    submissionCIP={imageUploadCIP || registerPlayerCIP}
+                    submissionCIP={imageUploadCIP || registerMentorCIP}
                   />
                 );
             }
@@ -206,20 +207,19 @@ const PlayerRegistrationDetails = () => {
   );
 };
 
-type PlayerBioAndSponsorshipProps = {
-  formData: RegisterPlayerFormData;
-  setFormData: React.Dispatch<React.SetStateAction<RegisterPlayerFormData>>;
+type MentorBioAndExperienceProps = {
+  formData: RegisterMentorFormData;
+  setFormData: React.Dispatch<React.SetStateAction<RegisterMentorFormData>>;
   setRegistrationStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-type PlayerBioAndSponsorshipFormData = {
-  currrentTeam: string;
-  coachName: string;
-  playerBio: string;
-  availableForSponsorship: boolean;
+type MentorBioAndExperienceFormData = {
+  currentAffiliation: string;
+  yearsOfExperience: string;
+  mentorBio: string;
 };
 
-const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
+const MentorBioAndExperience: React.FC<MentorBioAndExperienceProps> = ({
   formData,
   setFormData,
   setRegistrationStep,
@@ -232,21 +232,20 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      currrentTeam: '',
-      coachName: '',
-      playerBio: '',
-      availableForSponsorship: true,
+      currentAffiliation: 'Sports Academy',
+      yearsOfExperience: '4',
+      mentorBio: '223',
+      website: 'https://www.instagram.com/yourprofile',
     },
   });
 
-  const onSubmit = async (data: PlayerBioAndSponsorshipFormData) => {
+  const onSubmit = async (data: MentorBioAndExperienceFormData) => {
     try {
       setFormData(prev => ({
         ...prev,
-        currentTeam: data.currrentTeam,
-        coachName: data.coachName,
-        playerBio: data.playerBio,
-        availableForSponsorship: data.availableForSponsorship,
+        currentAffiliation: data.currentAffiliation,
+        yearsOfExperience: data.yearsOfExperience,
+        mentorBio: data.mentorBio,
       }));
       setRegistrationStep(4);
       return;
@@ -279,7 +278,7 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
       </View>
       <View style={{marginBottom: 26}}>
         <Controller
-          name='playerBio'
+          name='mentorBio'
           control={control}
           rules={{
             required: {
@@ -293,7 +292,7 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <CustomTextInputField
-              label='Player Bio'
+              label='Mentor Bio'
               placeholder='Enter about yourself'
               value={value}
               maxLength={501}
@@ -302,8 +301,8 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
               autoCapitalize='sentences'
               height={'auto'}
               textAlignVertical='top'
-              isValid={errors.playerBio ? false : true}
-              errorMessage={errors.playerBio ? errors.playerBio.message : ''}
+              isValid={errors.mentorBio ? false : true}
+              errorMessage={errors.mentorBio ? errors.mentorBio.message : ''}
             />
           )}
         />
@@ -311,24 +310,26 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
 
       <View style={{marginBottom: 26}}>
         <Controller
-          name='currrentTeam'
+          name='currentAffiliation'
           control={control}
           rules={{
             maxLength: {
               value: 50,
-              message: 'Team name cannot exceed 50 characters',
+              message: 'It cannot exceed 50 characters',
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <CustomTextInputField
-              label='Which team do you currently play for ?'
-              placeholder='Enter your current team (if any)'
+              label='Where are you currently affiliated or working?'
+              placeholder='Enter your current affiliation (if any)'
               value={value}
               maxLength={51}
               onChangeText={onChange}
-              isValid={errors.currrentTeam ? false : true}
+              isValid={errors.currentAffiliation ? false : true}
               errorMessage={
-                errors.currrentTeam ? errors.currrentTeam.message : ''
+                errors.currentAffiliation
+                  ? errors.currentAffiliation.message
+                  : ''
               }
             />
           )}
@@ -337,23 +338,34 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
 
       <View style={{marginBottom: 26}}>
         <Controller
-          name='coachName'
+          name='yearsOfExperience'
           control={control}
           rules={{
+            required: {
+              value: true,
+              message: 'Kindly enter your years of experience',
+            },
+            pattern: {
+              value: /^[0-9]+$/,
+              message: 'Only numbers are allowed',
+            },
+
             maxLength: {
-              value: 50,
-              message: 'Coach name cannot exceed 50 characters',
+              value: 2,
+              message: 'It cannot exceed 2 characters',
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <CustomTextInputField
-              label='Who is your coach ?'
-              placeholder='Enter your coach name (if any)'
+              label='How many years of experience do you have?'
+              placeholder='Enter your experience'
               value={value}
-              maxLength={51}
+              maxLength={3}
               onChangeText={onChange}
-              isValid={errors.coachName ? false : true}
-              errorMessage={errors.coachName ? errors.coachName.message : ''}
+              isValid={errors.yearsOfExperience ? false : true}
+              errorMessage={
+                errors.yearsOfExperience ? errors.yearsOfExperience.message : ''
+              }
             />
           )}
         />
@@ -361,29 +373,28 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
 
       <View style={{marginBottom: 26}}>
         <Controller
-          name='availableForSponsorship'
+          name='website'
           control={control}
+          rules={{
+            validate: {
+              validUrl: value => (value ? isValidWebsiteUrl(value) : true),
+            },
+            maxLength: {
+              value: 100,
+              message: 'Link cannot exceed 100 characters',
+            },
+          }}
           render={({field: {onChange, onBlur, value}}) => (
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => onChange(!value)}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 16,
-                // backgroundColor: 'red',
-              }}>
-              <Text style={[fontBold(14, textColor), {flex: 1}]}>
-                Would you like to be visible to sponsors?
-              </Text>
-              <Switch
-                trackColor={{
-                  true: appColors.warmRed,
-                }}
-                value={value}
-              />
-            </TouchableOpacity>
+            <CustomTextInputField
+              label='Personal or Professional Website Link'
+              placeholder='https://www.mentor.com/'
+              value={value}
+              onChangeText={onChange}
+              maxLength={101}
+              autoCapitalize='none'
+              isValid={errors.website ? false : true}
+              errorMessage={errors.website ? errors.website.message : ''}
+            />
           )}
         />
       </View>
@@ -404,10 +415,10 @@ const PlayerBioAndSponsorship: React.FC<PlayerBioAndSponsorshipProps> = ({
 };
 
 type SocialMediaLinksProps = {
-  formData: RegisterPlayerFormData;
-  setFormData: React.Dispatch<React.SetStateAction<RegisterPlayerFormData>>;
+  formData: RegisterMentorFormData;
+  setFormData: React.Dispatch<React.SetStateAction<RegisterMentorFormData>>;
   setRegistrationStep: React.Dispatch<React.SetStateAction<number>>;
-  onSubmitForm: (data: RegisterPlayerFormData) => void;
+  onSubmitForm: (data: RegisterMentorFormData) => void;
   submissionCIP: boolean;
 };
 
@@ -433,14 +444,16 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      fbLink: 'https://www.facebook.com/yourprofile', // number
-      xLink: '', // number
-      instaLink: '',
+      fbLink: 'https://www.facebook.com/yourprofile',
+      xLink: '',
+      instaLink: 'https://www.instagram.com/yourprofile',
     },
   });
 
   const onSubmit = async (data: SocialMediaLinksFormData) => {
     try {
+      console.log('data', data);
+
       onSubmitForm({
         ...formData,
         fbLink: data.fbLink as string,
@@ -475,6 +488,10 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
           name='fbLink'
           control={control}
           rules={{
+            required: {
+              value: true,
+              message: 'Kindly enter your facebook profile link',
+            },
             validate: {
               validUrl: value =>
                 value ? isValidFacebookProfileUrl(value) : true,
@@ -489,9 +506,9 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
               label='Facebook Profile Link'
               placeholder='https://www.facebook.com/yourprofile'
               value={value}
+              autoCapitalize='none'
               onChangeText={onChange}
               maxLength={101}
-              autoCapitalize='none'
               isValid={errors.fbLink ? false : true}
               errorMessage={errors.fbLink ? errors.fbLink.message : ''}
             />
@@ -504,6 +521,10 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
           name='instaLink'
           control={control}
           rules={{
+            required: {
+              value: true,
+              message: 'Kindly enter your instagram profile link',
+            },
             validate: {
               validUrl: value =>
                 value ? isValidInstagramProfileUrl(value) : true,
@@ -517,10 +538,10 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
             <CustomTextInputField
               label='Instagram Profile Link'
               placeholder='https://www.instagram.com/yourprofile'
+              autoCapitalize='none'
               value={value}
               onChangeText={onChange}
               maxLength={101}
-              autoCapitalize='none'
               isValid={errors.instaLink ? false : true}
               errorMessage={errors.instaLink ? errors.instaLink.message : ''}
             />
@@ -549,8 +570,8 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
               placeholder='https://www.twitter.com/yourprofile'
               value={value}
               onChangeText={onChange}
-              maxLength={101}
               autoCapitalize='none'
+              maxLength={101}
               isValid={errors.xLink ? false : true}
               errorMessage={errors.xLink ? errors.xLink.message : ''}
             />
@@ -573,15 +594,15 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
 };
 
 type SportsExperienceProps = {
-  formData: RegisterPlayerFormData;
-  setFormData: React.Dispatch<React.SetStateAction<RegisterPlayerFormData>>;
+  formData: RegisterMentorFormData;
+  setFormData: React.Dispatch<React.SetStateAction<RegisterMentorFormData>>;
   setRegistrationStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type SportsExperienceFormData = {
   primarySport: DropDownItemType | null;
-  playingLevel: DropDownItemType | null;
-  secondarySports: number[];
+  role: DropDownItemType | null;
+  sportInterests: number[];
 };
 
 const SportsExperience: React.FC<SportsExperienceProps> = ({
@@ -601,8 +622,8 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
   } = useForm({
     defaultValues: {
       primarySport: null, // number
-      playingLevel: null, // number
-      secondarySports: [],
+      role: null, // number
+      sportInterests: [],
     },
   });
 
@@ -616,8 +637,8 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
       setFormData(prev => ({
         ...prev,
         primarySport: data.primarySport?.value as number,
-        playingLevel: data.playingLevel?.value as number,
-        secondarySports: data.secondarySports,
+        role: data.role?.value as number,
+        sportInterests: data.sportInterests,
       }));
 
       setRegistrationStep(3);
@@ -645,6 +666,45 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
           style={{width: 190, height: 190}}
         />
       </View>
+
+      <View style={{marginBottom: 26}}>
+        <Controller
+          name='role'
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Kindly select one role',
+            },
+          }}
+          render={({field: {onChange, onBlur, value}}) => (
+            <CustomDropDown
+              label='What best describes your professional role?'
+              customLabelStyles={{
+                marginTop: 4,
+              }}
+              buttonTitle='Select Your Role'
+              sheetTitle='Select 1 Professional Role '
+              data={convertObjectIntoDropDownItemsArrayFormat(MentorRoles)}
+              selectedItem={value}
+              onItemSelect={onChange}
+              snapPoints={['30%']}
+              style={{
+                buttonBackgroundColor: cardColor,
+                buttonTextColor: textColor,
+                buttonJustifyContent: 'space-between',
+                buttonBorderWidth: 0.5,
+                buttonBorderColor: appColors.gray,
+                buttonPaddingVertical: 16,
+                buttonrightIconSize: 12,
+              }}
+              isValid={errors.role ? false : true}
+              errorMessage={errors.role ? errors.role.message : ''}
+            />
+          )}
+        />
+      </View>
+
       <View style={{marginBottom: 26}}>
         <Controller
           name='primarySport'
@@ -686,57 +746,16 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
       </View>
 
       <View style={{marginBottom: 26}}>
-        <Controller
-          name='playingLevel'
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Kindly select playing level',
-            },
-          }}
-          render={({field: {onChange, onBlur, value}}) => (
-            <CustomDropDown
-              label='Your playing level in primary sport ?'
-              customLabelStyles={{
-                marginTop: 4,
-              }}
-              buttonTitle='Select Play Level'
-              sheetTitle='Select 1 Primary Sport '
-              data={convertObjectIntoDropDownItemsArrayFormat(playerLevels)}
-              selectedItem={value}
-              onItemSelect={onChange}
-              snapPoints={['30%']}
-              style={{
-                buttonBackgroundColor: cardColor,
-                buttonTextColor: textColor,
-                buttonJustifyContent: 'space-between',
-                buttonBorderWidth: 0.5,
-                buttonBorderColor: appColors.gray,
-                buttonPaddingVertical: 16,
-                buttonrightIconSize: 12,
-              }}
-              isValid={errors.playingLevel ? false : true}
-              errorMessage={
-                errors.playingLevel ? errors.playingLevel.message : ''
-              }
-            />
-          )}
-        />
-      </View>
-
-      <View style={{marginBottom: 26}}>
         <Text style={[fontBold(14, textColor), {marginBottom: 18}]}>
-          Any secondary sports you play or Interested In ?
+          Any other sport you play or are Interested In ?
         </Text>
         <Controller
-          name='secondarySports'
+          name='sportInterests'
           control={control}
           rules={{
             required: {
               value: true,
-              message:
-                'Kindly select atleast one secondary sport you are interested in',
+              message: 'Kindly select atleast one sport you are interested in',
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
@@ -745,9 +764,9 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
               onSportsSelected={sports => {
                 onChange(sports);
               }}
-              isValid={errors.secondarySports ? false : true}
+              isValid={errors.sportInterests ? false : true}
               errorMessage={
-                errors.secondarySports ? errors.secondarySports.message : ''
+                errors.sportInterests ? errors.sportInterests.message : ''
               }
             />
           )}
@@ -761,8 +780,8 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
             onPress={handleSubmit(data => {
               onSubmit({
                 primarySport: data.primarySport,
-                playingLevel: data.playingLevel,
-                secondarySports: data.secondarySports,
+                role: data.role,
+                sportInterests: data.sportInterests,
               });
             })}
             // isLoading={imageUploadCIP || registerFanCIP}
@@ -775,7 +794,7 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
   );
 };
 
-export default PlayerRegistrationDetails;
+export default MentorRegistrationDetails;
 
 const styles = StyleSheet.create({
   container: {
