@@ -491,6 +491,7 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
               value={value}
               onChangeText={onChange}
               maxLength={101}
+              autoCapitalize='none'
               isValid={errors.fbLink ? false : true}
               errorMessage={errors.fbLink ? errors.fbLink.message : ''}
             />
@@ -519,6 +520,7 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
               value={value}
               onChangeText={onChange}
               maxLength={101}
+              autoCapitalize='none'
               isValid={errors.instaLink ? false : true}
               errorMessage={errors.instaLink ? errors.instaLink.message : ''}
             />
@@ -548,6 +550,7 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
               value={value}
               onChangeText={onChange}
               maxLength={101}
+              autoCapitalize='none'
               isValid={errors.xLink ? false : true}
               errorMessage={errors.xLink ? errors.xLink.message : ''}
             />

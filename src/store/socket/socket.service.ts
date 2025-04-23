@@ -13,7 +13,7 @@ export const connectSocket = () => {
       reconnectionAttempts: 5,
       reconnectionDelay: 2000,
       auth: {
-        accessToken: store.getState().auth.userToken,
+        token: store.getState().auth.userToken,
       },
     });
 
