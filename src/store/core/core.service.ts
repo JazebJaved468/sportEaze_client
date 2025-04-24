@@ -227,8 +227,6 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    //
-
     getChatMessages: builder.query<
       GetChatMessagesResponse,
       {receiverId: string}
