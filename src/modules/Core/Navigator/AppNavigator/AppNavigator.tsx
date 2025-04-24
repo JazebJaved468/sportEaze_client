@@ -61,9 +61,7 @@ export type RootStackParamList = {
   PatronRootPage: undefined;
   MentorRootPage: undefined;
   ChatScreenPage: {
-    name: string;
-    image: string;
-    isOnline: boolean;
+    receiverId: string;
   };
   CreatePostPage: undefined;
   OnBoardingPage: undefined;

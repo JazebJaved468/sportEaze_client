@@ -1,11 +1,9 @@
 import {
-  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
 } from 'react-native';
 import React from 'react';
 import PageContainer from '../../../components/PageContainer';
@@ -21,7 +19,7 @@ import {
 } from '../../../assets/icons';
 import {appColors} from '../../../constants/colors';
 import {fontBold, fontRegular} from '../../../styles/fonts';
-import {Button, FlatList, useColorMode, View} from 'native-base';
+import {Button, View} from 'native-base';
 import {
   useTextColor,
   useLightTextColor,
@@ -37,7 +35,6 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
 import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {PulseEffect} from '../../../components/PulseEffect';
-import {TabView, SceneMap} from 'react-native-tab-view';
 import {
   authApi,
   useGetUserByIdServiceQuery,
@@ -45,14 +42,13 @@ import {
 import {Loader} from '../../../components/Loader';
 import {playerLevels} from '../../../constants/player';
 import {
-  playerApi,
   useFollowPlayerMutation,
   useGetPlayerPostsByPlayerIdServiceQuery,
   useUnfollowPlayerMutation,
 } from '../../../store/player/player.service';
-import {Toast} from '../../../components/Toast';
 import {updateToast} from '../../../store/core/core.slice';
 import {ViewPostPage} from '../../Core/ViewPost';
+import {MessageButton} from '../../../components/MessageButton/MessageButton';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -268,6 +264,9 @@ const PlayerProfile = () => {
                 {playerData.player?.playerBio}
               </Text>
             </View>
+
+            {/* Send Message */}
+            {isVisitor ? <MessageButton receiverId={playerData.id} /> : null}
 
             {/* SPorts */}
             {sports && (

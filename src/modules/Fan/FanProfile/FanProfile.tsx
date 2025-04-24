@@ -40,6 +40,7 @@ import {
   ConnectionReqResponse,
   ConnectionStatus,
 } from '../../../constants/enums';
+import {MessageButton} from '../../../components/MessageButton/MessageButton';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -355,6 +356,10 @@ export const FanProfile = () => {
               </View>
             )}
           </View>
+
+          {/* Send Message */}
+          {isVisitor ? <MessageButton receiverId={fanData.id} /> : null}
+
           {/* Counts */}
           <View
             style={[
