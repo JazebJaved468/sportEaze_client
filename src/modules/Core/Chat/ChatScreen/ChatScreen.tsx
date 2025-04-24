@@ -1,4 +1,11 @@
-import {FlatList, Image, StyleSheet, Text, TextInput} from 'react-native';
+import {
+  BackHandler,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import GeneralHeader from '../../../../components/GeneralHeader';
 import PageContainer from '../../../../components/PageContainer';
@@ -13,44 +20,113 @@ import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {it} from 'date-fns/locale';
 import {chatMessagesMockData} from '../../../../constants/mockData/ChatListing';
 import {Controller, useForm} from 'react-hook-form';
+import {useGetChatMessagesQuery} from '../../../../store/core/core.service';
+import {Loader} from '../../../../components/Loader';
+import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
+import {getSocket} from '../../../../store/socket/socket.service';
+import {ChatMessage} from '../../../../types/core/core.type';
+import {SocketEvents} from '../../../../store/socket/socket.events';
+import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import {AppStates} from '../../../../constants/core';
+import PullToRefresh from '../../../../components/PullToRefresh';
 
 export type ChatScreenRouteProp = RouteProp<
   RootStackParamList,
   'ChatScreenPage'
 >;
 
+const sendStopTypingSocket = (
+  chatId: string | undefined,
+  receiverId: string,
+) => {
+  if (chatId) {
+    getSocket()?.emit(SocketEvents.IS_MSG_TYPING, {
+      chatId: chatId,
+      receiverId: receiverId,
+      contentLength: 0,
+    });
+  }
+};
+
 export const ChatScreen = () => {
   const route = useRoute<ChatScreenRouteProp>();
+  const {user} = useAppSelector(state => state.auth);
 
-  const {image, name, isOnline} = route.params;
+  const {receiverId} = route.params;
+
+  const {data, isError, isLoading, isFetching, refetch} =
+    useGetChatMessagesQuery({
+      receiverId,
+    });
+
+  console.log('chat data', receiverId, data?.chatId);
 
   const textColor = useColorModeValue(appColors.black, appColors.white);
 
-  const [conversation, setConversation] = useState(chatMessagesMockData);
+  const [conversation, setConversation] = useState<ChatMessage[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setConversation(data.messages);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        sendStopTypingSocket(data?.chatId, receiverId);
+        return false;
+      },
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [data?.chatId, receiverId]);
+
+  const onRefresh = async () => {
+    await refetch();
+  };
+
+  console.log('isTyping ', data?.isTyping);
 
   return (
     <PageContainer>
       <View style={{flex: 1}}>
-        <ChatScreenHeader image={image} name={name} isOnline={isOnline} />
-
-        <ChatBody conversation={conversation} />
-        <ChatScreenFooter setConversation={setConversation} />
+        {isLoading || !data ? (
+          <Loader />
+        ) : (
+          <>
+            <ChatScreenHeader
+              image={data?.receiver.profilePicUrl}
+              name={data?.receiver.fullName}
+              isOnline={true}
+              isTyping={data?.isTyping}
+            />
+            <ChatBody conversation={conversation} onRefresh={onRefresh} />
+            <ChatScreenFooter
+              setConversation={setConversation}
+              receiverId={receiverId}
+              chatId={data?.chatId}
+            />
+          </>
+        )}
       </View>
     </PageContainer>
   );
 };
 
-export type ChatMessageProps = {
-  message: string;
-  time: string;
-  isMyMessage: boolean;
-};
-
-const ChatMessage: React.FC<ChatMessageProps> = ({
-  isMyMessage,
-  message,
-  time,
+const TextMessage: React.FC<ChatMessage> = ({
+  content,
+  id,
+  senderId,
+  sentAt,
 }) => {
+  const {user} = useAppSelector(state => state.auth);
+
+  const isMyMessage = senderId === user?.id;
+
   const messageColor = isMyMessage ? appColors.white : appColors.black;
   return (
     <View
@@ -74,7 +150,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             color: messageColor,
             fontSize: 14,
           }}>
-          {message}
+          {content}
         </Text>
       </View>
     </View>
@@ -82,10 +158,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 };
 
 type ChatBodyProps = {
-  conversation: ChatMessageProps[];
+  conversation: ChatMessage[];
+  onRefresh: () => Promise<void>;
 };
 
-const ChatBody: React.FC<ChatBodyProps> = ({conversation}) => {
+const ChatBody: React.FC<ChatBodyProps> = ({conversation, onRefresh}) => {
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
@@ -96,14 +173,22 @@ const ChatBody: React.FC<ChatBodyProps> = ({conversation}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
+        windowSize={100}
+        scrollEventThrottle={16}
+        initialNumToRender={20}
         inverted
+        refreshControl={<PullToRefresh onRefresh={onRefresh} />}
         // getItemLayout={(data, index) => ({
         //   length: 70,
         //   offset: 70 * index,
         //   index,
         // })}
         // initialScrollIndex={conversation.length - 1}
-        contentContainerStyle={{flexGrow: 1, marginHorizontal: 16}}
+        contentContainerStyle={{
+          flexGrow: 1,
+          marginHorizontal: 16,
+          paddingTop: 16,
+        }}
         data={conversation}
         // onContentSizeChange={() => {
         //   console.log('scrolling to end');
@@ -113,13 +198,15 @@ const ChatBody: React.FC<ChatBodyProps> = ({conversation}) => {
         ListFooterComponent={<View style={{height: 30}} />}
         renderItem={({item}) => {
           return (
-            <ChatMessage
-              message={item.message}
-              isMyMessage={item.isMyMessage}
-              time={item.time}
+            <TextMessage
+              content={item.content}
+              id={item.id}
+              senderId={item.senderId}
+              sentAt={item.sentAt}
             />
           );
         }}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
@@ -130,42 +217,101 @@ type ChatScreenFooterProps = {
   // image: string;
   // isOnline: boolean;
   // flatlistRef: React.RefObject<FlatList>;
-  setConversation: React.Dispatch<React.SetStateAction<ChatMessageProps[]>>;
+  setConversation: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+  // sendMessage: (message: string) => void;
+  receiverId: string;
+  chatId: string | undefined;
 };
 
 const ChatScreenFooter: React.FC<ChatScreenFooterProps> = ({
   setConversation,
+  // sendMessage,
+  receiverId,
   // flatlistRef,
+  chatId,
 }) => {
+  const {user} = useAppSelector(state => state.auth);
+  const {appState} = useAppSelector(state => state.core);
   const {
     control,
     handleSubmit,
     formState: {errors},
     getValues,
     setValue,
+    watch,
   } = useForm({
     defaultValues: {
       message: '',
     },
   });
 
-  const onSend = (data: any) => {
-    console.log(data);
+  const message = watch('message');
+
+  const sendMessage = () => {
+    if (!user) {
+      return;
+    }
+    getSocket()?.emit('send_message', {
+      recipientId: receiverId,
+      content: getValues('message'),
+    });
+
     setConversation(prev => [
       {
-        message: data.message,
-        time: '10:17 AM',
-        isMyMessage: true,
+        content: getValues('message'),
+        sentAt: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        senderId: user?.id,
+        id: Math.random().toString(36).substring(7),
       },
       ...prev,
     ]);
-    setValue('message', '');
 
-    // Ensure scroll happens after FlatList updates
-    // setTimeout(() => {
-    //   flatlistRef.current?.scrollToEnd({animated: true});
-    // }, 100);
+    console.log('sending message', {
+      content: getValues('message'),
+      sentAt: new Date().toISOString(),
+      senderId: user?.id,
+      id: Math.random().toString(36).substring(7),
+    });
+    setValue('message', '');
   };
+
+  const messageLengthGreaterThanZeroSocketSendRef = useRef(false);
+
+  useEffect(() => {
+    if (chatId) {
+      console.log('message typing', getValues('message').length);
+      if (message.length === 0) {
+        getSocket()?.emit(SocketEvents.IS_MSG_TYPING, {
+          chatId: chatId,
+          receiverId: receiverId,
+          contentLength: message.length,
+        });
+
+        messageLengthGreaterThanZeroSocketSendRef.current = false;
+      } else if (
+        messageLengthGreaterThanZeroSocketSendRef.current === false &&
+        message.length > 0
+      ) {
+        console.log('sending typing socket');
+        getSocket()?.emit(SocketEvents.IS_MSG_TYPING, {
+          chatId: chatId,
+          receiverId: receiverId,
+          contentLength: message.length,
+        });
+        messageLengthGreaterThanZeroSocketSendRef.current = true;
+      }
+    }
+  }, [message.length, chatId, receiverId]);
+
+  useEffect(() => {
+    if (appState === AppStates.BACKGROUND) {
+      sendStopTypingSocket(chatId, receiverId);
+      messageLengthGreaterThanZeroSocketSendRef.current = false;
+    }
+  }, [appState]);
 
   return (
     <View style={styles.chatFooterContainer}>
@@ -192,7 +338,7 @@ const ChatScreenFooter: React.FC<ChatScreenFooterProps> = ({
         activeOpacity={0.8}
         onPress={() => {
           if (getValues('message').trim().length) {
-            handleSubmit(onSend)();
+            handleSubmit(sendMessage)();
           }
         }}>
         <View
@@ -215,11 +361,13 @@ type ChatScreenHeaderProps = {
   name: string;
   image: string;
   isOnline: boolean;
+  isTyping?: boolean;
 };
 const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
   name,
   image,
   isOnline,
+  isTyping,
 }) => {
   const navigation = useAppNavigation();
   const textColor = useColorModeValue(appColors.black, appColors.white);
@@ -248,9 +396,11 @@ const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
           {name}
         </Text>
 
-        <Text numberOfLines={1} style={[styles.message, {color: textColor}]}>
-          typing..
-        </Text>
+        {isTyping ? (
+          <Text numberOfLines={1} style={[styles.message, {color: textColor}]}>
+            typing..
+          </Text>
+        ) : null}
       </View>
     </View>
   );
