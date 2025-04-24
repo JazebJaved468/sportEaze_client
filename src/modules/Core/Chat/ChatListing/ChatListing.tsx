@@ -6,50 +6,72 @@ import {chatListingMockData} from '../../../../constants/mockData/ChatListing';
 import ChatCard from '../../../../components/ChatCard';
 import {ChatCardSkeleton} from '../../../../components/ChatCard/ChatCard';
 import {RefreshControl} from 'react-native-gesture-handler';
+import {useGetChatListingQuery} from '../../../../store/core/core.service';
+import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
+import PullToRefresh from '../../../../components/PullToRefresh';
 
 export const ChatListing = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [refereshing, setRefreshing] = useState(false);
+  const {user} = useAppSelector(state => state.auth);
 
-  useEffect(() => {
-    loadChats();
-  }, []);
+  const {data, isFetching, isLoading, isError, refetch} =
+    useGetChatListingQuery(
+      {
+        userId: user?.id || '',
+      },
+      {skip: !user?.id},
+    );
 
-  const loadChats = async () => {
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    setIsLoading(false);
+  const onRefresh = async () => {
+    await refetch();
   };
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
 
   return (
     <PageContainer>
       <GeneralHeader title='Messages' />
-      <FlatList
-        data={chatListingMockData}
-        refreshControl={
-          <RefreshControl refreshing={refereshing} onRefresh={onRefresh} />
-        }
-        renderItem={({item}) =>
-          isLoading ? (
-            <ChatCardSkeleton />
-          ) : (
-            <ChatCard
-              name={item.name}
-              message={item.message}
-              image={item.image}
-              time={item.time}
-              unread={item.unread}
-              isOnline={item.isOnline}
-            />
-          )
-        }
-      />
+
+      {isLoading || !data ? (
+        <ChatListingSkeleton />
+      ) : (
+        <FlatList
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={data}
+          refreshControl={<PullToRefresh onRefresh={onRefresh} />}
+          renderItem={({item}) =>
+            isLoading ? (
+              <ChatCardSkeleton />
+            ) : (
+              <ChatCard
+                receiver={item.receiver}
+                message={item.messages}
+                unread={true}
+                isOnline={true}
+                isTyping={item.isTyping}
+              />
+            )
+          }
+        />
+      )}
     </PageContainer>
+  );
+};
+
+const ChatListingSkeleton = () => {
+  return (
+    <>
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+      <ChatCardSkeleton />
+    </>
   );
 };
 

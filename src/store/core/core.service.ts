@@ -8,6 +8,8 @@ import {
   AvailableSportsResponse,
   ConnectUserResponse,
   GetAcceptedConnectionsResponse,
+  GetChatListingResponse,
+  GetChatMessagesResponse,
   GetPendingConnectionsResponse,
 } from '../../types/core/core.response';
 import {UserWindow} from '../../types/core/core.type';
@@ -224,10 +226,33 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         return `/feed?pageSize=${POST_FEED_PAGE_SIZE}&pageNo=${pageParam}`;
       },
     }),
+
+    getChatMessages: builder.query<
+      GetChatMessagesResponse,
+      {receiverId: string}
+    >({
+      query: ({receiverId}) => ({
+        url: `/chat/${receiverId}`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.receiverId}`;
+      },
+    }),
+
+    getChatListing: builder.query<GetChatListingResponse[], {userId: string}>({
+      query: ({userId}) => ({
+        url: `/chat/user/${userId}`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
   }),
 });
 
 export const {
+  useGetChatListingQuery,
+  useGetChatMessagesQuery,
   useGetAvailableSportsQuery,
   useLazyGetAvailableSportsQuery,
   useLazyGetSearchedUsersQuery,

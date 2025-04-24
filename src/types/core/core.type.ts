@@ -15,3 +15,16 @@ export type PendingConnections = {
   totalConnectionCount: number;
   connections: UserWindow[];
 };
+
+export type ChatMessage = {
+  id: string;
+  content: string;
+  senderId: string;
+  sentAt: string;
+};
+
+export type OnMessageTyping = {
+  chatId: string;
+  receiverId: string;
+  contentLength: number;
+};

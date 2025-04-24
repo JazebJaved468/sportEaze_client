@@ -6,23 +6,24 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
 import {ChatScreenPage} from '../../modules/Core/Chat/ChatScreen';
 import SkeletonLoader from '../SkeletonLoader';
+import {ChatMessage, UserWindow} from '../../types/core/core.type';
+import {format} from 'date-fns';
+import {fontLight, fontRegular} from '../../styles/fonts';
 
 export type ChatCardProps = {
-  name: string;
-  message: string;
-  image: string;
-  time: string;
+  message: ChatMessage;
   unread: boolean;
   isOnline: boolean;
+  receiver: UserWindow;
+  isTyping?: boolean;
 };
 
 export const ChatCard: React.FC<ChatCardProps> = ({
-  name,
   message,
-  time,
-  image,
   isOnline,
   unread,
+  receiver,
+  isTyping,
 }) => {
   const navigation = useAppNavigation();
 
@@ -36,7 +37,7 @@ export const ChatCard: React.FC<ChatCardProps> = ({
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={() => {
-        navigation.navigate(ChatScreenPage, {name, image, isOnline});
+        navigation.navigate(ChatScreenPage, {receiverId: receiver.id});
       }}>
       <View style={styles.chatCardContainer}>
         <View style={styles.profilePicContainer}>
@@ -44,7 +45,7 @@ export const ChatCard: React.FC<ChatCardProps> = ({
           <Image
             style={styles.profilePic}
             source={{
-              uri: image,
+              uri: receiver.profilePicUrl,
             }}
           />
         </View>
@@ -55,13 +56,32 @@ export const ChatCard: React.FC<ChatCardProps> = ({
               justifyContent: 'space-between',
             }}>
             <Text numberOfLines={1} style={[styles.name, {color: textColor}]}>
-              {name}
+              {receiver.fullName}
             </Text>
-            <Text style={[styles.time, {color: textColor}]}>{time}</Text>
+            <Text style={fontLight(12, textColor)}>
+              {format(message.sentAt, 'd MMM y')}
+            </Text>
           </View>
-          <Text numberOfLines={1} style={[styles.message, {color: textColor}]}>
-            {message}
-          </Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Text
+              numberOfLines={1}
+              style={[
+                styles.message,
+                fontRegular(12),
+                {color: isTyping ? appColors.warmRed : `${textColor}90`},
+              ]}>
+              {isTyping ? 'Typing . . .' : message.content}
+            </Text>
+            <Text style={fontLight(12, textColor)}>
+              {format(message.sentAt, 'hh:mm aaa')}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -122,8 +142,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   message: {
-    fontSize: 12,
-    fontWeight: '300',
     marginRight: 60,
   },
   time: {
