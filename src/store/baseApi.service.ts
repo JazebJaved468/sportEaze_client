@@ -1,10 +1,12 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {store} from './store';
+import {getFromLocalStorage} from '../utils/helpers/asyncStorage';
 
 export const sporteazeBaseApi = createApi({
   reducerPath: 'sporteazeBaseApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.SPORTEAZE_BASE_API,
+    // baseUrl: process.env.SPORTEAZE_BASE_API,
+    baseUrl: 'http://192.168.100.3:3000/api',
     prepareHeaders: headers => {
       const {userToken} = store.getState().auth;
       if (userToken) {
@@ -26,3 +28,32 @@ export const cloudinaryBaseApi = createApi({
   }),
   endpoints: builder => ({}),
 });
+
+// const createDynamicBaseQuery = () => {
+//   return async (args: any, api: any, extraOptions: any) => {
+//     // Get the server domain each time a request is made
+//     const serverDomain =
+//       (await getFromLocalStorage({key: 'serverDomain'})) || 'api.sporteaze.com';
+
+//     // Construct the URL dynamically
+//     const baseUrl = `https://${serverDomain}/api`;
+
+//     console.log('Base URL:', baseUrl); // Log the dynamic base URL
+
+//     // Create a new base query with the dynamic URL
+//     const dynamicBaseQuery = fetchBaseQuery({
+//       baseUrl,
+//       prepareHeaders: headers => {
+//         const {userToken} = store.getState().auth;
+//         if (userToken) {
+//           headers.set('authorization', `Bearer ${userToken}`);
+//         }
+//         headers.set('Content-Type', 'application/json');
+//         return headers;
+//       },
+//     });
+
+//     // Use the dynamic base query to execute the request
+//     return dynamicBaseQuery(args, api, extraOptions);
+//   };
+// };
