@@ -49,7 +49,8 @@ export const onMessageTyping = (data: OnMessageTyping) => {
   dispatch(
     coreApi.util.updateQueryData(
       'getChatMessages',
-      {receiverId: data.receiverId},
+      {receiverId: data.senderId},
+
       draft => {
         draft.isTyping = data.contentLength > 0 ? true : false;
       },

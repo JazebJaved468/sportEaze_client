@@ -27,4 +27,5 @@ export type OnMessageTyping = {
   chatId: string;
   receiverId: string;
   contentLength: number;
+  senderId: string;
 };
