@@ -358,7 +358,10 @@ export const FanProfile = () => {
           </View>
 
           {/* Send Message */}
-          {isVisitor ? <MessageButton receiverId={fanData.id} /> : null}
+
+          <View style={{marginHorizontal: 16}}>
+            {isVisitor ? <MessageButton receiverId={fanData.id} /> : null}
+          </View>
 
           {/* Counts */}
           <View
