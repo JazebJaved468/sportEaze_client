@@ -18,6 +18,7 @@ import {ConnectionRequestIcon} from './svgs/ConnectionRequestIcon';
 import {ConnectionsIcon} from './svgs/ConnectionsIcon';
 import {CreateIcon} from './svgs/CreateIcon';
 import {CrossIcon} from './svgs/CrossIcon';
+import {CustomerSupportIcon} from './svgs/CustomerSupportIcon';
 import {DashboardIcon} from './svgs/DashboardIcon';
 import {DeleteIcon} from './svgs/DeleteIcon';
 import {EditProfileIcon} from './svgs/EditProfileIcon';
@@ -62,6 +63,7 @@ import {TermsAndConditionsIcon} from './svgs/TermsAndConditionsIcon';
 import {TickIcon} from './svgs/TickIcon';
 import {UnMuteIcon} from './svgs/UnMuteIcon';
 import {UserPlaceholderIcon} from './svgs/UserPlaceholderIcon';
+import {WarningIcon} from './svgs/WarningIcon';
 
 export {
   BackIcon,
@@ -128,4 +130,6 @@ export {
   RemoveUserIcon,
   AddUserIcon,
   ComplianceIcon,
+  WarningIcon,
+  CustomerSupportIcon,
 };
