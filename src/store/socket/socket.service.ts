@@ -1,7 +1,11 @@
 import {io, Socket} from 'socket.io-client';
 import {store} from '../store';
 import {GetChatListingResponse} from '../../types/core/core.response';
-import {onMessageSent, onMessageTyping} from '../../utils/helpers/chat.utils';
+import {
+  onMessageRecieved,
+  onMessageSent,
+  onMessageTyping,
+} from '../../utils/helpers/chat.utils';
 import {SocketEvents} from './socket.events';
 import {OnMessageTyping} from '../../types/core/core.type';
 // const SOCKET_URL = 'http://192.168.100.18:3000'; // Replace with your backend URL
@@ -40,7 +44,7 @@ export const connectSocket = () => {
     // Message received
     socket.on(SocketEvents.MESSAGE_RECEIVED, (data: GetChatListingResponse) => {
       console.log('message received!', data);
-      onMessageSent(data);
+      onMessageRecieved(data);
     });
 
     // Message sent

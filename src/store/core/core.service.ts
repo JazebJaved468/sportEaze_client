@@ -2,6 +2,7 @@ import {POST_FEED_PAGE_SIZE} from '../../constants/core';
 import {ConnectionReqResponse, ConnectionStatus} from '../../constants/enums';
 import {
   ConnectUserParams,
+  MarkChatAsReadParams,
   RespondConnectionRequestParams,
 } from '../../types/core/core.params';
 import {
@@ -15,6 +16,7 @@ import {
 import {UserWindow} from '../../types/core/core.type';
 import {Post} from '../../types/player/player.type';
 import {RootState} from '../../utils/customHooks/storeHooks';
+import {onChatRead} from '../../utils/helpers/chat.utils';
 import {authApi} from '../auth/auth.service';
 import {sporteazeBaseApi} from '../baseApi.service';
 
@@ -247,10 +249,40 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         return `${endpointName}-${queryArgs.userId}`;
       },
     }),
+
+    //
+
+    markChatAsRead: builder.mutation<ConnectUserResponse, MarkChatAsReadParams>(
+      {
+        query: ({chatId, user2Id}) => ({
+          url: `/chat/read/${chatId}`,
+          method: 'POST',
+        }),
+
+        async onQueryStarted(args, {dispatch, queryFulfilled}) {
+          // // `onStart` side-effect
+
+          try {
+            const {data} = await queryFulfilled;
+            // `onSuccess` side-effect
+            console.log('response - chat read success', data);
+
+            onChatRead(args.chatId, args.user2Id);
+          } catch (err) {
+            // `onError` side-effect
+            console.log(
+              'Error while marking chat as read : core.service.ts : Line 274',
+              err,
+            );
+          }
+        },
+      },
+    ),
   }),
 });
 
 export const {
+  useMarkChatAsReadMutation,
   useGetChatListingQuery,
   useGetChatMessagesQuery,
   useGetAvailableSportsQuery,
