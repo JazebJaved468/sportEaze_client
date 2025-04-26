@@ -9,6 +9,7 @@ import SkeletonLoader from '../SkeletonLoader';
 import {ChatMessage, UserWindow} from '../../types/core/core.type';
 import {format} from 'date-fns';
 import {fontLight, fontRegular} from '../../styles/fonts';
+import {useTextColor} from '../../utils/customHooks/colorHooks';
 
 export type ChatCardProps = {
   message: ChatMessage;
@@ -27,7 +28,7 @@ export const ChatCard: React.FC<ChatCardProps> = ({
 }) => {
   const navigation = useAppNavigation();
 
-  const textColor = useColorModeValue(appColors.black, appColors.white);
+  const textColor = useTextColor();
   const messageColor = useColorModeValue(
     appColors.placeHolder,
     appColors.white,
@@ -39,7 +40,16 @@ export const ChatCard: React.FC<ChatCardProps> = ({
       onPress={() => {
         navigation.navigate(ChatScreenPage, {receiverId: receiver.id});
       }}>
-      <View style={styles.chatCardContainer}>
+      <View
+        style={[
+          styles.chatCardContainer,
+          {
+            borderLeftColor: unread ? appColors.warmRed : `${textColor}40`,
+
+            borderLeftWidth: 4,
+            paddingHorizontal: 16,
+          },
+        ]}>
         <View style={styles.profilePicContainer}>
           {isOnline ? <View style={styles.onlineMark} /> : null}
           <Image
@@ -104,7 +114,7 @@ export const ChatCardSkeleton = () => {
             <View style={styles.skeletonName} />
             <View style={styles.skeletonTime} />
           </View>
-          <View style={[styles.message]}></View>
+          <View style={[styles.messageSkeleton]}></View>
         </View>
       </View>
     </SkeletonLoader>
@@ -120,6 +130,8 @@ const styles = StyleSheet.create({
     borderBottomColor: appColors.divider,
     gap: 18,
     paddingVertical: 20,
+    borderRadius: 16,
+    marginTop: 8,
   },
   profilePicContainer: {
     width: 52,
@@ -142,6 +154,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   message: {
+    marginRight: 60,
+    flex: 1,
+  },
+  messageSkeleton: {
     marginRight: 60,
   },
   time: {

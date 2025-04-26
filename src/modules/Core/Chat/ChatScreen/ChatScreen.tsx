@@ -9,7 +9,10 @@ import {BackIcon, MessageSendIcon} from '../../../../assets/icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {Controller, useForm} from 'react-hook-form';
-import {useGetChatMessagesQuery} from '../../../../store/core/core.service';
+import {
+  useGetChatMessagesQuery,
+  useMarkChatAsReadMutation,
+} from '../../../../store/core/core.service';
 import {Loader} from '../../../../components/Loader';
 import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
 import {getSocket} from '../../../../store/socket/socket.service';
@@ -48,6 +51,14 @@ export const ChatScreen = () => {
   const textColor = useColorModeValue(appColors.black, appColors.white);
 
   const [conversation, setConversation] = useState<ChatMessage[]>([]);
+
+  const [markChatAsRead] = useMarkChatAsReadMutation();
+
+  useEffect(() => {
+    if (data?.unreadCount && data.chatId && data?.unreadCount > 0) {
+      markChatAsRead({chatId: data?.chatId, user2Id: receiverId});
+    }
+  }, [data?.unreadCount]);
 
   useEffect(() => {
     if (data) {
