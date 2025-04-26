@@ -12,6 +12,7 @@ import {CircularInfoIcon} from './svgs/CircularInfoIcon';
 import {CloseEyeIcon} from './svgs/CloseEyeIcon';
 import {CoachIcon} from './svgs/CoachIcon';
 import {CommentIcon} from './svgs/CommentIcon';
+import {ComplianceIcon} from './svgs/ComplianceIcon';
 import {ConnectionNetworkIcon} from './svgs/ConnectionNetworkIcon';
 import {ConnectionRequestIcon} from './svgs/ConnectionRequestIcon';
 import {ConnectionsIcon} from './svgs/ConnectionsIcon';
@@ -126,4 +127,5 @@ export {
   ConnectionRequestIcon,
   RemoveUserIcon,
   AddUserIcon,
+  ComplianceIcon,
 };

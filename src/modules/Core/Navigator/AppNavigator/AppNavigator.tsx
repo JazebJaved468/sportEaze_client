@@ -47,6 +47,12 @@ import FollowingListing from '../../Networking/FollowingListing';
 import MentorRegistrationDetails, {
   MentorRegistrationDetailsPage,
 } from '../../../Mentor/MentorRegistrationDetails.tsx';
+import AccountSettings, {
+  AccountSettingsPage,
+} from '../../AccountSettings/index.ts';
+import SuperAdminRoot, {
+  SuperAdminRootPage,
+} from '../../../SuperAdmin/Root/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -86,6 +92,8 @@ export type RootStackParamList = {
   AcceptedConnectionsPage: undefined;
   FollowingListingPage: undefined;
   MentorRegistrationDetailsPage: undefined;
+  AccountSettingsPage: undefined;
+  SuperAdminRootPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -112,6 +120,8 @@ const getInitialRouteName = (user: User | null, isFirstVisit: boolean) => {
       return PatronRootPage;
     case USER_TYPE.MENTOR:
       return MentorRootPage;
+    case USER_TYPE.SUPER_ADMIN:
+      return SuperAdminRootPage;
     default:
       return FanRootPage;
   }
@@ -150,6 +160,11 @@ export const AppNavigator = () => {
       navigation.reset({
         index: 0,
         routes: [{name: MentorRootPage}],
+      });
+    } else if (userType === USER_TYPE.SUPER_ADMIN) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: SuperAdminRootPage}],
       });
     } else {
       navigation.reset({
@@ -204,6 +219,8 @@ export const AppNavigator = () => {
         }}
       />
 
+      <Stack.Screen name={AccountSettingsPage} component={AccountSettings} />
+
       {/* Fan Screens */}
       <Stack.Screen name={FanRootPage} component={FanRoot} />
       <Stack.Screen
@@ -232,6 +249,10 @@ export const AppNavigator = () => {
         name={MentorRegistrationDetailsPage}
         component={MentorRegistrationDetails}
       />
+
+      {/* Super Admin Screens */}
+
+      <Stack.Screen name={SuperAdminRootPage} component={SuperAdminRoot} />
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />

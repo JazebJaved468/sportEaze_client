@@ -4,6 +4,7 @@ export enum USER_TYPE {
   PATRON = 3,
   MENTOR = 4,
   GENERAL = 0,
+  SUPER_ADMIN = 5,
 }
 
 export enum GENDER {
