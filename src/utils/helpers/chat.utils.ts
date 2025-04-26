@@ -27,6 +27,7 @@ export const onMessageSent = (data: GetChatListingResponse) => {
       draft => {
         draft.chatId = data.chatId;
         draft.messages.unshift(data.messages);
+        draft.unreadCount = data.unreadCount;
       },
     ),
   );

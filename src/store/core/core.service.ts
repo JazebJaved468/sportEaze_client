@@ -19,6 +19,7 @@ import {RootState} from '../../utils/customHooks/storeHooks';
 import {onChatRead} from '../../utils/helpers/chat.utils';
 import {authApi} from '../auth/auth.service';
 import {sporteazeBaseApi} from '../baseApi.service';
+import {store} from '../store';
 
 export const coreApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
@@ -237,7 +238,7 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         url: `/chat/${receiverId}`,
       }),
       serializeQueryArgs: ({queryArgs, endpointName}) => {
-        return `${endpointName}-${queryArgs.receiverId}`;
+        return `${endpointName}-${queryArgs.receiverId}-${(store.getState() as RootState).auth?.user?.id}`;
       },
     }),
 

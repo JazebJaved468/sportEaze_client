@@ -20,6 +20,9 @@ import {ChatMessage} from '../../../../types/core/core.type';
 import {SocketEvents} from '../../../../store/socket/socket.events';
 import {AppStates} from '../../../../constants/core';
 import PullToRefresh from '../../../../components/PullToRefresh';
+import {format} from 'date-fns';
+import {fontRegular} from '../../../../styles/fonts';
+import {customHeight} from '../../../../styles/responsiveStyles';
 
 export type ChatScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -134,16 +137,14 @@ const TextMessage: React.FC<ChatMessage> = ({
             : appColors.whisperGray,
           paddingVertical: 12,
           paddingLeft: 12,
-          paddingRight: 20,
+          paddingRight: 16,
           borderRadius: 16,
           maxWidth: '78%',
+          gap: customHeight(8),
         }}>
-        <Text
-          style={{
-            color: messageColor,
-            fontSize: 14,
-          }}>
-          {content}
+        <Text style={fontRegular(14, messageColor)}>{content}</Text>
+        <Text style={[fontRegular(9, messageColor), {alignSelf: 'flex-end'}]}>
+          {format(sentAt, 'hh:mm a')}
         </Text>
       </View>
     </View>
@@ -252,10 +253,7 @@ const ChatScreenFooter: React.FC<ChatScreenFooterProps> = ({
     setConversation(prev => [
       {
         content: getValues('message'),
-        sentAt: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
+        sentAt: new Date().toISOString(),
         senderId: user?.id,
         id: Math.random().toString(36).substring(7),
       },
