@@ -4,6 +4,7 @@ import {
   Dimensions,
   Easing,
   FlatList,
+  Image,
   StatusBar,
   StyleSheet,
   Text,
@@ -22,6 +23,8 @@ import {
 } from '../../../constants/onBoarding';
 import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {FanRootPage} from '../../Fan/Root';
+import {customHeight, customWidth} from '../../../styles/responsiveStyles';
+import {fontBold, fontExtraBold, fontRegular} from '../../../styles/fonts';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -107,26 +110,18 @@ export const OnBoarding = () => {
   const renderItem = ({item}: {item: OnBoardingDataType}) => {
     return (
       <View style={[styles.slide]}>
-        <View>
+        <View
+          style={{
+            height: screenHeight - customHeight(280),
+            overflow: 'hidden',
+          }}>
           <item.image />
         </View>
 
         <View style={styles.content}>
+          <Text style={fontExtraBold(42, textColor)}>{item.title}</Text>
           <Text
-            style={{
-              color: textColor,
-              fontSize: 42,
-              fontFamily: 'LatoBlack',
-            }}>
-            {item.title}
-          </Text>
-          <Text
-            style={{
-              color: textColor,
-              fontSize: 16,
-              marginTop: 16,
-              fontFamily: 'LatoRegular',
-            }}>
+            style={[fontRegular(16, textColor), {marginTop: customHeight(16)}]}>
             {item.description}
           </Text>
         </View>
@@ -164,9 +159,9 @@ export const OnBoarding = () => {
         </View>
 
         {/* remove ths static view */}
-        <View style={styles.modelContainer}>
+        {/* <View style={styles.modelContainer}>
           <PlayerModelIcon />
-        </View>
+        </View> */}
 
         <View style={styles.swiperContainer}>
           <FlatList
@@ -251,9 +246,9 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   content: {
-    marginLeft: 16,
-    marginRight: 24,
-    marginTop: 20,
+    marginLeft: customWidth(16),
+    marginRight: customWidth(24),
+    marginTop: customHeight(30),
   },
 
   // swiper
@@ -261,10 +256,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    marginTop: 80,
+    marginTop: customHeight(70),
   },
   slide: {
     width: screenWidth,
+    // backgroundColor: 'red',
   },
   pagination: {
     flexDirection: 'row',

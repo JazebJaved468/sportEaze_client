@@ -1,7 +1,12 @@
 import * as React from 'react';
 import Svg, {SvgProps, Path, Defs, Pattern, Use, Image} from 'react-native-svg';
 export const PlayerModelIcon = (props: SvgProps) => (
-  <Svg width={402} height={550} fill='none' {...props}>
+  <Svg
+    width={props.width ?? 402}
+    height={props.height ?? 550}
+    viewBox='0 0 402 550'
+    fill='none'
+    {...props}>
     <Path
       fill='url(#a)'
       d='M0 0h417.239v549.899H0z'
