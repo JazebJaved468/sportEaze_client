@@ -45,7 +45,9 @@ export const ChatListing = () => {
               <ChatCard
                 receiver={item.receiver}
                 message={item.messages}
-                unread={true}
+                unread={
+                  item?.unreadCount && item.unreadCount > 0 ? true : false
+                }
                 isOnline={true}
                 isTyping={item.isTyping}
               />

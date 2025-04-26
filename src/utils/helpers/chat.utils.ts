@@ -32,6 +32,19 @@ export const onMessageSent = (data: GetChatListingResponse) => {
   );
 };
 
+export const onMessageRecieved = (data: GetChatListingResponse) => {
+  onMessageSent(data);
+
+  dispatch(
+    coreApi.util.updateQueryData('getChatListing', {userId}, draft => {
+      const index = draft.findIndex(item => item.chatId === data.chatId);
+      if (index !== -1) {
+        draft[index].unreadCount = data.unreadCount;
+      }
+    }),
+  );
+};
+
 export const onMessageTyping = (data: OnMessageTyping) => {
   dispatch(
     coreApi.util.updateQueryData('getChatListing', {userId}, draft => {
@@ -53,6 +66,27 @@ export const onMessageTyping = (data: OnMessageTyping) => {
 
       draft => {
         draft.isTyping = data.contentLength > 0 ? true : false;
+      },
+    ),
+  );
+};
+
+export const onChatRead = (chatId: string, user2Id: string) => {
+  dispatch(
+    coreApi.util.updateQueryData('getChatListing', {userId}, draft => {
+      const index = draft.findIndex(item => item.chatId === chatId);
+      if (index !== -1) {
+        draft[index].unreadCount = 0;
+      }
+    }),
+  );
+
+  dispatch(
+    coreApi.util.updateQueryData(
+      'getChatMessages',
+      {receiverId: user2Id},
+      draft => {
+        draft.unreadCount = 0;
       },
     ),
   );
