@@ -26,6 +26,7 @@ import {
 import {useLazyGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {navigationRef} from '../../../utils/helpers/navigation';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {useLazyGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ export const Navigationcontainer: React.FC = () => {
 
   const [getUserSettings] = useLazyGetUserSettingsQuery();
   const [getAvailableSports] = useLazyGetAvailableSportsQuery();
+  const [getAppSettings] = useLazyGetAppSettingsQuery();
 
   const getColorMode = async () => {
     const colorMode =
@@ -135,6 +137,7 @@ export const Navigationcontainer: React.FC = () => {
   const loadApp = async () => {
     // calls that we dont want to wait for
     getAvailableSports().unwrap();
+    getAppSettings().unwrap();
 
     // calls that we want to wait for
     const [colorModeResponse, isFirstVisitResponse, isLoggedInResponse] =
