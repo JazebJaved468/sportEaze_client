@@ -9,12 +9,11 @@ export type LoginParams = {
   recover?: boolean;
 };
 
-export type UpdateUserParams = {
-  name?: string;
+export type UpdateFanParams = {
+  fullName?: string;
   gender?: number;
   dob?: string;
-  city?: string;
-  country?: string;
   profilePicUrl?: string | null;
-  username?: string;
+  sportInterests?: number[];
+  password?: string;
 };
