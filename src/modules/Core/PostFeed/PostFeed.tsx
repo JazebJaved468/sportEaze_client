@@ -81,7 +81,8 @@ export const PostFeed = () => {
     <PageContainer>
       <GeneralHeader showLeftElement={false} titleAlign='left' />
 
-      {postsCIP || (postsFIP && !postsNextPageFIP) ? (
+      {/* {postsCIP || (postsFIP && !postsNextPageFIP) ? ( */}
+      {postsCIP ? (
         <Loader />
       ) : (
         <FlatList
