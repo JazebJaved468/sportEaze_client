@@ -3,6 +3,8 @@ import {PlayerProfilePage} from '../../modules/Player/PlayerProfile';
 import {RootStackParamList} from '../../modules/Core/Navigator/AppNavigator/AppNavigator';
 import {USER_TYPE} from '../../constants/enums';
 import {FanProfilePage} from '../../modules/Fan/FanProfile';
+import {PlayerRegistrationDetailsPage} from '../../modules/Player/PlayerRegistrationDetails';
+import {FanRegistrationDetailsPage} from '../../modules/Fan/FanRegistrationDetails';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
@@ -23,6 +25,16 @@ export const navigateToProfilePage = ({
       navigationRef.navigate(FanProfilePage, {
         userId: userId,
       });
+    }
+  }
+};
+
+export const navigateToEditProfilePage = ({userType}: {userType: number}) => {
+  if (navigationRef.isReady()) {
+    if (userType === USER_TYPE.PLAYER) {
+      navigationRef.navigate(PlayerRegistrationDetailsPage);
+    } else if (userType === USER_TYPE.FAN) {
+      navigationRef.navigate(FanRegistrationDetailsPage, {isEditProfile: true});
     }
   }
 };

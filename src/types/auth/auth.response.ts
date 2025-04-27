@@ -19,8 +19,8 @@ export type GetUserSettingsResponse = {
   user: User;
 };
 
-export type UpdateUserResponse = {
-  message: string;
-  user: User;
-  success: boolean;
-};
+// export type UpdateUserResponse = {
+//   message: string;
+//   user: User;
+//   success: boolean;
+// };
