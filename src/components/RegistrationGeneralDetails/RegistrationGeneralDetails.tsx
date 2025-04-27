@@ -28,6 +28,7 @@ type RegistrationGeneralDetailsProps = {
   formData: RegisterFanFormData | RegisterPlayerFormData;
   selectedImage: ImageType | null;
   setSelectedImage: Dispatch<SetStateAction<ImageType | null>>;
+  isEditingProfile?: boolean;
 };
 
 type GeneralDetailsFormData = {
@@ -43,6 +44,7 @@ const RegistrationGeneralDetails: React.FC<RegistrationGeneralDetailsProps> = ({
   formData,
   selectedImage,
   setSelectedImage,
+  isEditingProfile = false,
 }) => {
   const {user} = useAppSelector(state => state.auth);
 
@@ -57,8 +59,8 @@ const RegistrationGeneralDetails: React.FC<RegistrationGeneralDetailsProps> = ({
     defaultValues: {
       fullName: user?.fullName || formData.fullName || '',
       username: user?.username || formData.username || '',
-      dob: formData.dob || (undefined as string | undefined),
-      gender: formData.gender as number | undefined,
+      dob: user?.dob || formData.dob || (undefined as string | undefined),
+      gender: user?.gender || (formData.gender as number | undefined),
     },
   });
 
@@ -137,14 +139,37 @@ const RegistrationGeneralDetails: React.FC<RegistrationGeneralDetailsProps> = ({
               alignItems: 'center',
               overflow: 'hidden',
             }}>
-            {selectedImage === null ? (
-              <UserPlaceholderIcon width={100} height={100} color={textColor} />
+            {isEditingProfile &&
+            user?.profilePicUrl &&
+            selectedImage === null ? (
+              <Image
+                source={{uri: user.profilePicUrl}}
+                style={{width: 140, height: 140}}
+              />
+            ) : isEditingProfile &&
+              user?.profilePicUrl &&
+              selectedImage !== null ? (
+              <Image
+                source={{uri: selectedImage.path}}
+                style={{width: 140, height: 140}}
+              />
+            ) : selectedImage === null ? (
+              <UserPlaceholderIcon width={90} height={90} color={textColor} />
             ) : (
               <Image
                 source={{uri: selectedImage.path}}
                 style={{width: 140, height: 140}}
               />
             )}
+
+            {/* {selectedImage === null ? (
+              <UserPlaceholderIcon width={90} height={90} color={textColor} />
+            ) : (
+              <Image
+                source={{uri: selectedImage.path}}
+                style={{width: 140, height: 140}}
+              />
+            )} */}
           </View>
         </View>
       </TouchableOpacity>
@@ -233,6 +258,7 @@ const RegistrationGeneralDetails: React.FC<RegistrationGeneralDetailsProps> = ({
 
                 onChange(formattedUsername);
               }}
+              isReadOnly={isEditingProfile}
               isValid={errors.username ? false : true}
               errorMessage={errors.username ? errors.username.message : ''}
             />
