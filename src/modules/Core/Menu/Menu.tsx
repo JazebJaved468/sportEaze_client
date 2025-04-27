@@ -26,6 +26,7 @@ import {
   LogoutIcon,
   MoonIcon,
   PrivacyPolicyIcon,
+  SettingsIcon,
   SunIcon,
   TermsAndConditionsIcon,
   UserPlaceholderIcon,
@@ -49,6 +50,7 @@ import {
   FollowingListingPage,
   PendingConnectionsPage,
 } from '../Networking';
+import {AccountSettingsPage} from '../AccountSettings';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -261,11 +263,18 @@ const Menu = () => {
             <MenuSection>
               <MenuSectionHeader title='Account Settings' />
               <MenuSectionItem
-                title='Edit Profile'
+                title='Manage Profile'
                 leftIcon={
-                  <EditProfileIcon width={20} height={20} color={textColor} />
+                  <SettingsIcon
+                    width={20}
+                    height={20}
+                    strokeWidth={1.2}
+                    color={textColor}
+                  />
                 }
-                onPress={() => {}}
+                onPress={() => {
+                  navigation.navigate(AccountSettingsPage);
+                }}
               />
             </MenuSection>
 
