@@ -110,15 +110,16 @@ export const CustomTextInputField = ({
             ? appColors.error
             : (borderColor ?? inputborderColor),
           borderRadius: borderRadius,
-          backgroundColor: backgroundColor ?? appColors.transparent,
+          backgroundColor: isReadOnly
+            ? `${textColor}10`
+            : (backgroundColor ?? appColors.transparent),
         }}>
         <TextInput
           onFocus={onFocus}
           style={[
             {
               flex: 1,
-              ...fontRegular(14),
-              color: textColor,
+              ...fontRegular(14, isReadOnly ? `${textColor}70` : textColor),
               textAlignVertical: 'center',
               // padding: 0,
             },
