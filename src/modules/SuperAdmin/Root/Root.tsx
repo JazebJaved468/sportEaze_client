@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {ReactNode} from 'react';
 import PageContainer from '../../../components/PageContainer';
-import {fontBold} from '../../../styles/fonts';
+import {fontBold, fontRegular} from '../../../styles/fonts';
 import {
   useCardColor,
   useTextColor,
@@ -9,6 +9,7 @@ import {
 import {
   ComplianceIcon,
   ConnectionRequestIcon,
+  CustomerSupportIcon,
   LogoutIcon,
   SportEazeLogo,
 } from '../../../assets/icons';
@@ -19,6 +20,9 @@ import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
+import {GDPRPage} from '../GDPR';
+import {PulseEffect} from '../../../components/PulseEffect';
+import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 
 const SuperAdminRoot = () => {
   const textColor = useTextColor();
@@ -33,36 +37,22 @@ const SuperAdminRoot = () => {
           <SportEazeLogo color={appColors.white} width={50} height={50} />
           <Text style={fontBold(20, appColors.white)}>SportEaze Admin</Text>
         </View>
-
-        <Button onPress={onLogout} backgroundColor={appColors.transparent}>
-          <View style={{padding: 10}}>
-            <LogoutIcon
-              strokeWidth={1.5}
-              width={24}
-              height={24}
-              color={appColors.white}
-            />
-          </View>
-        </Button>
       </View>
 
       {/* Body */}
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          marginHorizontal: 16,
-          gap: 10,
-        }}>
-        <HomeItemCard onCardPress={() => {}}>
+      <View style={styles.cardRow}>
+        <HomeItemCard
+          onCardPress={() => {
+            navigation.navigate(GDPRPage);
+          }}>
           <View style={{alignItems: 'center', gap: 16}}>
             <ComplianceIcon
               width={customWidth(40)}
               height={customHeight(40)}
               color={textColor}
             />
-            <Text style={fontBold(16, textColor)}>GDPR Compliances</Text>
+            <Text style={fontBold(15, textColor)}>GDPR Compliances</Text>
           </View>
         </HomeItemCard>
 
@@ -73,9 +63,39 @@ const SuperAdminRoot = () => {
               height={customHeight(40)}
               color={textColor}
             />
-            <Text style={fontBold(16, textColor)}>Patron Requests</Text>
+            <Text style={fontBold(15, textColor)}>Patron Requests</Text>
           </View>
         </HomeItemCard>
+      </View>
+
+      <View style={styles.cardRow}>
+        <HomeItemCard onCardPress={() => {}}>
+          <View style={{alignItems: 'center', gap: 16}}>
+            <CustomerSupportIcon
+              width={customWidth(40)}
+              height={customHeight(40)}
+              color={textColor}
+            />
+            <Text style={fontBold(15, textColor)}>Customer Support</Text>
+          </View>
+        </HomeItemCard>
+      </View>
+
+      {/* Save Compliances */}
+      <View style={{marginTop: 'auto', marginHorizontal: customWidth(16)}}>
+        <PulseEffect>
+          <Button style={styles.logoutButton} onPress={onLogout}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+              <LogoutIcon
+                strokeWidth={1.5}
+                width={customWidth(24)}
+                height={customHeight(24)}
+                color={appColors.white}
+              />
+              <Text style={fontBold(14, appColors.white)}> Logout</Text>
+            </View>
+          </Button>
+        </PulseEffect>
       </View>
     </PageContainer>
   );
@@ -127,5 +147,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 20,
+  },
+  logoutButton: {
+    height: 48,
+    borderRadius: BUTTON_BORDER_RADIUS,
+    marginBottom: 20,
+  },
+  cardRow: {
+    flexDirection: 'row',
+    marginHorizontal: customWidth(16),
+    gap: customWidth(10),
+    marginBottom: customHeight(16),
   },
 });

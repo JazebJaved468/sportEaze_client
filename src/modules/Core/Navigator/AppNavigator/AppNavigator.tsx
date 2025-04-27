@@ -53,6 +53,7 @@ import AccountSettings, {
 import SuperAdminRoot, {
   SuperAdminRootPage,
 } from '../../../SuperAdmin/Root/index.ts';
+import GDPR, {GDPRPage} from '../../../SuperAdmin/GDPR/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -94,6 +95,7 @@ export type RootStackParamList = {
   MentorRegistrationDetailsPage: undefined;
   AccountSettingsPage: undefined;
   SuperAdminRootPage: undefined;
+  GDPRPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -253,6 +255,7 @@ export const AppNavigator = () => {
       {/* Super Admin Screens */}
 
       <Stack.Screen name={SuperAdminRootPage} component={SuperAdminRoot} />
+      <Stack.Screen name={GDPRPage} component={GDPR} />
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />
