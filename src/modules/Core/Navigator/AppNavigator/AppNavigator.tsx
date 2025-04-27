@@ -75,7 +75,9 @@ export type RootStackParamList = {
   RegisterPage: undefined;
   LoginPage: undefined;
   JoinAsPage: undefined;
-  FanRegistrationDetailsPage: undefined;
+  FanRegistrationDetailsPage: {
+    isEditProfile?: boolean;
+  };
   GeminiPage: undefined;
   MediaPreviewPage: {
     mediaPath: string;
@@ -228,6 +230,7 @@ export const AppNavigator = () => {
       <Stack.Screen
         name={FanRegistrationDetailsPage}
         component={FanRegistrationDetails}
+        initialParams={{isEditProfile: false}}
       />
       <Stack.Screen name={'GeminiPage'} component={Gemini} />
       <Stack.Screen name={RecommendationsPage} component={Recommendations} />

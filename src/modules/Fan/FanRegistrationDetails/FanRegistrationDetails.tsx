@@ -1,4 +1,11 @@
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 
 import PageContainer from '../../../components/PageContainer';
@@ -19,6 +26,22 @@ import {fontBold} from '../../../styles/fonts';
 import {RegisterFanParams} from '../../../types/fan/fan.params';
 import {RecommendationsPage} from '../Recommendations';
 import {RegistrationGeneralDetails} from '../../../components/RegistrationGeneralDetails';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
+import {AccountSettingsPage} from '../../Core/AccountSettings';
+import {useUpdateFanMutation} from '../../../store/auth/auth.service';
+import {updateToast} from '../../../store/core/core.slice';
+import {onLogout} from '../../../utils/helpers/auth';
+import {LogoutIcon} from '../../../assets/icons';
+
+type FanRegistrationDetailsPageRouteProp = RouteProp<
+  RootStackParamList,
+  'FanRegistrationDetailsPage'
+>;
 
 export type RegisterFanFormData = {
   profilePic?: ImageType | null;
@@ -31,6 +54,9 @@ export type RegisterFanFormData = {
 
 const FanRegistrationDetails = () => {
   const navigation = useAppNavigation();
+  const {params} = useRoute<FanRegistrationDetailsPageRouteProp>();
+
+  console.log('params', params);
 
   const [registrationStep, setRegistrationStep] = useState(1);
   const [formData, setFormData] = useState<RegisterFanFormData>({});
@@ -49,7 +75,28 @@ const FanRegistrationDetails = () => {
 
   return (
     <PageContainer applyGradient>
-      <GeneralHeader title='Fan Details' backHandler={handleBackPress} />
+      <GeneralHeader
+        title={params.isEditProfile ? 'Edit Profile' : 'Fan Details'}
+        backHandler={handleBackPress}
+        rightElement={
+          params.isEditProfile ? null : (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              hitSlop={20}
+              onPress={onLogout}
+              style={{marginRight: -10}}>
+              <View style={{padding: 10}}>
+                <LogoutIcon
+                  strokeWidth={1.5}
+                  width={24}
+                  height={24}
+                  color={textColor}
+                />
+              </View>
+            </TouchableOpacity>
+          )
+        }
+      />
 
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
@@ -73,6 +120,7 @@ const FanRegistrationDetails = () => {
                     setRegistrationStep={setRegistrationStep}
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
+                    isEditingProfile={params.isEditProfile}
                   />
                 );
 
@@ -81,6 +129,7 @@ const FanRegistrationDetails = () => {
                   <ChooseSportsInterest
                     formData={formData}
                     selectedImage={selectedImage}
+                    isEditingProfile={params.isEditProfile}
                   />
                 );
             }
@@ -94,20 +143,24 @@ const FanRegistrationDetails = () => {
 type ChooseSportsInterestProps = {
   formData: RegisterFanFormData;
   selectedImage: ImageType | null;
+  isEditingProfile: boolean | undefined;
 };
 
 const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
   formData,
   selectedImage,
+  isEditingProfile,
 }) => {
+  const {user} = useAppSelector(state => state.auth);
   const navigation = useAppNavigation();
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     control,
     formState: {errors},
   } = useForm({
     defaultValues: {
-      sportInterests: [],
+      sportInterests: user?.sportInterests || [],
     },
   });
 
@@ -115,8 +168,13 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
     useUploadImageMutation();
 
   const [registerFan, {isLoading: registerFanCIP}] = useRegisterFanMutation();
+  const [updateFan, {isLoading: updateFanCIP}] = useUpdateFanMutation();
 
   const uploadToCloudinary = async () => {
+    if (isEditingProfile && !selectedImage) {
+      return user?.profilePicUrl || '';
+    }
+
     if (selectedImage) {
       try {
         const uploadedImage = await uploadImagesToCloudinary({
@@ -144,6 +202,20 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
         gender: formData.gender as number,
         sportInterests: data.sportInterests,
       };
+
+      if (isEditingProfile) {
+        const {username, ...updatedData} = apiData;
+        await updateFan(updatedData).unwrap();
+        navigation.navigate(AccountSettingsPage);
+
+        dispatch(
+          updateToast({
+            message: 'Profile updated successfully',
+            isVisible: true,
+          }),
+        );
+        return;
+      }
 
       await registerFan(apiData).unwrap();
       navigation.reset({
@@ -207,8 +279,8 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
           <Button
             style={styles.submitButton}
             onPress={handleSubmit(onSubmit)}
-            isLoading={imageUploadCIP || registerFanCIP}>
-            Done
+            isLoading={imageUploadCIP || registerFanCIP || updateFanCIP}>
+            {isEditingProfile ? 'Save Changes' : 'Done'}
           </Button>
         </PulseEffect>
       </View>

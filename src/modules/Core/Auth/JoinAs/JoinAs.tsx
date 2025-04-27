@@ -9,6 +9,7 @@ import {
   JoinAsMentorIcon,
   JoinAsPatronIcon,
   JoinAsPlayerIcon,
+  LogoutIcon,
   TickIcon,
 } from '../../../../assets/icons';
 import {Button} from 'native-base';
@@ -20,6 +21,7 @@ import {fontBold} from '../../../../styles/fonts';
 import {RecommendationsPage} from '../../../Fan/Recommendations';
 import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationDetails';
 import {MentorRegistrationDetailsPage} from '../../../Mentor/MentorRegistrationDetails.tsx';
+import {onLogout} from '../../../../utils/helpers/auth.ts';
 
 type OptionCardProps = {
   id: number;
@@ -103,7 +105,7 @@ export const JoinAs = () => {
   const textColor = useTextColor();
 
   const navigateToFanRegistration = useCallback(() => {
-    navigation.navigate(FanRegistrationDetailsPage);
+    navigation.navigate(FanRegistrationDetailsPage, {isEditProfile: false});
   }, [navigation]);
 
   const navigateToPlayerRegistration = useCallback(() => {
@@ -162,6 +164,22 @@ export const JoinAs = () => {
         showLeftElement={false}
         title='Join As'
         showRightElement={true}
+        rightElement={
+          <TouchableOpacity
+            activeOpacity={0.5}
+            hitSlop={20}
+            onPress={onLogout}
+            style={{marginRight: -10}}>
+            <View style={{padding: 10}}>
+              <LogoutIcon
+                strokeWidth={1.5}
+                width={24}
+                height={24}
+                color={textColor}
+              />
+            </View>
+          </TouchableOpacity>
+        }
       />
       <View style={styles.container}>
         <Text

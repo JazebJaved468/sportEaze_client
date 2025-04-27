@@ -63,6 +63,7 @@ import {TermsAndConditionsIcon} from './svgs/TermsAndConditionsIcon';
 import {TickIcon} from './svgs/TickIcon';
 import {UnMuteIcon} from './svgs/UnMuteIcon';
 import {UserPlaceholderIcon} from './svgs/UserPlaceholderIcon';
+import {VerifyIcon} from './svgs/VerifyIcon';
 import {WarningIcon} from './svgs/WarningIcon';
 
 export {
@@ -132,4 +133,5 @@ export {
   ComplianceIcon,
   WarningIcon,
   CustomerSupportIcon,
+  VerifyIcon,
 };

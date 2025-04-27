@@ -41,6 +41,8 @@ import {
   ConnectionStatus,
 } from '../../../constants/enums';
 import {MessageButton} from '../../../components/MessageButton/MessageButton';
+import {useAppNavigation} from '../../../utils/customHooks/navigator';
+import {AccountSettingsPage} from '../../Core/AccountSettings';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -49,7 +51,7 @@ export type PlayerProfilePageRouteProp = RouteProp<
 
 export const FanProfile = () => {
   const {params} = useRoute<PlayerProfilePageRouteProp>();
-
+  const navigation = useAppNavigation();
   const {user, isLoggedIn, userType} = useAppSelector(state => state.auth);
 
   const isVisitor = user?.id !== params.userId;
@@ -326,7 +328,9 @@ export const FanProfile = () => {
               ) : (
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.navigate(AccountSettingsPage);
+                  }}
                   hitSlop={20}
                   style={{}}>
                   <SettingsIcon width={20} height={20} color={textColor} />

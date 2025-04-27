@@ -2,17 +2,16 @@ import {sporteazeBaseApi} from '../baseApi.service';
 import {
   LoginParams,
   RegisterUserParams,
-  UpdateUserParams,
+  UpdateFanParams,
 } from '../../types/auth/auth.params';
 import {
   GetUserSettingsResponse,
   LoginUserResponse,
   RegisterUserResponse,
-  UpdateUserResponse,
 } from '../../types/auth/auth.response';
 import {User} from '../../types/auth/auth.type';
 import {updateUser} from './auth.slice';
-import {onLogin, onRegisterUser} from '../../utils/helpers/auth';
+import {onLogin, onLogout, onRegisterUser} from '../../utils/helpers/auth';
 import {USER_TYPE} from '../../constants/enums';
 
 export const authApi = sporteazeBaseApi.injectEndpoints({
@@ -41,10 +40,9 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    // replace it with reegister fan endpoint /user/fan
-    updateUser: builder.mutation<UpdateUserResponse, UpdateUserParams>({
+    updateFan: builder.mutation<User, UpdateFanParams>({
       query: body => ({
-        url: `/user/update-user`,
+        url: `/user/fan`,
         method: 'PATCH',
         body,
       }),
@@ -53,11 +51,11 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         try {
           const {data} = await queryFulfilled;
 
-          dispatch(updateUser(data.user));
-        } catch (err) {
+          dispatch(updateUser(data));
+        } catch (error) {
           console.log(
-            'Error while Updating user data : auth.service.ts : Line 66',
-            err,
+            'Error while Updating user data : auth.service.ts : Line 60',
+            error,
           );
         }
       },
@@ -67,7 +65,10 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
       query: body => ({
         url: `/user/login`,
         method: 'POST',
-        body,
+        body: {
+          ...body,
+          recover: true,
+        },
       }),
 
       async onQueryStarted(args, {dispatch, queryFulfilled}) {
@@ -120,6 +121,26 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         return response;
       },
     }),
+
+    deleteUser: builder.mutation<{}, void>({
+      query: body => ({
+        url: `/user`,
+        method: 'DELETE',
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        try {
+          const {data} = await queryFulfilled;
+
+          await onLogout();
+        } catch (err) {
+          console.log(
+            'Error while deleting user : auth.service.ts : Line 138',
+            err,
+          );
+        }
+      },
+    }),
   }),
 });
 
@@ -128,6 +149,7 @@ export const {
   useLoginUserMutation,
   useLazyGetUserSettingsQuery,
   useGetUserSettingsQuery,
-  useUpdateUserMutation,
+  useUpdateFanMutation,
   useGetUserByIdServiceQuery,
+  useDeleteUserMutation,
 } = authApi;
