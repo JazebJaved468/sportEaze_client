@@ -12,25 +12,41 @@ import {
   ArrowRightIcon,
   DeleteIcon,
   EditProfileIcon,
+  TickIcon,
   VerifyIcon,
 } from '../../../assets/icons';
 import {useDeleteUserMutation} from '../../../store/auth/auth.service';
 import {CustomModal} from '../../../components/CustomModal/CustomModal';
 import {
   useCardColor,
+  usePageBackgroundColor,
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
 import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {navigateToEditProfilePage} from '../../../utils/helpers/navigation';
-import {useAppSelector} from '../../../utils/customHooks/storeHooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
+import {useGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
+import {updateUserConsent} from '../../../store/core/core.slice';
 
 const AccountSettings = () => {
   const {userType} = useAppSelector(state => state.auth);
+  const {userConsent} = useAppSelector(state => state.core);
   const navigation = useAppNavigation();
+  const dispatch = useAppDispatch();
 
+  const {data: appSettings} = useGetAppSettingsQuery();
   const [deleteProfile, {isLoading: isDeletingProfile}] =
     useDeleteUserMutation();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const textColor = useTextColor();
+  const pageColor = usePageBackgroundColor();
+  const containerShadow = useContainerShadow(4);
+  const cardColor = useCardColor();
 
   const handleDeleteProfile = async () => {
     try {
@@ -40,26 +56,31 @@ const AccountSettings = () => {
     }
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const handleUserConsent = async () => {
+    dispatch(updateUserConsent(!userConsent));
+  };
 
   return (
     <PageContainer>
       <GeneralHeader title='Manage Profile' />
 
       <View style={styles.container}>
-        <SettingsItemCard
-          onCardPress={() => {
-            navigateToEditProfilePage({userType: userType});
-          }}
-          icon={
-            <EditProfileIcon
-              strokeWidth={1.3}
-              width={customWidth(22)}
-              height={customHeight(22)}
-            />
-          }
-          label='Edit Profile'
-        />
+        {appSettings?.allowUpdateUser ? (
+          <SettingsItemCard
+            onCardPress={() => {
+              navigateToEditProfilePage({userType: userType});
+            }}
+            icon={
+              <EditProfileIcon
+                strokeWidth={1.3}
+                width={customWidth(22)}
+                height={customHeight(22)}
+                color={textColor}
+              />
+            }
+            label='Edit Profile'
+          />
+        ) : null}
         <SettingsItemCard
           onCardPress={() => {}}
           icon={
@@ -67,34 +88,79 @@ const AccountSettings = () => {
               strokeWidth={1.3}
               width={customWidth(22)}
               height={customHeight(22)}
+              color={textColor}
             />
           }
-          label='Verify Account'
+          label='Verify Email'
         />
 
-        <View style={{marginTop: 'auto'}}>
-          <PulseEffect>
-            <Button
-              isLoading={isDeletingProfile}
-              style={styles.deleteButton}
-              onPress={() => {
-                setModalVisible(true);
+        <View
+          style={[
+            containerShadow,
+            {backgroundColor: cardColor, borderRadius: 20},
+          ]}>
+          <TouchableOpacity
+            hitSlop={14}
+            activeOpacity={0.7}
+            onPress={handleUserConsent}>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: customWidth(16),
+                alignItems: 'center',
+                paddingVertical: customHeight(22),
+                paddingHorizontal: customWidth(20),
+                paddingRight: customWidth(20),
               }}>
               <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-                <DeleteIcon
-                  strokeWidth={1.8}
-                  width={customWidth(20)}
-                  height={customHeight(20)}
-                  color={appColors.white}
-                />
-                <Text style={fontBold(14, appColors.white)}>
-                  Delete Profile
-                </Text>
+                style={[
+                  styles.checkbox,
+                  {
+                    borderColor: textColor,
+
+                    backgroundColor: userConsent ? textColor : pageColor,
+                  },
+                ]}>
+                {userConsent ? (
+                  <TickIcon
+                    width={customWidth(9)}
+                    height={customWidth(10)}
+                    color={pageColor}
+                  />
+                ) : null}
               </View>
-            </Button>
-          </PulseEffect>
+              <Text style={[fontRegular(15, textColor), {flex: 1}]}>
+                Use My Data for Marketing And Advertising purposes
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
+
+        {appSettings?.allowDeleteUser ? (
+          <View style={{marginTop: 'auto'}}>
+            <PulseEffect>
+              <Button
+                isLoading={isDeletingProfile}
+                style={styles.deleteButton}
+                onPress={() => {
+                  setModalVisible(true);
+                }}>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+                  <DeleteIcon
+                    strokeWidth={1.8}
+                    width={customWidth(20)}
+                    height={customHeight(20)}
+                    color={appColors.white}
+                  />
+                  <Text style={fontBold(14, appColors.white)}>
+                    Delete Profile
+                  </Text>
+                </View>
+              </Button>
+            </PulseEffect>
+          </View>
+        ) : null}
       </View>
 
       <CustomModal
@@ -184,12 +250,17 @@ const SettingsItemCard = ({
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 16}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: customWidth(16),
+            }}>
             {icon}
             <Text style={fontRegular(15, textColor)}>{label}</Text>
           </View>
 
-          <ArrowRightIcon />
+          <ArrowRightIcon color={textColor} />
         </View>
       </TouchableOpacity>
     </View>
@@ -211,4 +282,12 @@ const styles = StyleSheet.create({
   },
 
   actionButton: {height: customHeight(48), borderRadius: BUTTON_BORDER_RADIUS},
+  checkbox: {
+    width: customWidth(16),
+    height: customWidth(16),
+    borderWidth: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
