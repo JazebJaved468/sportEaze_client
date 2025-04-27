@@ -1,8 +1,8 @@
-import {AppState, StyleSheet} from 'react-native';
+import {AppState, BackHandler, StyleSheet, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
-import {useColorMode} from 'native-base';
+import {Button, useColorMode, View} from 'native-base';
 import {getFromLocalStorage} from '../../../utils/helpers/asyncStorage';
 import SplashScreen from '../../../components/SplashScreen';
 import {AppStates} from '../../../constants/core';
@@ -27,17 +27,27 @@ import {useLazyGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {navigationRef} from '../../../utils/helpers/navigation';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {useLazyGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
+import {CustomModal} from '../../../components/CustomModal/CustomModal';
+import {fontBold, fontRegular} from '../../../styles/fonts';
+import {useTextColor} from '../../../utils/customHooks/colorHooks';
+import {customHeight} from '../../../styles/responsiveStyles';
+import {appColors} from '../../../constants/colors';
+import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 
 export const Navigationcontainer: React.FC = () => {
   const dispatch = useAppDispatch();
-  const {isLoggedIn} = useAppSelector(state => state.auth);
+  const {isLoggedIn, user} = useAppSelector(state => state.auth);
   const {setColorMode} = useColorMode();
 
   const [appLoading, setAppLoading] = useState(true);
 
   const [getUserSettings] = useLazyGetUserSettingsQuery();
   const [getAvailableSports] = useLazyGetAvailableSportsQuery();
-  const [getAppSettings] = useLazyGetAppSettingsQuery();
+  const [getAppSettings, {data: appSettings}] = useLazyGetAppSettingsQuery();
+
+  const [gdprmodalVisible, setGdprModalVisible] = useState(false);
+
+  const textColor = useTextColor();
 
   const getColorMode = async () => {
     const colorMode =
@@ -49,6 +59,18 @@ export const Navigationcontainer: React.FC = () => {
     );
     return `Color Mode Success`;
   };
+
+  useEffect(() => {
+    if (
+      appSettings &&
+      (appSettings?.allowDeleteUser === false ||
+        appSettings?.allowUpdateUser === false ||
+        appSettings?.shouldTakeConsent === false) &&
+      user?.userType !== USER_TYPE.SUPER_ADMIN
+    ) {
+      setGdprModalVisible(true);
+    }
+  }, [appSettings]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener(
@@ -166,10 +188,54 @@ export const Navigationcontainer: React.FC = () => {
         <AppNavigator />
         <Toast />
       </BottomSheetModalProvider>
+
+      <CustomModal
+        modalVisible={gdprmodalVisible}
+        setModalVisible={setGdprModalVisible}
+        modalHeading='WARNING !'>
+        <View>
+          <Text style={[fontRegular(16, textColor)]}>
+            This app is not GDPR compliant. Are you sure you want to continue?
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              marginTop: customHeight(30),
+            }}>
+            <Button
+              onPress={() => {
+                BackHandler.exitApp();
+              }}
+              style={[
+                styles.actionButton,
+                {
+                  backgroundColor: appColors.transparent,
+                  borderWidth: 1,
+                  borderColor: appColors.warmRed,
+                  flex: 1,
+                },
+              ]}>
+              <Text style={fontBold(14, appColors.warmRed)}>Close App</Text>
+            </Button>
+
+            <Button
+              onPress={() => {
+                setGdprModalVisible(false);
+              }}
+              style={[styles.actionButton, {flex: 1}]}>
+              <Text style={fontBold(14, appColors.white)}>Continue Using</Text>
+            </Button>
+          </View>
+        </View>
+      </CustomModal>
     </NavigationContainer>
   );
 };
 
 export default Navigationcontainer;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  actionButton: {height: customHeight(48), borderRadius: BUTTON_BORDER_RADIUS},
+});

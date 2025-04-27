@@ -22,7 +22,7 @@ import {useRegisterFanMutation} from '../../../store/fan/fan.service';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {SportsPreferenceSelector} from '../../../components/SportsPreferenceSelector';
-import {fontBold} from '../../../styles/fonts';
+import {fontBold, fontRegular} from '../../../styles/fonts';
 import {RegisterFanParams} from '../../../types/fan/fan.params';
 import {RecommendationsPage} from '../Recommendations';
 import {RegistrationGeneralDetails} from '../../../components/RegistrationGeneralDetails';
@@ -34,9 +34,12 @@ import {
 } from '../../../utils/customHooks/storeHooks';
 import {AccountSettingsPage} from '../../Core/AccountSettings';
 import {useUpdateFanMutation} from '../../../store/auth/auth.service';
-import {updateToast} from '../../../store/core/core.slice';
+import {updateToast, updateUserConsent} from '../../../store/core/core.slice';
 import {onLogout} from '../../../utils/helpers/auth';
 import {LogoutIcon} from '../../../assets/icons';
+import {useGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
+import {CustomModal} from '../../../components/CustomModal/CustomModal';
+import {customHeight} from '../../../styles/responsiveStyles';
 
 type FanRegistrationDetailsPageRouteProp = RouteProp<
   RootStackParamList,
@@ -154,6 +157,7 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
   const {user} = useAppSelector(state => state.auth);
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
+
   const {
     handleSubmit,
     control,
@@ -167,8 +171,14 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
   const [uploadImagesToCloudinary, {isLoading: imageUploadCIP}] =
     useUploadImageMutation();
 
+  const {data: appSettings} = useGetAppSettingsQuery();
+
   const [registerFan, {isLoading: registerFanCIP}] = useRegisterFanMutation();
   const [updateFan, {isLoading: updateFanCIP}] = useUpdateFanMutation();
+
+  const [consentModalVisible, setConsentModalVisible] = useState(false);
+
+  const textColor = useTextColor();
 
   const uploadToCloudinary = async () => {
     if (isEditingProfile && !selectedImage) {
@@ -278,12 +288,72 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
         <PulseEffect>
           <Button
             style={styles.submitButton}
-            onPress={handleSubmit(onSubmit)}
+            // onPress={handleSubmit(onSubmit)}
+            onPress={() => {
+              if (appSettings?.shouldTakeConsent && !isEditingProfile) {
+                setConsentModalVisible(true);
+              } else {
+                handleSubmit(onSubmit)();
+              }
+            }}
             isLoading={imageUploadCIP || registerFanCIP || updateFanCIP}>
             {isEditingProfile ? 'Save Changes' : 'Done'}
           </Button>
         </PulseEffect>
       </View>
+
+      {/*  to do : make user consent global state */}
+      <CustomModal
+        modalVisible={consentModalVisible}
+        setModalVisible={setConsentModalVisible}
+        modalHeading={`User's Consent`}>
+        <View>
+          <Text style={[fontRegular(15, textColor)]}>
+            We collect your data and preferences to personalize your experience
+            and to support advertising and marketing activities.
+            {'\n'}
+            {'\n'}
+            {'\n'}
+            By choosing "Allow", you agree to our use of this information as
+            described in our Privacy Policy.
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              marginTop: customHeight(30),
+            }}>
+            <Button
+              onPress={() => {
+                setConsentModalVisible(false);
+                handleSubmit(onSubmit)();
+                dispatch(updateUserConsent(false));
+              }}
+              style={[
+                styles.actionButton,
+                {
+                  backgroundColor: appColors.transparent,
+                  borderWidth: 1,
+                  borderColor: appColors.warmRed,
+                  flex: 1,
+                },
+              ]}>
+              <Text style={fontBold(14, appColors.warmRed)}>Don't Allow</Text>
+            </Button>
+
+            <Button
+              onPress={() => {
+                setConsentModalVisible(false);
+                handleSubmit(onSubmit)();
+                dispatch(updateUserConsent(true));
+              }}
+              style={[styles.actionButton, {flex: 1}]}>
+              <Text style={fontBold(14, appColors.white)}>Allow</Text>
+            </Button>
+          </View>
+        </View>
+      </CustomModal>
     </View>
   );
 };
@@ -300,4 +370,6 @@ const styles = StyleSheet.create({
     borderRadius: BUTTON_BORDER_RADIUS,
     marginBottom: 20,
   },
+
+  actionButton: {height: customHeight(48), borderRadius: BUTTON_BORDER_RADIUS},
 });
