@@ -22,7 +22,11 @@ const Recommendations = () => {
   const textColor = useTextColor();
   return (
     <PageContainer>
-      <GeneralHeader title='Recommended Players' showLeftElement={false} />
+      <GeneralHeader
+        title='Recommended Players'
+        showLeftElement={false}
+        showRightElement={false}
+      />
 
       <View style={styles.container}>
         {/* <ConnectionNetworkIcon
