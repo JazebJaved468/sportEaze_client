@@ -32,28 +32,36 @@ export const fontThin = (fontSize: number = 14, color?: string) => ({
   fontFamily: fonts.thin,
   fontSize,
   ...(color && {color}),
+  lineHeight: fontSize * 1.1,
 });
 
 export const fontLight = (fontSize: number = 14, color?: string) => ({
   fontFamily: fonts.light,
   fontSize,
   ...(color && {color}),
+
+  lineHeight: fontSize * 1.1,
 });
 
 export const fontRegular = (fontSize: number = 14, color?: string) => ({
   fontFamily: fonts.regular,
   fontSize,
   ...(color && {color}),
+
+  lineHeight: fontSize * 1.1,
 });
 
 export const fontBold = (fontSize: number = 14, color?: string) => ({
   fontFamily: fonts.bold,
   fontSize,
   ...(color && {color}),
+  lineHeight: fontSize * 1.1,
 });
 
 export const fontExtraBold = (fontSize: number = 14, color?: string) => ({
   fontFamily: fonts.black,
   fontSize,
   ...(color && {color}),
+
+  lineHeight: fontSize * 1.1,
 });
