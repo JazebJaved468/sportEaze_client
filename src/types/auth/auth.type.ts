@@ -1,4 +1,5 @@
 import {Mentor} from '../mentor/mentor.type';
+import {Patron} from '../patron/patron.type';
 import {Player} from '../player/player.type';
 
 export type User = {
@@ -18,6 +19,7 @@ export type User = {
   isFollowing?: boolean;
   player?: Player;
   mentor?: Mentor;
+  patron?: Patron;
 };
 
 export type Connection = {
