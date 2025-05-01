@@ -61,8 +61,12 @@ import {SunIcon} from './svgs/SunIcon';
 import {TeamIcon} from './svgs/TeamIcon';
 import {TermsAndConditionsIcon} from './svgs/TermsAndConditionsIcon';
 import {TickIcon} from './svgs/TickIcon';
+import {TimerIcon} from './svgs/TimerIcon';
 import {UnMuteIcon} from './svgs/UnMuteIcon';
+import {UserApprovedIcon} from './svgs/UserApprovedIcon';
+import {UserPendingIcon} from './svgs/UserPendingIcon';
 import {UserPlaceholderIcon} from './svgs/UserPlaceholderIcon';
+import {UserRejectedIcon} from './svgs/UserRejectedIcon';
 import {VerifyIcon} from './svgs/VerifyIcon';
 import {WarningIcon} from './svgs/WarningIcon';
 
@@ -134,4 +138,8 @@ export {
   WarningIcon,
   CustomerSupportIcon,
   VerifyIcon,
+  UserPendingIcon,
+  UserRejectedIcon,
+  UserApprovedIcon,
+  TimerIcon,
 };
