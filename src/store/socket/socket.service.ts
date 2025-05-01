@@ -8,6 +8,8 @@ import {
 } from '../../utils/helpers/chat.utils';
 import {SocketEvents} from './socket.events';
 import {OnMessageTyping} from '../../types/core/core.type';
+import {onConnectionRequestReceived} from './socket.utils';
+import {ConnectionRequestReceived} from './socket.type';
 // const SOCKET_URL = 'http://192.168.100.18:3000'; // Replace with your backend URL
 const SOCKET_URL = 'ws://192.168.100.3:3000'; // Replace with your backend URL
 
@@ -52,6 +54,24 @@ export const connectSocket = () => {
       console.log('message_sent!', data);
       onMessageSent(data);
     });
+
+    // Message sent
+    socket.on(
+      SocketEvents.CONNECTION_REQUEST,
+      (data: ConnectionRequestReceived) => {
+        console.log('connection request received!', data);
+        // onMessageSent(data);
+        onConnectionRequestReceived(data);
+      },
+    );
+
+    socket.on(
+      SocketEvents.CONNECTION_RESPONSE,
+      (data: ConnectionRequestReceived) => {
+        console.log('conneciton response', data);
+        // onMessageSent(data);
+      },
+    );
 
     // socket.on('newComment', data =>
     //   console.log('Commented', data);

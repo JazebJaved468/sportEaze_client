@@ -6,4 +6,6 @@ export const SocketEvents = {
   PATRON_VERIFICATION: 'patron_verification',
   SUCCESSFUL_CONNECTION: 'success-connection',
   SOCKET_DISCONNECT: 'disconnect',
+  CONNECTION_REQUEST: 'connection_request',
+  CONNECTION_RESPONSE: 'connection_response',
 };
