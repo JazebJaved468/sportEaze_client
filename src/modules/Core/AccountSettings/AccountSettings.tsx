@@ -13,6 +13,9 @@ import {
   DeleteIcon,
   EditProfileIcon,
   TickIcon,
+  UserApprovedIcon,
+  UserPendingIcon,
+  UserRejectedIcon,
   VerifyIcon,
 } from '../../../assets/icons';
 import {useDeleteUserMutation} from '../../../store/auth/auth.service';
@@ -31,6 +34,7 @@ import {
 } from '../../../utils/customHooks/storeHooks';
 import {useGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
 import {updateUserConsent} from '../../../store/core/core.slice';
+import {PatronAccountStatus, USER_TYPE} from '../../../constants/enums';
 
 const AccountSettings = () => {
   const {userType} = useAppSelector(state => state.auth);
@@ -65,6 +69,8 @@ const AccountSettings = () => {
       <GeneralHeader title='Manage Profile' />
 
       <View style={styles.container}>
+        {userType === USER_TYPE.PATRON ? <AccountPending /> : null}
+
         {appSettings?.allowUpdateUser ? (
           <SettingsItemCard
             onCardPress={() => {
@@ -211,6 +217,122 @@ const AccountSettings = () => {
         </View>
       </CustomModal>
     </PageContainer>
+  );
+};
+
+const AccountPending = () => {
+  const {userType, user} = useAppSelector(state => state.auth);
+
+  const isAccountPending = user?.patron?.status === PatronAccountStatus.PENDING;
+  const isAccountRejected =
+    user?.patron?.status === PatronAccountStatus.REJECTED;
+  const isAccountApproved =
+    user?.patron?.status === PatronAccountStatus.APPROVED;
+  const isAccountModificationRequired =
+    user?.patron?.status === PatronAccountStatus.MODIFICATION_REQUIRED;
+
+  const getColor = () => {
+    if (isAccountPending) {
+      return `${appColors.gold}40`;
+    } else if (isAccountApproved) {
+      return `${appColors.success}40`;
+    } else if (isAccountModificationRequired) {
+      return `${appColors.masculineBlue}30`;
+    } else if (isAccountRejected) {
+      return `${appColors.error}40`;
+    }
+  };
+
+  const getBorderColor = () => {
+    if (isAccountPending) {
+      return `${appColors.gold}`;
+    } else if (isAccountApproved) {
+      return `${appColors.success}`;
+    } else if (isAccountModificationRequired) {
+      return `${appColors.masculineBlue}`;
+    } else if (isAccountRejected) {
+      return `${appColors.error}`;
+    }
+  };
+
+  const getMessage = () => {
+    if (isAccountPending) {
+      return 'Your account is under review';
+    } else if (isAccountApproved) {
+      return 'Your account is approved';
+    } else if (isAccountModificationRequired) {
+      return 'Profile update needed';
+    } else if (isAccountRejected) {
+      return 'Your account was not approved';
+    }
+  };
+
+  const getIcon = () => {
+    if (isAccountPending) {
+      return (
+        <UserPendingIcon
+          width={customWidth(19)}
+          height={customHeight(19)}
+          color={appColors.black}
+        />
+      );
+    } else if (isAccountApproved) {
+      return (
+        <UserApprovedIcon
+          width={customWidth(19)}
+          height={customHeight(19)}
+          color={appColors.black}
+        />
+      );
+    } else if (isAccountModificationRequired) {
+      return (
+        <EditProfileIcon
+          width={customWidth(19)}
+          height={customHeight(19)}
+          color={appColors.black}
+        />
+      );
+    } else if (isAccountRejected) {
+      return (
+        <UserRejectedIcon
+          width={customWidth(19)}
+          height={customHeight(19)}
+          color={appColors.black}
+        />
+      );
+    }
+  };
+
+  return (
+    <View
+      style={{
+        backgroundColor: getColor(),
+        borderWidth: 1,
+        borderColor: getBorderColor(),
+        borderRadius: 20,
+        borderStyle: 'dashed',
+        paddingVertical: customHeight(16),
+        paddingHorizontal: customWidth(20),
+      }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: customWidth(16),
+        }}>
+        {getIcon()}
+        <Text style={[fontRegular(14, appColors.black)]}>{getMessage()}</Text>
+      </View>
+      {user?.patron?.adminReviewComment ? (
+        <Text
+          style={[
+            fontRegular(14, appColors.black),
+            {marginTop: customHeight(12)},
+          ]}>
+          Admin Feedback : {user?.patron?.adminReviewComment}
+        </Text>
+      ) : null}
+    </View>
   );
 };
 

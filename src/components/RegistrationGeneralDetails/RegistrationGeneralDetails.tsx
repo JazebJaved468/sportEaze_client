@@ -325,8 +325,6 @@ const RegistrationGeneralDetails: React.FC<RegistrationGeneralDetailsProps> = ({
                 dob: data.dob as string,
                 gender: data.gender as number,
               });
-
-              setRegistrationStep(2);
             })}>
             Next
           </Button>

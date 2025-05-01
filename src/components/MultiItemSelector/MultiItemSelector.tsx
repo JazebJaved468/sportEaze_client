@@ -12,43 +12,45 @@ type SportItem = {
   name: string;
 };
 
-type SportsPreferenceSelectorProps = {
-  onSportsSelected: (sports: number[]) => void;
+type MultiItemSelectorProps = {
+  onItemSelected: (items: number[]) => void;
   isValid?: boolean;
   errorMessage?: string;
-  selectedSports: number[];
+  selectedItems: number[];
+  data: Record<string, string>;
 };
 
-const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
-  onSportsSelected,
+const MultiItemSelector: React.FC<MultiItemSelectorProps> = ({
+  onItemSelected,
   errorMessage = '',
   isValid,
-  selectedSports,
+  selectedItems,
+  data,
 }) => {
   const {data: sports} = useGetAvailableSportsQuery();
   const containerShadow = useContainerShadow();
   const cardColor = useCardColor();
 
-  const toggleSport = useCallback(
+  const toggleItem = useCallback(
     (sportId: number) => {
-      const newSelectedSports = selectedSports.includes(sportId)
-        ? selectedSports.filter(id => id !== sportId)
-        : [...selectedSports, sportId];
+      const newSelectedSports = selectedItems.includes(sportId)
+        ? selectedItems.filter(id => id !== sportId)
+        : [...selectedItems, sportId];
 
-      onSportsSelected(newSelectedSports);
+      onItemSelected(newSelectedSports);
     },
-    [selectedSports, onSportsSelected],
+    [selectedItems, onItemSelected],
   );
 
   const renderSportItem = useCallback(
     ({item}: {item: SportItem}) => {
-      const isSelected = selectedSports.includes(item.id);
+      const isSelected = selectedItems.includes(item.id);
 
       return (
         <TouchableOpacity
           key={item.id}
           activeOpacity={0.7}
-          onPress={() => toggleSport(item.id)}
+          onPress={() => toggleItem(item.id)}
           style={[
             styles.sportItem,
             containerShadow,
@@ -72,12 +74,12 @@ const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
         </TouchableOpacity>
       );
     },
-    [selectedSports, toggleSport],
+    [selectedItems, toggleItem],
   );
 
   return (
     <View>
-      {sports ? (
+      {data ? (
         <View
           style={{
             flexDirection: 'row',
@@ -86,8 +88,8 @@ const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
             rowGap: 12,
             columnGap: 8,
           }}>
-          {Object.entries(sports).map(([key, sport]) => {
-            return renderSportItem({item: {id: Number(key), name: sport}});
+          {Object.entries(data).map(([key, itemName]) => {
+            return renderSportItem({item: {id: Number(key), name: itemName}});
           })}
         </View>
       ) : null}
@@ -101,7 +103,7 @@ const SportsPreferenceSelector: React.FC<SportsPreferenceSelectorProps> = ({
   );
 };
 
-export default SportsPreferenceSelector;
+export default MultiItemSelector;
 
 const styles = StyleSheet.create({
   errorText: {
