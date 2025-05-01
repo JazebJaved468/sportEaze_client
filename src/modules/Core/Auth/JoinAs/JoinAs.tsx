@@ -22,6 +22,7 @@ import {RecommendationsPage} from '../../../Fan/Recommendations';
 import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationDetails';
 import {MentorRegistrationDetailsPage} from '../../../Mentor/MentorRegistrationDetails.tsx';
 import {onLogout} from '../../../../utils/helpers/auth.ts';
+import {PulseEffect} from '../../../../components/PulseEffect/PulseEffect.tsx';
 
 type OptionCardProps = {
   id: number;
@@ -208,16 +209,18 @@ export const JoinAs = () => {
           keyExtractor={item => item.id.toString()}
         />
 
-        <Button
-          style={{
-            height: 48,
-            borderRadius: BUTTON_BORDER_RADIUS,
-            marginBottom: 20,
-            marginHorizontal: 16,
-          }}
-          onPress={joiningOptions[selectedOption]?.onPress}>
-          Next
-        </Button>
+        <PulseEffect>
+          <Button
+            style={{
+              height: 48,
+              borderRadius: BUTTON_BORDER_RADIUS,
+              marginBottom: 20,
+              marginHorizontal: 16,
+            }}
+            onPress={joiningOptions[selectedOption]?.onPress}>
+            Next
+          </Button>
+        </PulseEffect>
       </View>
     </PageContainer>
   );
