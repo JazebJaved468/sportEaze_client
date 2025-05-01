@@ -23,6 +23,7 @@ import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationD
 import {MentorRegistrationDetailsPage} from '../../../Mentor/MentorRegistrationDetails.tsx';
 import {onLogout} from '../../../../utils/helpers/auth.ts';
 import {PulseEffect} from '../../../../components/PulseEffect/PulseEffect.tsx';
+import {PatronRegistrationDetailsPage} from '../../../Patron/PatronRegistrationDetails/index.ts';
 
 type OptionCardProps = {
   id: number;
@@ -116,6 +117,9 @@ export const JoinAs = () => {
   const navigateToMentorRegistration = useCallback(() => {
     navigation.navigate(MentorRegistrationDetailsPage);
   }, [navigation]);
+  const navigateToPatronRegistration = useCallback(() => {
+    navigation.navigate(PatronRegistrationDetailsPage);
+  }, [navigation]);
 
   const joiningOptions = useMemo(
     () => [
@@ -138,7 +142,7 @@ export const JoinAs = () => {
         title: 'Patron',
         description: 'Support and invest in the future of sports',
         icon: JoinAsPatronIcon,
-        onPress: navigateToPlayerRegistration,
+        onPress: navigateToPatronRegistration,
       },
       {
         id: 3,
@@ -152,6 +156,7 @@ export const JoinAs = () => {
       navigateToFanRegistration,
       navigateToPlayerRegistration,
       navigateToMentorRegistration,
+      navigateToPatronRegistration,
     ],
   );
 
