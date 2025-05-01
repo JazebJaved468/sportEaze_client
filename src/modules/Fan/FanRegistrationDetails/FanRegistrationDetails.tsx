@@ -21,7 +21,7 @@ import {CloudinaryUploadPresets} from '../../../constants/cloudinary';
 import {useRegisterFanMutation} from '../../../store/fan/fan.service';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {PulseEffect} from '../../../components/PulseEffect';
-import {SportsPreferenceSelector} from '../../../components/SportsPreferenceSelector';
+import {MultiItemSelector} from '../../../components/MultiItemSelector';
 import {fontBold, fontRegular} from '../../../styles/fonts';
 import {RegisterFanParams} from '../../../types/fan/fan.params';
 import {RecommendationsPage} from '../Recommendations';
@@ -40,6 +40,7 @@ import {LogoutIcon} from '../../../assets/icons';
 import {useGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
 import {CustomModal} from '../../../components/CustomModal/CustomModal';
 import {customHeight} from '../../../styles/responsiveStyles';
+import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
 
 type FanRegistrationDetailsPageRouteProp = RouteProp<
   RootStackParamList,
@@ -172,6 +173,7 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
     useUploadImageMutation();
 
   const {data: appSettings} = useGetAppSettingsQuery();
+  const {data: sports} = useGetAvailableSportsQuery();
 
   const [registerFan, {isLoading: registerFanCIP}] = useRegisterFanMutation();
   const [updateFan, {isLoading: updateFanCIP}] = useUpdateFanMutation();
@@ -270,9 +272,10 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
-            <SportsPreferenceSelector
-              selectedSports={value || []}
-              onSportsSelected={sports => {
+            <MultiItemSelector
+              data={{...sports}}
+              selectedItems={value || []}
+              onItemSelected={sports => {
                 onChange(sports);
               }}
               isValid={errors.sportInterests ? false : true}
