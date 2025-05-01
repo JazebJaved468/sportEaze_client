@@ -29,6 +29,7 @@ import GeneralHeader from '../../../../components/GeneralHeader';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {JoinAsPage} from '../JoinAs';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
+import {PulseEffect} from '../../../../components/PulseEffect';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -199,17 +200,18 @@ export const Register = () => {
             />
           </View>
 
-          <Button
-            style={{
-              height: 48,
-              borderRadius: BUTTON_BORDER_RADIUS,
-              marginBottom: 20,
-            }}
-            onPress={handleSubmit(onSubmit)}
-            isLoading={registerUserCIP || loginUserCIP}>
-            {isLogin ? 'Login' : 'Register'}
-          </Button>
-
+          <PulseEffect>
+            <Button
+              style={{
+                height: 48,
+                borderRadius: BUTTON_BORDER_RADIUS,
+                marginBottom: 20,
+              }}
+              onPress={handleSubmit(onSubmit)}
+              isLoading={registerUserCIP || loginUserCIP}>
+              {isLogin ? 'Login' : 'Register'}
+            </Button>
+          </PulseEffect>
           <View
             style={{
               flexDirection: 'row',
@@ -222,26 +224,29 @@ export const Register = () => {
             <Text style={{color: textColor}}>
               {isLogin ? 'Dont have an account ?' : 'Already have an account ?'}
             </Text>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={{
-                backgroundColor: appColors.warmRed,
-                borderRadius: 10,
-                paddingVertical: 4,
-                paddingHorizontal: 16,
-              }}
-              onPress={() => {
-                setIsLogin(!isLogin);
-              }}>
-              <Text
+
+            <PulseEffect>
+              <TouchableOpacity
+                activeOpacity={1}
                 style={{
-                  color: appColors.white,
-                  // textDecorationLine: 'underline',
-                  fontSize: 14,
+                  backgroundColor: appColors.warmRed,
+                  borderRadius: 10,
+                  paddingVertical: 4,
+                  paddingHorizontal: 16,
+                }}
+                onPress={() => {
+                  setIsLogin(!isLogin);
                 }}>
-                {isLogin ? 'Register' : 'Login'}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: appColors.white,
+                    // textDecorationLine: 'underline',
+                    fontSize: 14,
+                  }}>
+                  {isLogin ? 'Register' : 'Login'}
+                </Text>
+              </TouchableOpacity>
+            </PulseEffect>
           </View>
         </View>
       </ScrollView>

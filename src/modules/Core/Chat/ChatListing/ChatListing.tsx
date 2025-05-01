@@ -9,9 +9,10 @@ import {RefreshControl} from 'react-native-gesture-handler';
 import {useGetChatListingQuery} from '../../../../store/core/core.service';
 import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
 import PullToRefresh from '../../../../components/PullToRefresh';
+import {LoginRequired} from '../../../../components/LoginRequired';
 
 export const ChatListing = () => {
-  const {user} = useAppSelector(state => state.auth);
+  const {user, isLoggedIn} = useAppSelector(state => state.auth);
 
   const {data, isFetching, isLoading, isError, refetch} =
     useGetChatListingQuery(
@@ -29,7 +30,9 @@ export const ChatListing = () => {
     <PageContainer>
       <GeneralHeader title='Messages' />
 
-      {isLoading || !data ? (
+      {!isLoggedIn ? (
+        <LoginRequired message={'Login to access your profile'} />
+      ) : isLoading || !data ? (
         <ChatListingSkeleton />
       ) : (
         <FlatList
