@@ -83,21 +83,34 @@ const PostHeader = ({post}: {post: Post}) => {
     console.log('Save Post : POST ID -->', post.id);
   };
 
+  const isSharedPost = post.sharedId ? true : false;
+  const profilePicUrl = isSharedPost
+    ? post.share?.user.profilePicUrl
+    : post.user.profilePicUrl;
+  const fullName = isSharedPost
+    ? post.share?.user.fullName
+    : post.user.fullName;
+  const userId = isSharedPost ? post.share?.user.id : post.user.id;
+  const userType = isSharedPost
+    ? post.share?.user.userType
+    : post.user.userType;
+
   return (
     <View style={styles.postHeader}>
       <TouchableOpacity
         activeOpacity={0.5}
         onPress={() => {
+          if (!userId || !userType) return;
           navigateToProfilePage({
-            userId: post.user.id,
-            userType: post.user.userType,
+            userId,
+            userType,
           });
         }}>
         <View style={styles.picName}>
           <View style={styles.profilePicContainer}>
-            {post.user.profilePicUrl ? (
+            {profilePicUrl ? (
               <Image
-                source={{uri: post.user.profilePicUrl}}
+                source={{uri: profilePicUrl}}
                 style={{
                   width: 50,
                   height: 50,
@@ -110,7 +123,7 @@ const PostHeader = ({post}: {post: Post}) => {
             )}
           </View>
           <View style={{gap: 4}}>
-            <Text style={fontBold(14, textColor)}>{post.user.fullName}</Text>
+            <Text style={fontBold(14, textColor)}>{fullName}</Text>
             <Text style={fontRegular(10, lightTextColor)}>
               {format(post.createdAt, 'MMM d h:mm aaa')}
             </Text>
@@ -268,6 +281,59 @@ const TextWithMediaContent = ({
   );
 };
 
+const SharedPostHeader = ({post}: {post: Post}) => {
+  const textColor = useTextColor();
+  const postBackgroundColor = usePostBackgroundColor();
+  const lightTextColor = useLightTextColor();
+
+  return (
+    <View
+      style={[
+        styles.contentView,
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingBottom: 0,
+          backgroundColor: postBackgroundColor,
+        },
+      ]}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => {
+          navigateToProfilePage({
+            userId: post.user.id,
+            userType: post.user.userType,
+          });
+        }}>
+        <View style={styles.picName}>
+          <View style={[styles.profilePicContainer, {width: 40, height: 40}]}>
+            {post.user.profilePicUrl ? (
+              <Image
+                source={{uri: post.user.profilePicUrl}}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: 'contain',
+                  borderRadius: 200,
+                }}
+              />
+            ) : (
+              <UserPlaceholderIcon width={40} height={40} color={textColor} />
+            )}
+          </View>
+          <View style={{gap: 4}}>
+            <Text style={fontBold(13, textColor)}>{post.user.fullName}</Text>
+            <Text style={fontRegular(9, lightTextColor)}>
+              {format(post.createdAt, 'MMM d h:mm aaa')}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const PostContent = ({
   post,
   isLiked,
@@ -275,7 +341,6 @@ const PostContent = ({
   setIsLiked,
 }: {
   post: Post;
-
   isLiked: boolean;
   setLikeCount: React.Dispatch<React.SetStateAction<number>>;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -296,6 +361,8 @@ const PostContent = ({
 
   const isTextPost = post.media.length === 0;
 
+  const isSharedPost = post.sharedId ? true : false;
+
   return (
     <View
       style={{
@@ -303,6 +370,8 @@ const PostContent = ({
         marginHorizontal: 16,
         borderRadius: 10,
       }}>
+      {isSharedPost ? <SharedPostHeader post={post} /> : null}
+
       {isTextPost ? (
         <TextOnlyContent content={post.textContent} />
       ) : (

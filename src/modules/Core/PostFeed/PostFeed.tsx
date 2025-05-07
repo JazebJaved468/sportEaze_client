@@ -96,6 +96,7 @@ export const PostFeed = () => {
               }}
             />
           }
+          keyExtractor={item => `${item.id}-${item.sharedId}`}
           renderItem={({item}) => {
             return (
               // <VideoPlayer
