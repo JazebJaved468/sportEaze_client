@@ -39,6 +39,7 @@ import {Loader} from '../../../components/Loader';
 import {
   ConnectionReqResponse,
   ConnectionStatus,
+  USER_TYPE,
 } from '../../../constants/enums';
 import {MessageButton} from '../../../components/MessageButton/MessageButton';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
@@ -323,7 +324,7 @@ export const FanProfile = () => {
                 </View>
               </View>
 
-              {isVisitor ? (
+              {userType === USER_TYPE.PLAYER ? null : isVisitor ? (
                 <ConnectionActionButtons />
               ) : (
                 <TouchableOpacity
