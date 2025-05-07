@@ -59,6 +59,9 @@ import {PatronRegistrationDetailsPage} from '../../../Patron/PatronRegistrationD
 import WaitingforApproval, {
   WaitingforApprovalPage,
 } from '../../../Patron/WaitingForApproval/index.ts';
+import FollowerListing, {
+  FollowerListingPage,
+} from '../../../Player/Followerlisting/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -105,6 +108,7 @@ export type RootStackParamList = {
   GDPRPage: undefined;
   PatronRegistrationDetailsPage: undefined;
   WaitingforApprovalPage: undefined;
+  FollowerListingPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -251,6 +255,7 @@ export const AppNavigator = () => {
         component={PlayerRegistrationDetails}
       />
       <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} />
+      <Stack.Screen name={FollowerListingPage} component={FollowerListing} />
 
       {/* Patron Screens */}
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />
