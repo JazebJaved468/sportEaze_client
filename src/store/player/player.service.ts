@@ -13,6 +13,7 @@ import {
   CreateLikeOnPostResponse,
   CreateTextPostResponse,
   FollowPlayerResponse,
+  GetMyFollowersResponse,
   GetPostIdResponse,
   GetPostsByPlayerIdResponse,
   LikesByPostIdResponse,
@@ -392,10 +393,21 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    //
+    getMyFollowers: builder.query<GetMyFollowersResponse, {userId?: string}>({
+      query: () => ({
+        url: `/network/get-all-followers`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
   }),
 });
 
 export const {
+  useGetMyFollowersQuery,
   useRegisterPlayerMutation,
   useFollowPlayerMutation,
   useUnfollowPlayerMutation,

@@ -66,3 +66,9 @@ export type SharePostResponse = {
   success: boolean;
   sharedPost: SharedPost;
 };
+
+export type GetMyFollowersResponse = {
+  followers: UserWindow[];
+  count: number;
+  success: boolean;
+};
