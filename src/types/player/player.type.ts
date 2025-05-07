@@ -50,6 +50,8 @@ export type Post = {
   user: UserWindow;
   likeCount: number;
   commentCount: number;
+  sharedId?: string;
+  share?: Share;
 };
 
 export type Comment = {
@@ -73,4 +75,9 @@ export type SharedPost = {
   shareMessage: string;
   visibility: number;
   originalPost: Post;
+};
+
+export type Share = {
+  message: string;
+  user: UserWindow;
 };
