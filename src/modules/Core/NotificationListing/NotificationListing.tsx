@@ -16,11 +16,12 @@ const NotificationListing = () => {
           <Text>Notifications</Text>
         </View>
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', marginTop: -70}}>
-          <LoginRequired
-            message={'Login to access your personalized notifications'}
-          />
-        </View>
+        <LoginRequired
+          message={'Login to access your personalized notifications'}
+          customStyles={{
+            marginTop: -70,
+          }}
+        />
       )}
     </PageContainer>
   );

@@ -359,7 +359,10 @@ const Menu = () => {
             </MenuSection>
           </ScrollView>
         ) : (
-          <LoginRequired message={'Login to access your profile'} />
+          <LoginRequired
+            message={'Login to access your profile'}
+            applyShadow={false}
+          />
         )}
       </View>
     </PageContainer>

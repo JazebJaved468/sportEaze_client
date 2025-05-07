@@ -54,6 +54,11 @@ import SuperAdminRoot, {
   SuperAdminRootPage,
 } from '../../../SuperAdmin/Root/index.ts';
 import GDPR, {GDPRPage} from '../../../SuperAdmin/GDPR/index.ts';
+import PatronRegistrationDetails from '../../../Patron/PatronRegistrationDetails/PatronRegistrationDetails.tsx';
+import {PatronRegistrationDetailsPage} from '../../../Patron/PatronRegistrationDetails/index.ts';
+import WaitingforApproval, {
+  WaitingforApprovalPage,
+} from '../../../Patron/WaitingForApproval/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -98,6 +103,8 @@ export type RootStackParamList = {
   AccountSettingsPage: undefined;
   SuperAdminRootPage: undefined;
   GDPRPage: undefined;
+  PatronRegistrationDetailsPage: undefined;
+  WaitingforApprovalPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -247,6 +254,14 @@ export const AppNavigator = () => {
 
       {/* Patron Screens */}
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />
+      <Stack.Screen
+        name={PatronRegistrationDetailsPage}
+        component={PatronRegistrationDetails}
+      />
+      <Stack.Screen
+        name={WaitingforApprovalPage}
+        component={WaitingforApproval}
+      />
 
       {/* Mentor Screens */}
       <Stack.Screen name={MentorRootPage} component={MentorRoot} />

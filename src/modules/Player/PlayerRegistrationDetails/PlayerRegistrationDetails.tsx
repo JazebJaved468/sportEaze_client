@@ -19,7 +19,7 @@ import {Button, Switch} from 'native-base';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 import {appColors} from '../../../constants/colors';
 import {playerLevels} from '../../../constants/player';
-import {SportsPreferenceSelector} from '../../../components/SportsPreferenceSelector';
+import {MultiItemSelector} from '../../../components/MultiItemSelector';
 import {CustomTextInputField} from '../../../components/CustomInputField';
 import {
   isValidFacebookProfileUrl,
@@ -740,9 +740,10 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
-            <SportsPreferenceSelector
-              selectedSports={value || []}
-              onSportsSelected={sports => {
+            <MultiItemSelector
+              data={{...sports}}
+              selectedItems={value || []}
+              onItemSelected={sports => {
                 onChange(sports);
               }}
               isValid={errors.secondarySports ? false : true}
