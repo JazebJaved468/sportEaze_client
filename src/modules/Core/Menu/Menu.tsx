@@ -51,6 +51,7 @@ import {
   PendingConnectionsPage,
 } from '../Networking';
 import {AccountSettingsPage} from '../AccountSettings';
+import {FollowerListingPage} from '../../Player/Followerlisting';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -225,12 +226,16 @@ const Menu = () => {
             <MenuSection>
               <MenuSectionHeader title='Network' />
               <MenuSectionItem
-                title='Followings'
+                title={
+                  userType === USER_TYPE.PLAYER ? 'Followers' : 'Followings'
+                }
                 leftIcon={
                   <FollowingsIcon width={20} height={20} color={textColor} />
                 }
                 onPress={() => {
-                  navigation.navigate(FollowingListingPage);
+                  userType === USER_TYPE.PLAYER
+                    ? navigation.navigate(FollowerListingPage)
+                    : navigation.navigate(FollowingListingPage);
                 }}
               />
               <MenuSectionItem
