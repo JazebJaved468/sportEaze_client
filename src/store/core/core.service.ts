@@ -187,6 +187,7 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
       serializeQueryArgs: ({queryArgs, endpointName}) => {
         return `${endpointName}-${queryArgs.userId}`;
       },
+      providesTags: ['PendingConnections'],
     }),
 
     getAcceptedConnections: builder.query<
