@@ -13,6 +13,7 @@ import {User} from '../../types/auth/auth.type';
 import {updateUser} from './auth.slice';
 import {onLogin, onLogout, onRegisterUser} from '../../utils/helpers/auth';
 import {USER_TYPE} from '../../constants/enums';
+import {coreApi} from '../core/core.service';
 
 export const authApi = sporteazeBaseApi.injectEndpoints({
   endpoints: builder => ({
@@ -103,6 +104,12 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
           const {data} = await queryFulfilled;
           // `onSuccess` side-effect
           dispatch(updateUser(data));
+          dispatch(
+            coreApi.endpoints.getNotifications.initiate(
+              {userId: data.id},
+              {forceRefetch: true},
+            ),
+          );
         } catch (err) {
           // `onError` side-effect
           console.log(

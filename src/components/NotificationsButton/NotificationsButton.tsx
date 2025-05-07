@@ -7,13 +7,20 @@ import {fontBold, fontExtraBold, fontRegular} from '../../styles/fonts';
 import {appColors} from '../../constants/colors';
 import {NotificationListingPage} from '../../modules/Core/NotificationListing';
 import {useAppSelector} from '../../utils/customHooks/storeHooks';
+import {useGetNotificationsQuery} from '../../store/core/core.service';
 
 const NotificationsButton = () => {
-  const textColor = useTextColor();
+  const {isLoggedIn, user} = useAppSelector(state => state.auth);
   const navigation = useAppNavigation();
 
-  const {isLoggedIn} = useAppSelector(state => state.auth);
-  const unreadCount = 2;
+  const {data} = useGetNotificationsQuery(
+    {userId: user?.id || ''},
+    {skip: !isLoggedIn},
+  );
+
+  const textColor = useTextColor();
+  const unreadCount = data?.unreadCount || 0;
+
   return (
     <TouchableOpacity
       activeOpacity={0.6}

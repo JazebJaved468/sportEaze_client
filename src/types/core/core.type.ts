@@ -29,3 +29,16 @@ export type OnMessageTyping = {
   contentLength: number;
   senderId: string;
 };
+
+export type Notification = {
+  id: string;
+  type: number;
+  redirect: string;
+  data: NotificationData;
+};
+
+export type NotificationData = {
+  message: string;
+  user: UserWindow;
+  createdAt: string;
+};

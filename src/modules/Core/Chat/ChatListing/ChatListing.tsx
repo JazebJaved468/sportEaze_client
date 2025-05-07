@@ -62,7 +62,7 @@ export const ChatListing = () => {
   );
 };
 
-const ChatListingSkeleton = () => {
+export const ChatListingSkeleton = () => {
   return (
     <>
       <ChatCardSkeleton />
