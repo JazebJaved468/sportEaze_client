@@ -17,8 +17,10 @@ import {UserWindow} from '../../types/core/core.type';
 import {Post} from '../../types/player/player.type';
 import {RootState} from '../../utils/customHooks/storeHooks';
 import {onChatRead} from '../../utils/helpers/chat.utils';
+import {onNotificationsRead} from '../../utils/helpers/core.utils';
 import {authApi} from '../auth/auth.service';
 import {sporteazeBaseApi} from '../baseApi.service';
+import {NotificationResponse} from '../socket/socket.type';
 import {store} from '../store';
 
 export const coreApi = sporteazeBaseApi.injectEndpoints({
@@ -280,10 +282,45 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         },
       },
     ),
+
+    //
+    getNotifications: builder.query<NotificationResponse, {userId: string}>({
+      query: () => ({
+        url: `/notifications`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
+
+    markNotificationsAsRead: builder.mutation<{}, void>({
+      query: () => ({
+        url: `/notifications/read`,
+        method: 'POST',
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+          onNotificationsRead();
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while marking chat as read : core.service.ts : Line 274',
+            err,
+          );
+        }
+      },
+    }),
   }),
 });
 
 export const {
+  useMarkNotificationsAsReadMutation,
+  useGetNotificationsQuery,
   useMarkChatAsReadMutation,
   useGetChatListingQuery,
   useGetChatMessagesQuery,
