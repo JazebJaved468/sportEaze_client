@@ -8,8 +8,16 @@ import {
 } from '../../utils/helpers/chat.utils';
 import {SocketEvents} from './socket.events';
 import {OnMessageTyping} from '../../types/core/core.type';
-import {onConnectionRequestReceived} from './socket.utils';
-import {ConnectionRequestReceived} from './socket.type';
+import {
+  onConnectionRequestReceived,
+  onConnectionResponseReceived,
+  onNotificationReceived,
+} from './socket.utils';
+import {
+  ConnectionRequestReceived,
+  ConnectionResponseReceived,
+  NotificationResponse,
+} from './socket.type';
 // const SOCKET_URL = 'http://192.168.100.18:3000'; // Replace with your backend URL
 const SOCKET_URL = 'ws://192.168.100.3:3000'; // Replace with your backend URL
 
@@ -29,37 +37,37 @@ export const connectSocket = () => {
 
     // Successful connection
     socket.on(SocketEvents.SUCCESSFUL_CONNECTION, () => {
-      console.log('Socket Connected Successfully!');
+      console.log('socket : Socket Connected Successfully!');
     });
 
     // Disconnection Successful
     socket.on(SocketEvents.SOCKET_DISCONNECT, () =>
-      console.log('Socket Disconnected!'),
+      console.log('socket : Socket Disconnected!'),
     );
 
     // Is Message Typing
     socket.on(SocketEvents.IS_MSG_TYPING, (data: OnMessageTyping) => {
-      console.log('is message typing...', data);
+      console.log('socket : is message typing...', data);
       onMessageTyping(data);
     });
 
     // Message received
     socket.on(SocketEvents.MESSAGE_RECEIVED, (data: GetChatListingResponse) => {
-      console.log('message received!', data);
+      console.log('socket : message received!', data);
       onMessageRecieved(data);
     });
 
     // Message sent
     socket.on(SocketEvents.MESSAGE_SENT, (data: GetChatListingResponse) => {
-      console.log('message_sent!', data);
+      console.log('socket : message_sent!', data);
       onMessageSent(data);
     });
 
-    // Message sent
+    // Receive Connection request
     socket.on(
       SocketEvents.CONNECTION_REQUEST,
       (data: ConnectionRequestReceived) => {
-        console.log('connection request received!', data);
+        console.log('socket : connection request received!', data);
         // onMessageSent(data);
         onConnectionRequestReceived(data);
       },
@@ -67,11 +75,17 @@ export const connectSocket = () => {
 
     socket.on(
       SocketEvents.CONNECTION_RESPONSE,
-      (data: ConnectionRequestReceived) => {
+      (data: ConnectionResponseReceived) => {
         console.log('socket : connection response', data);
-        // onMessageSent(data);
+        onConnectionResponseReceived(data);
       },
     );
+
+    // Receive Notification
+    socket.on(SocketEvents.NOTIFICATION, (data: NotificationResponse) => {
+      console.log('socket : notification received', JSON.stringify(data));
+      onNotificationReceived(data);
+    });
 
     // socket.on('newComment', data =>
     //   console.log('Commented', data);

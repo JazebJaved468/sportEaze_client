@@ -8,4 +8,5 @@ export const SocketEvents = {
   SOCKET_DISCONNECT: 'disconnect',
   CONNECTION_REQUEST: 'connection_request',
   CONNECTION_RESPONSE: 'connection_response',
+  NOTIFICATION: 'notification',
 };
