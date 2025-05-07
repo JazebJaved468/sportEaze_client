@@ -68,7 +68,7 @@ export const connectSocket = () => {
     socket.on(
       SocketEvents.CONNECTION_RESPONSE,
       (data: ConnectionRequestReceived) => {
-        console.log('conneciton response', data);
+        console.log('socket : connection response', data);
         // onMessageSent(data);
       },
     );
