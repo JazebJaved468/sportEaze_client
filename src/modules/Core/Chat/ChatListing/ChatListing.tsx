@@ -1,4 +1,4 @@
-import {FlatList, Image, StyleSheet, Text} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import GeneralHeader from '../../../../components/GeneralHeader';
 import PageContainer from '../../../../components/PageContainer';
@@ -10,6 +10,10 @@ import {useGetChatListingQuery} from '../../../../store/core/core.service';
 import {useAppSelector} from '../../../../utils/customHooks/storeHooks';
 import PullToRefresh from '../../../../components/PullToRefresh';
 import {LoginRequired} from '../../../../components/LoginRequired';
+import {MessageIcon} from '../../../../assets/icons';
+import {useTextColor} from '../../../../utils/customHooks/colorHooks';
+import {fontBold, fontRegular} from '../../../../styles/fonts';
+import {customHeight} from '../../../../styles/responsiveStyles';
 
 export const ChatListing = () => {
   const {user, isLoggedIn} = useAppSelector(state => state.auth);
@@ -21,6 +25,8 @@ export const ChatListing = () => {
       },
       {skip: !user?.id},
     );
+
+  const textColor = useTextColor();
 
   const onRefresh = async () => {
     await refetch();
@@ -36,6 +42,7 @@ export const ChatListing = () => {
         <ChatListingSkeleton />
       ) : (
         <FlatList
+          contentContainerStyle={styles.container}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -55,6 +62,32 @@ export const ChatListing = () => {
                 isTyping={item.isTyping}
               />
             )
+          }
+          ListEmptyComponent={
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <MessageIcon
+                width={120}
+                height={120}
+                color={textColor}
+                strokeWidth={0.8}
+              />
+              <Text style={[fontBold(16, textColor), {marginTop: 16}]}>
+                You have no messages yet
+              </Text>
+              <Text
+                style={[
+                  fontRegular(14, textColor),
+                  {marginTop: 10, width: '80%', textAlign: 'center'},
+                ]}>
+                Start a conversation with someone you know or follow to get
+                started.
+              </Text>
+            </View>
           }
         />
       )}
@@ -80,4 +113,10 @@ export const ChatListingSkeleton = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    flexGrow: 1,
+    paddingBottom: customHeight(50),
+  },
+});
