@@ -31,10 +31,17 @@ export const superAdminApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    getPatronRequests: builder.query<any[], void>({
+      query: () => ({
+        url: `/user/patron/registrations`,
+      }),
+    }),
   }),
 });
 
 export const {
+  useGetPatronRequestsQuery,
   useGetAppSettingsQuery,
   useUpdateAppSettingsMutation,
   useLazyGetAppSettingsQuery,
