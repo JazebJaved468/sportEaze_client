@@ -5,7 +5,11 @@ import {Input, useColorModeValue, View} from 'native-base';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Navigator/AppNavigator/AppNavigator';
 import {appColors} from '../../../../constants/colors';
-import {BackIcon, MessageSendIcon} from '../../../../assets/icons';
+import {
+  BackIcon,
+  MessageSendIcon,
+  UserPlaceholderIcon,
+} from '../../../../assets/icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {Controller, useForm} from 'react-hook-form';
@@ -367,12 +371,20 @@ const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
         </TouchableOpacity>
         <View style={styles.profilePicContainer}>
           {isOnline ? <View style={styles.onlineMark} /> : null}
-          <Image
-            style={styles.profilePic}
-            source={{
-              uri: image,
-            }}
-          />
+
+          {image ? (
+            <Image
+              source={{uri: image}}
+              style={{
+                width: 50,
+                height: 50,
+                objectFit: 'contain',
+                borderRadius: 100,
+              }}
+            />
+          ) : (
+            <UserPlaceholderIcon width={20} height={20} color={textColor} />
+          )}
         </View>
       </View>
 
@@ -393,9 +405,11 @@ const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
 const styles = StyleSheet.create({
   profilePicContainer: {
     width: 52,
-    height: 50,
-    borderRadius: 100,
-    // backgroundColor: appColors.gray,
+    height: 52,
+    backgroundColor: `${appColors.whisperGray}90`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 200,
   },
   profilePic: {
     width: 50,
