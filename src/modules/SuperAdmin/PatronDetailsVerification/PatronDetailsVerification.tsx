@@ -50,7 +50,6 @@ const PatronDetailsVerification = () => {
       const filteredData = state.data?.filter(
         item => item.id === params.patronId,
       );
-      console.log('filteredData', filteredData);
 
       return {
         data: filteredData,
@@ -112,8 +111,6 @@ const PatronDetailsVerification = () => {
   };
 
   const onSubmit = async (data: {adminComment: string; action: number}) => {
-    console.log('data - onsubmit', data);
-
     if (data.action === PatronAccountStatus.REJECTED) {
       handleReject(data.adminComment);
     } else if (data.action === PatronAccountStatus.MODIFICATION_REQUIRED) {
