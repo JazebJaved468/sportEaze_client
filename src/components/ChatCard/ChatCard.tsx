@@ -124,7 +124,7 @@ export const ChatCardSkeleton = () => {
 const styles = StyleSheet.create({
   chatCardContainer: {
     flexDirection: 'row',
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: appColors.divider,
