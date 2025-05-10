@@ -23,6 +23,7 @@ import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {GDPRPage} from '../GDPR';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
+import {PatronRequestsPage} from '../PatronRequests';
 
 const SuperAdminRoot = () => {
   const textColor = useTextColor();
@@ -56,7 +57,10 @@ const SuperAdminRoot = () => {
           </View>
         </HomeItemCard>
 
-        <HomeItemCard onCardPress={() => {}}>
+        <HomeItemCard
+          onCardPress={() => {
+            navigation.navigate(PatronRequestsPage);
+          }}>
           <View style={{alignItems: 'center', gap: 16}}>
             <ConnectionRequestIcon
               width={customWidth(40)}
