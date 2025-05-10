@@ -32,13 +32,19 @@ import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 import {useAppSelector} from '../../../utils/customHooks/storeHooks';
+import PullToRefresh from '../../../components/PullToRefresh';
+import {PatronDetailsVerificationPage} from '../PatronDetailsVerification';
 
 const PatronRequests = () => {
-  const {data, isLoading} = useGetPatronRequestsQuery();
+  const {data, isLoading, refetch} = useGetPatronRequestsQuery();
 
   const textColor = useTextColor();
   const containerShadow = useContainerShadow();
   const cardColor = useCardColor();
+
+  const onRefresh = async () => {
+    await refetch();
+  };
 
   return (
     <PageContainer>
@@ -48,6 +54,7 @@ const PatronRequests = () => {
         <Loader />
       ) : (
         <FlatList
+          refreshControl={<PullToRefresh onRefresh={onRefresh} />}
           ListHeaderComponent={
             <View
               style={[
@@ -67,61 +74,28 @@ const PatronRequests = () => {
           }
           numColumns={2}
           columnWrapperStyle={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: 'space-between',
+            // alignItems: 'center',
           }}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 20,
           }}
-          keyExtractor={(item, index) => item.username}
-          data={[
-            {
-              name: 'Jazeb Javed',
-              username: 'jazebjaved',
-              userType: USER_TYPE.PLAYER,
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-            {
-              name: 'Zohaib Ali',
-              username: 'jazebjaved1',
-              userType: USER_TYPE.PLAYER,
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-            {
-              name: 'Jazeb Javed',
-              username: 'jazebjaved2',
-              userType: USER_TYPE.PLAYER,
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-            {
-              name: 'Zohaib Ali',
-              username: 'jazebjaved3',
-              userType: USER_TYPE.PLAYER,
-              followersCount: 123,
-              sportInterest: 'Cricket',
-              profilePicUrl:
-                'https://res.cloudinary.com/dpe70dvug/image/upload/v1742500736/xr3pge1bh380dkesvwpw.jpg',
-            },
-          ]}
-          renderItem={({item}) => (
-            <View style={{marginVertical: 12, marginHorizontal: 12}}>
-              <PatronCard
-                username={item.username}
-                name={item.name}
-                profilePicUrl={item.profilePicUrl}
-              />
-            </View>
-          )}
+          keyExtractor={(item, index) => item.id}
+          data={data}
+          renderItem={({item}) => {
+            return (
+              <View style={{marginVertical: 12}}>
+                <PatronCard
+                  patronId={item.id}
+                  username={item.username}
+                  name={item.fullName}
+                  profilePicUrl={item.profilePicUrl || ''}
+                  status={item.patron?.status}
+                />
+              </View>
+            );
+          }}
         />
       )}
     </PageContainer>
@@ -132,6 +106,8 @@ type PatronCardProps = {
   name: string;
   username: string;
   profilePicUrl: string;
+  status?: number;
+  patronId: string;
 };
 
 const {width: screenWidth} = Dimensions.get('window');
@@ -140,6 +116,8 @@ const PatronCard: React.FC<PatronCardProps> = ({
   profilePicUrl,
   username,
   name,
+  status,
+  patronId,
 }) => {
   const containerShadow = useContainerShadow();
   const backgroundColor = useCardColor();
@@ -149,8 +127,10 @@ const PatronCard: React.FC<PatronCardProps> = ({
   return (
     <TouchableOpacity
       style={[{backgroundColor, borderRadius: 14}, containerShadow]}
-      //   onPress={() => navigation.navigate('PatronRequestDetails')}
-      activeOpacity={0.8}>
+      onPress={() =>
+        navigation.navigate(PatronDetailsVerificationPage, {patronId})
+      }
+      activeOpacity={0.6}>
       <View
         style={[
           {
@@ -184,7 +164,7 @@ const PatronCard: React.FC<PatronCardProps> = ({
               }}
             />
           ) : (
-            <UserPlaceholderIcon width={22} height={22} color={textColor} />
+            <UserPlaceholderIcon width={34} height={34} color={textColor} />
           )}
         </View>
 
@@ -199,13 +179,13 @@ const PatronCard: React.FC<PatronCardProps> = ({
           ]}>
           {username}
         </Text>
-        <PatronAccountStatusBadge status={PatronAccountStatus.PENDING} />
+        {status ? <PatronAccountStatusBadge status={status} /> : null}
       </View>
     </TouchableOpacity>
   );
 };
 
-const PatronAccountStatusBadge = ({status}: {status: number}) => {
+export const PatronAccountStatusBadge = ({status}: {status: number}) => {
   const {userType, user} = useAppSelector(state => state.auth);
 
   const isAccountPending = status === PatronAccountStatus.PENDING;
