@@ -69,6 +69,10 @@ import {UserPlaceholderIcon} from './svgs/UserPlaceholderIcon';
 import {UserRejectedIcon} from './svgs/UserRejectedIcon';
 import {VerifyIcon} from './svgs/VerifyIcon';
 import {WarningIcon} from './svgs/WarningIcon';
+import {AddIcon} from './svgs/AddIcon';
+import {ContractIcon} from './svgs/ContractIcon';
+import {MilestoneIcon} from './svgs/MilestoneIcon';
+import {EditIcon} from './svgs/EditIcon';
 
 export {
   BackIcon,
@@ -142,4 +146,8 @@ export {
   UserRejectedIcon,
   UserApprovedIcon,
   TimerIcon,
+  AddIcon,
+  ContractIcon,
+  MilestoneIcon,
+  EditIcon,
 };
