@@ -110,7 +110,7 @@ type PatronCardProps = {
   patronId: string;
 };
 
-const {width: screenWidth} = Dimensions.get('window');
+export const {width: screenWidth} = Dimensions.get('window');
 
 const PatronCard: React.FC<PatronCardProps> = ({
   profilePicUrl,
