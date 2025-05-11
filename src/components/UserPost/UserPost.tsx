@@ -777,8 +777,8 @@ const PostFooter = ({
                         />
                       ) : (
                         <UserPlaceholderIcon
-                          width={36}
-                          height={36}
+                          width={20}
+                          height={20}
                           color={textColor}
                         />
                       )}
