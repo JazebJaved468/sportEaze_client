@@ -1,7 +1,17 @@
-import {RegisterPatronParams} from '../../types/patron/patron.params';
+import {
+  CreateContractParams,
+  RegisterPatronParams,
+  UpdateContractParams,
+} from '../../types/patron/patron.params';
+import {Contract} from '../../types/patron/patron.type';
 import {RegisterPlayerParams} from '../../types/player/player.params';
 import {registerPlayerResponse} from '../../types/player/player.response';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
+import {
+  onContractAccepted,
+  onContractCreated,
+  onContractUpdated,
+} from '../../utils/helpers/contract.utils';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
 
@@ -40,7 +50,113 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    //
+    getContractsByUserId: builder.query<Contract[], {userId: string}>({
+      query: ({userId}) => ({
+        url: `/contracts/with-user/${userId}`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+
+      providesTags: ['ContractsByUserId'],
+    }),
+
+    getContractById: builder.query<Contract[], {contractId: string}>({
+      query: ({contractId}) => ({
+        url: `/contracts/${contractId}`,
+      }),
+
+      // providesTags: (result, error, {contractId}) => {
+      //   return [{type: 'ContractById', id: contractId}];
+      // },
+
+      providesTags: ['ContractById'],
+    }),
+
+    //
+    createContract: builder.mutation<{}, CreateContractParams>({
+      query: body => ({
+        url: `/contracts`,
+        method: 'POST',
+        body,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+
+          onContractCreated();
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while creating  contract : patron.service.ts : Line 37',
+            err,
+          );
+        }
+      },
+    }),
+
+    acceptContract: builder.mutation<{}, {contractId: string}>({
+      query: ({contractId}) => ({
+        url: `/contracts/accept/${contractId}`,
+        method: 'PATCH',
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+
+          await onContractAccepted(args.contractId);
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while accpeting  contract : patron.service.ts : Line 37',
+            err,
+          );
+        }
+      },
+    }),
+
+    updateContract: builder.mutation<Contract[], UpdateContractParams>({
+      query: ({contractId, ...body}) => ({
+        url: `/contracts/${contractId}`,
+        method: 'PATCH',
+        body,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+
+          await onContractUpdated(args.contractId, data[0]);
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while updating  contract : patron.service.ts : Line 37',
+            err,
+          );
+        }
+      },
+    }),
   }),
 });
 
-export const {useRegisterPatronMutation} = patronApi;
+export const {
+  useUpdateContractMutation,
+  useAcceptContractMutation,
+  useGetContractByIdQuery,
+  useRegisterPatronMutation,
+  useGetContractsByUserIdQuery,
+  useCreateContractMutation,
+} = patronApi;

@@ -13,3 +13,21 @@ export type RegisterPatronParams = {
   website: string;
   linkedIn: string;
 };
+
+export type CreateContractParams = {
+  playerId: string;
+  description: string;
+  totalAmount: number;
+  endDate: string;
+  status: number;
+  milestones: MilestoneCreate[];
+};
+
+export type MilestoneCreate = {
+  description: string;
+  amount: number;
+};
+
+export type UpdateContractParams = {
+  contractId: string;
+} & CreateContractParams;
