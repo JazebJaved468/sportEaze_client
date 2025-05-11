@@ -11,10 +11,7 @@ export const onContractCreated = () => {
 export const onContractAccepted = (contractId: string) => {
   dispatch(
     patronApi.util.updateQueryData('getContractById', {contractId}, draft => {
-      const index = draft.findIndex(contract => contract.id === contractId);
-      if (index !== -1) {
-        draft[index].status = ContractStatus.IN_PROGRESS;
-      }
+      draft.status = ContractStatus.IN_PROGRESS;
     }),
   );
   dispatch(patronApi.util.invalidateTags(['ContractsByUserId']));
@@ -26,10 +23,8 @@ export const onContractUpdated = (
 ) => {
   dispatch(
     patronApi.util.updateQueryData('getContractById', {contractId}, draft => {
-      const index = draft.findIndex(contract => contract.id === contractId);
-      if (index !== -1) {
-        draft[index] = contractData;
-      }
+      draft = contractData;
+      return draft;
     }),
   );
   dispatch(patronApi.util.invalidateTags(['ContractsByUserId']));

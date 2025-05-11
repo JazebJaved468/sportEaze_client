@@ -28,6 +28,7 @@ import {ContractStatus} from '../../../constants/enums';
 import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
 import {updateToast} from '../../../store/core/core.slice';
 import {divideAmountIntoThreeMilestones} from '../../../utils/helpers/contract.utils';
+import {ContractMilestone} from '../../../types/patron/patron.type';
 
 export type CreateContractPageRouteProp = RouteProp<
   RootStackParamList,
@@ -44,18 +45,12 @@ const CreateContract = () => {
   const [updateContract, {isLoading: updateContractCIP}] =
     useUpdateContractMutation();
 
-  const {data} = useGetContractByIdQuery(
+  const {data: contractData} = useGetContractByIdQuery(
     {
       contractId: params.contractId ?? '',
     },
     {skip: !params.contractId},
   );
-
-  const contractData = data?.[0];
-
-  const textColor = useTextColor();
-  const containerShadow = useContainerShadow();
-  const cardColor = useCardColor();
 
   const {
     handleSubmit,
@@ -120,24 +115,39 @@ const CreateContract = () => {
     }
 
     try {
-      const apiData: CreateContractParams = {
-        description: data.contract_description,
-        totalAmount: Number(data.contract_amount),
-        endDate: '2027-05-11',
-        status: ContractStatus.PENDING,
-        playerId: params.playerId,
-        milestones: data.milestones.map((milestone: any) => ({
-          description: milestone.description,
-          amount: Number(milestone.amount),
-        })),
-      };
-
       if (params.isEditing && params.contractId) {
+        const apiData: CreateContractParams = {
+          description: data.contract_description,
+          totalAmount: Number(data.contract_amount),
+          endDate: '2027-05-11',
+          status: ContractStatus.PENDING,
+          playerId: params.playerId,
+          milestones: data.milestones.map(
+            (milestone: ContractMilestone, index: number) => ({
+              id: contractData?.milestones[index].id,
+              description: milestone.description,
+              amount: Number(milestone.amount),
+            }),
+          ),
+        };
+
+        console.log('apiData', apiData);
         await updateContract({
           contractId: params.contractId,
           ...apiData,
         }).unwrap();
       } else {
+        const apiData: CreateContractParams = {
+          description: data.contract_description,
+          totalAmount: Number(data.contract_amount),
+          endDate: '2027-05-11',
+          status: ContractStatus.PENDING,
+          playerId: params.playerId,
+          milestones: data.milestones.map((milestone: any) => ({
+            description: milestone.description,
+            amount: Number(milestone.amount),
+          })),
+        };
         await createContract(apiData).unwrap();
       }
 

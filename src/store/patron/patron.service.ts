@@ -63,7 +63,7 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
       providesTags: ['ContractsByUserId'],
     }),
 
-    getContractById: builder.query<Contract[], {contractId: string}>({
+    getContractById: builder.query<Contract, {contractId: string}>({
       query: ({contractId}) => ({
         url: `/contracts/${contractId}`,
       }),
@@ -125,7 +125,7 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
       },
     }),
 
-    updateContract: builder.mutation<Contract[], UpdateContractParams>({
+    updateContract: builder.mutation<Contract, UpdateContractParams>({
       query: ({contractId, ...body}) => ({
         url: `/contracts/${contractId}`,
         method: 'PATCH',
@@ -139,7 +139,9 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
           const {data} = await queryFulfilled;
           // `onSuccess` side-effect
 
-          await onContractUpdated(args.contractId, data[0]);
+          console.log('data - on update', data);
+
+          await onContractUpdated(args.contractId, data);
         } catch (err) {
           // `onError` side-effect
           console.log(

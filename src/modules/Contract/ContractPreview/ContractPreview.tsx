@@ -62,15 +62,12 @@ const ContractPreview = () => {
   const {params} = useRoute<ContractPreviewPageRouteProp>();
   const navigation = useAppNavigation();
 
-  const {data, isLoading} = useGetContractByIdQuery({
+  const {data: contractData, isLoading} = useGetContractByIdQuery({
     contractId: params.contractId,
   });
 
   const [acceptContract, {isLoading: acceptContractCIP}] =
     useAcceptContractMutation();
-
-  const contractData = data?.[0];
-  //   console.log('contractData', contractData);
 
   console.log('params', params);
 
