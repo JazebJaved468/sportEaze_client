@@ -13,20 +13,60 @@ import {
 import React, {useEffect, useRef} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import {appColors} from '../../../constants/colors';
-import {PlayerModelIcon, ScarIcon} from '../../../assets/icons';
+import {ScarIcon, SportEazeLogo} from '../../../assets/icons';
 import {Button, useColorModeValue} from 'native-base';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  onBoardingData,
-  OnBoardingDataType,
-} from '../../../constants/onBoarding';
+import {OnBoardingDataType} from '../../../constants/onBoarding';
 import {storeInLocalStorage} from '../../../utils/helpers/asyncStorage';
 import {FanRootPage} from '../../Fan/Root';
 import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 import {fontBold, fontExtraBold, fontRegular} from '../../../styles/fonts';
+import {PulseEffect} from '../../../components/PulseEffect';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+
+export const onBoardingData: OnBoardingDataType[] = [
+  {
+    id: 1,
+    title: 'Shine On & Be Seen!',
+    description:
+      'Share your achievements, skills, and story. Build your fanbase and rise to stardom!',
+
+    imageKey: 'player',
+  },
+  {
+    id: 2,
+    title: 'Fuel the Future of Sports',
+    description:
+      ' Discover raw talent and empower athletes with the resources they need to thrive.',
+
+    imageKey: 'patron',
+  },
+  {
+    id: 3,
+    title: 'Shape Champions',
+    description:
+      'Guide upcoming players with your experience. Offer mentorship and give your endorsement.',
+
+    imageKey: 'mentor',
+  },
+  {
+    id: 4,
+    title: 'Back Your Heroes',
+    description:
+      ' Cheer for your favorite athletes, share their journey, and give them the spotlight they deserve!',
+
+    imageKey: 'fan',
+  },
+];
+
+const IMAGES = {
+  player: require('../../../assets/images/player_onboard.png'),
+  patron: require('../../../assets/images/patron_onboard.png'),
+  mentor: require('../../../assets/images/mentor_onboard.png'),
+  fan: require('../../../assets/images/fan_onboard.png'),
+};
 
 export const OnBoarding = () => {
   const navigation = useAppNavigation();
@@ -41,6 +81,7 @@ export const OnBoarding = () => {
   const textColor = useColorModeValue(appColors.black, appColors.white);
   const inActiveDotColor = useColorModeValue(appColors.black, appColors.white);
   const inActiveDotColorInverse = useColorModeValue(
+    // appColors.black,
     appColors.white,
     appColors.black,
   );
@@ -112,16 +153,35 @@ export const OnBoarding = () => {
       <View style={[styles.slide]}>
         <View
           style={{
-            height: screenHeight - customHeight(280),
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: screenWidth - 32,
+
+            marginHorizontal: customWidth(16),
+            borderRadius: 20,
             overflow: 'hidden',
           }}>
-          <item.image />
+          <Image
+            source={IMAGES[item.imageKey as keyof typeof IMAGES]}
+            style={{
+              width: screenWidth,
+              height: screenHeight - customHeight(100),
+              objectFit: 'cover',
+              borderRadius: 20,
+              opacity: 1,
+            }}
+          />
+          {/* <item.image /> */}
         </View>
 
-        <View style={styles.content}>
-          <Text style={fontExtraBold(42, textColor)}>{item.title}</Text>
+        <View
+          style={[styles.content, {backgroundColor: `${appColors.warmRed}90`}]}>
+          <Text style={fontExtraBold(28, appColors.white)}>{item.title}</Text>
           <Text
-            style={[fontRegular(16, textColor), {marginTop: customHeight(16)}]}>
+            style={[
+              fontRegular(15, appColors.white),
+              {marginTop: customHeight(16), lineHeight: 20},
+            ]}>
             {item.description}
           </Text>
         </View>
@@ -162,6 +222,18 @@ export const OnBoarding = () => {
         {/* <View style={styles.modelContainer}>
           <PlayerModelIcon />
         </View> */}
+        <View
+          style={{
+            justifyContent: 'flex-end',
+            paddingVertical: customHeight(10),
+            paddingHorizontal: customWidth(24),
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: customWidth(6),
+          }}>
+          <Text style={fontBold(12, textColor)}>SportEaze</Text>
+          <SportEazeLogo width={30} height={30} color={textColor} />
+        </View>
 
         <View style={styles.swiperContainer}>
           <FlatList
@@ -180,27 +252,36 @@ export const OnBoarding = () => {
           <View style={styles.paginationAndSkipContainer}>
             {renderPagination()}
 
-            <Button
-              onPress={() => {
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: FanRootPage}],
-                });
-                storeInLocalStorage({
-                  key: 'isFirstVisit',
-                  value: 'false',
-                });
-              }}
-              style={styles.skip}>
-              <Text
-                style={{
-                  color: appColors.warmRed,
-                  fontFamily: 'LatoRegular',
-                  padding: 8,
-                }}>
-                Skip
-              </Text>
-            </Button>
+            <View
+              style={{
+                position: 'absolute',
+                right: 0,
+                zIndex: 1,
+              }}>
+              <PulseEffect>
+                <Button
+                  onPress={() => {
+                    navigation.reset({
+                      index: 0,
+                      routes: [{name: FanRootPage}],
+                    });
+                    storeInLocalStorage({
+                      key: 'isFirstVisit',
+                      value: 'false',
+                    });
+                  }}
+                  style={styles.skip}>
+                  <Text
+                    style={{
+                      color: appColors.warmRed,
+                      fontFamily: 'LatoRegular',
+                      padding: 8,
+                    }}>
+                    Skip
+                  </Text>
+                </Button>
+              </PulseEffect>
+            </View>
           </View>
         </View>
       </View>
@@ -236,7 +317,7 @@ const styles = StyleSheet.create({
   scarContainer: {
     position: 'absolute',
     right: 0,
-    top: 10,
+    top: customHeight(10),
     opacity: 0.7,
   },
   modelContainer: {
@@ -246,21 +327,24 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   content: {
-    marginLeft: customWidth(16),
-    marginRight: customWidth(24),
-    marginTop: customHeight(30),
+    marginLeft: customWidth(30),
+    marginRight: customWidth(44),
+    marginBottom: customHeight(10),
+    marginTop: 'auto',
+    paddingBottom: customHeight(28),
+    paddingHorizontal: customWidth(16),
+    paddingTop: customHeight(16),
+    borderRadius: 20,
   },
 
   // swiper
   swiperContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    marginTop: customHeight(70),
+    flex: 1,
   },
   slide: {
     width: screenWidth,
-    // backgroundColor: 'red',
   },
   pagination: {
     flexDirection: 'row',
@@ -277,11 +361,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 24,
+    marginBottom: customHeight(26),
+    marginTop: customHeight(26),
   },
   footer: {
-    marginTop: screenHeight - 70,
     marginHorizontal: 16,
+    paddingVertical: 8,
   },
   skip: {
     borderRadius: 12,
