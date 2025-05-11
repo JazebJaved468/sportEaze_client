@@ -1,12 +1,14 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {ReactNode} from 'react';
 import {useAppSelector} from '../../utils/customHooks/storeHooks';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {BackIcon} from '../../assets/icons';
+import {BackIcon, UserPlaceholderIcon} from '../../assets/icons';
 import {fontBold} from '../../styles/fonts';
 import {NotificationsButton} from '../NotificationsButton';
 import {useTextColor} from '../../utils/customHooks/colorHooks';
+import {appColors} from '../../constants/colors';
+import {customWidth} from '../../styles/responsiveStyles';
+import {RegisterPage} from '../../modules/Core/Auth/Register';
 
 type GeneralHeaderProps = {
   title?: string;
@@ -79,8 +81,23 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
         {showRightElement ? (
           rightElement ? (
             rightElement
-          ) : (
+          ) : isLoggedIn ? (
             <NotificationsButton />
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              hitSlop={20}
+              onPress={() => {
+                navigation.navigate(RegisterPage);
+              }}>
+              <View style={styles.profilePicContainer}>
+                <UserPlaceholderIcon
+                  width={customWidth(20)}
+                  height={customWidth(20)}
+                  color={textColor}
+                />
+              </View>
+            </TouchableOpacity>
           )
         ) : null}
       </View>
@@ -103,5 +120,14 @@ const styles = StyleSheet.create({
 
   title: {
     textAlign: 'center',
+  },
+  profilePicContainer: {
+    width: customWidth(36),
+    height: customWidth(36),
+    backgroundColor: `${appColors.whisperGray}90`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });
