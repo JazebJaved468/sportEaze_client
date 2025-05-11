@@ -1,4 +1,6 @@
 import {NotificationType} from '../../constants/enums';
+import {ContractPreviewPage} from '../../modules/Contract/ContractPreview';
+import {ChatScreenPage} from '../../modules/Core/Chat/ChatScreen';
 import {
   AcceptedConnectionsPage,
   PendingConnectionsPage,
@@ -7,14 +9,13 @@ import {Notification} from '../../types/core/core.type';
 import {navigateToProfilePage, navigationRef} from './navigation';
 
 export const handleNotificationRedirection = (notification: Notification) => {
-  const {type, data} = notification;
+  const {type, data, redirect} = notification;
 
   if (!navigationRef.isReady()) return;
 
   console.log('Navigating to notification:');
   switch (type) {
     case NotificationType.FOLLOW:
-      console.log('-Navigating to follow notification:', data.user);
       navigateToProfilePage({
         userId: data.user.id,
         userType: data.user.userType,
@@ -27,6 +28,18 @@ export const handleNotificationRedirection = (notification: Notification) => {
 
     case NotificationType.CONNECTION_ACCEPTED:
       navigationRef.navigate(AcceptedConnectionsPage);
+      break;
+
+    case NotificationType.CONTRACT_UPDATED:
+      navigationRef.navigate(ContractPreviewPage, {
+        contractId: redirect.contractId,
+      });
+      break;
+
+    case NotificationType.MSG_RECEIVED:
+      navigationRef.navigate(ChatScreenPage, {
+        receiverId: redirect.senderId,
+      });
       break;
 
     default:

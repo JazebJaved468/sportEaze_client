@@ -156,7 +156,7 @@ const NotificationCard = ({
               }}
             />
           ) : (
-            <UserPlaceholderIcon width={40} height={40} color={textColor} />
+            <UserPlaceholderIcon width={22} height={22} color={textColor} />
           )}
         </View>
 

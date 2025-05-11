@@ -79,6 +79,7 @@ export const CustomTextInputField = ({
   maxLength,
   textAlignVertical = 'center',
   customTextInputStyles = {},
+  keyboardType = 'default',
 }: CustomTextInputFieldProps) => {
   const inputborderColor = useColorModeValue(appColors.gray, appColors.gray);
   const textColor = useColorModeValue(appColors.black, appColors.white);
@@ -115,6 +116,7 @@ export const CustomTextInputField = ({
             : (backgroundColor ?? appColors.transparent),
         }}>
         <TextInput
+          keyboardType={keyboardType}
           onFocus={onFocus}
           style={[
             {

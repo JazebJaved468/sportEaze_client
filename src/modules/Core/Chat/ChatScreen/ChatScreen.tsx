@@ -1,11 +1,15 @@
 import {BackHandler, FlatList, Image, StyleSheet, Text} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import PageContainer from '../../../../components/PageContainer';
-import {Input, useColorModeValue, View} from 'native-base';
+import {Button, Input, useColorModeValue, View} from 'native-base';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Navigator/AppNavigator/AppNavigator';
 import {appColors} from '../../../../constants/colors';
-import {BackIcon, MessageSendIcon} from '../../../../assets/icons';
+import {
+  BackIcon,
+  MessageSendIcon,
+  UserPlaceholderIcon,
+} from '../../../../assets/icons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {Controller, useForm} from 'react-hook-form';
@@ -21,8 +25,11 @@ import {SocketEvents} from '../../../../store/socket/socket.events';
 import {AppStates} from '../../../../constants/core';
 import PullToRefresh from '../../../../components/PullToRefresh';
 import {format} from 'date-fns';
-import {fontRegular} from '../../../../styles/fonts';
-import {customHeight} from '../../../../styles/responsiveStyles';
+import {fontBold, fontRegular} from '../../../../styles/fonts';
+import {customHeight, customWidth} from '../../../../styles/responsiveStyles';
+import {PulseEffect} from '../../../../components/PulseEffect';
+import {USER_TYPE} from '../../../../constants/enums';
+import {ContractListingPage} from '../../../Contract/ContractListing';
 
 export type ChatScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -99,6 +106,7 @@ export const ChatScreen = () => {
               name={data?.receiver.fullName}
               isOnline={true}
               isTyping={data?.isTyping}
+              userId={data.receiver.id}
             />
             <ChatBody conversation={conversation} onRefresh={onRefresh} />
             <ChatScreenFooter
@@ -347,13 +355,16 @@ type ChatScreenHeaderProps = {
   image: string;
   isOnline: boolean;
   isTyping?: boolean;
+  userId: string;
 };
 const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
   name,
   image,
   isOnline,
   isTyping,
+  userId,
 }) => {
+  const {userType} = useAppSelector(state => state.auth);
   const navigation = useAppNavigation();
   const textColor = useColorModeValue(appColors.black, appColors.white);
   return (
@@ -367,17 +378,25 @@ const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
         </TouchableOpacity>
         <View style={styles.profilePicContainer}>
           {isOnline ? <View style={styles.onlineMark} /> : null}
-          <Image
-            style={styles.profilePic}
-            source={{
-              uri: image,
-            }}
-          />
+
+          {image ? (
+            <Image
+              source={{uri: image}}
+              style={{
+                width: 50,
+                height: 50,
+                objectFit: 'contain',
+                borderRadius: 100,
+              }}
+            />
+          ) : (
+            <UserPlaceholderIcon width={20} height={20} color={textColor} />
+          )}
         </View>
       </View>
 
       <View style={{flex: 1, gap: 2}}>
-        <Text numberOfLines={1} style={[styles.name, {color: textColor}]}>
+        <Text numberOfLines={1} style={[fontBold(15, textColor)]}>
           {name}
         </Text>
 
@@ -387,15 +406,38 @@ const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
           </Text>
         ) : null}
       </View>
+
+      {userType === USER_TYPE.PATRON || userType === USER_TYPE.PLAYER ? (
+        <View>
+          <PulseEffect>
+            <Button
+              onPress={() => {
+                navigation.navigate(ContractListingPage, {
+                  userId,
+                });
+              }}
+              style={{
+                backgroundColor: appColors.warmRed,
+                borderRadius: 12,
+                width: customWidth(74),
+                height: customHeight(32),
+              }}>
+              <Text style={[fontRegular(12, appColors.white)]}>Contracts</Text>
+            </Button>
+          </PulseEffect>
+        </View>
+      ) : null}
     </View>
   );
 };
 const styles = StyleSheet.create({
   profilePicContainer: {
     width: 52,
-    height: 50,
-    borderRadius: 100,
-    // backgroundColor: appColors.gray,
+    height: 52,
+    backgroundColor: `${appColors.whisperGray}90`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 200,
   },
   profilePic: {
     width: 50,

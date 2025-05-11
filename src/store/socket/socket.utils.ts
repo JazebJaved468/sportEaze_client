@@ -1,3 +1,5 @@
+import {NotificationType} from '../../constants/enums';
+import {onContractNotificationReceived} from '../../utils/helpers/contract.utils';
 import {authApi} from '../auth/auth.service';
 import {coreApi} from '../core/core.service';
 import {updateToast} from '../core/core.slice';
@@ -50,4 +52,12 @@ export const onNotificationReceived = (data: NotificationResponse) => {
       },
     ),
   );
+
+  if (
+    data.notifications[0].type === NotificationType.CONTRACT_CREATED ||
+    data.notifications[0].type === NotificationType.CONTRACT_ACCEPTED ||
+    data.notifications[0].type === NotificationType.CONTRACT_UPDATED
+  ) {
+    onContractNotificationReceived();
+  }
 };

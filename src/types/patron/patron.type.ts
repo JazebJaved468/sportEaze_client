@@ -1,3 +1,6 @@
+import {User} from '../auth/auth.type';
+import {UserWindow} from '../core/core.type';
+
 export type Patron = {
   id: string;
   patronType: number;
@@ -13,4 +16,24 @@ export type Patron = {
   status: number;
   reviewedByAdminId: string;
   adminReviewComment: string;
+};
+
+export type Contract = {
+  id: string;
+  description: string;
+  totalAmount: number;
+  startDate: string;
+  endDate: string;
+  patron: UserWindow;
+  player: UserWindow;
+  milestones: ContractMilestone[];
+  status: number;
+};
+
+export type ContractMilestone = {
+  id: string;
+  description: string;
+  amount: string;
+  isAchieved: boolean;
+  contractId: string;
 };

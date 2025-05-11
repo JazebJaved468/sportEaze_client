@@ -33,7 +33,7 @@ export type OnMessageTyping = {
 export type Notification = {
   id: string;
   type: number;
-  redirect: string;
+  redirect: any;
   data: NotificationData;
 };
 

@@ -10,6 +10,8 @@ import {ChatMessage, UserWindow} from '../../types/core/core.type';
 import {format} from 'date-fns';
 import {fontLight, fontRegular} from '../../styles/fonts';
 import {useTextColor} from '../../utils/customHooks/colorHooks';
+import {UserPlaceholderIcon} from '../../assets/icons';
+import {customWidth} from '../../styles/responsiveStyles';
 
 export type ChatCardProps = {
   message: ChatMessage;
@@ -52,12 +54,19 @@ export const ChatCard: React.FC<ChatCardProps> = ({
         ]}>
         <View style={styles.profilePicContainer}>
           {isOnline ? <View style={styles.onlineMark} /> : null}
-          <Image
-            style={styles.profilePic}
-            source={{
-              uri: receiver.profilePicUrl,
-            }}
-          />
+          {receiver.profilePicUrl ? (
+            <Image
+              source={{uri: receiver.profilePicUrl}}
+              style={{
+                width: 52,
+                height: 52,
+                objectFit: 'contain',
+                borderRadius: 100,
+              }}
+            />
+          ) : (
+            <UserPlaceholderIcon width={20} height={20} color={textColor} />
+          )}
         </View>
         <View style={{flex: 1, gap: 2}}>
           <View
@@ -101,7 +110,8 @@ export const ChatCard: React.FC<ChatCardProps> = ({
 export const ChatCardSkeleton = () => {
   return (
     <SkeletonLoader>
-      <View style={styles.chatCardContainer}>
+      <View
+        style={[styles.chatCardContainer, {marginHorizontal: customWidth(16)}]}>
         <View style={styles.profilePicContainer}>
           <View style={styles.profilePic} />
         </View>
@@ -124,7 +134,7 @@ export const ChatCardSkeleton = () => {
 const styles = StyleSheet.create({
   chatCardContainer: {
     flexDirection: 'row',
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: appColors.divider,
@@ -135,9 +145,12 @@ const styles = StyleSheet.create({
   },
   profilePicContainer: {
     width: 52,
-    height: 50,
-    borderRadius: 100,
-    // backgroundColor: appColors.gray,
+    height: 52,
+    backgroundColor: `${appColors.whisperGray}90`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 200,
+    // overflow: 'hidden',
   },
   name: {
     fontSize: 16,
