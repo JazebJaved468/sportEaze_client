@@ -5,11 +5,15 @@ import {
   AcceptedConnectionsPage,
   PendingConnectionsPage,
 } from '../../modules/Core/Networking';
+import {ViewPostPage} from '../../modules/Core/ViewPost';
+import {store} from '../../store/store';
 import {Notification} from '../../types/core/core.type';
 import {navigateToProfilePage, navigationRef} from './navigation';
 
 export const handleNotificationRedirection = (notification: Notification) => {
   const {type, data, redirect} = notification;
+
+  const user = store.getState().auth.user;
 
   if (!navigationRef.isReady()) return;
 
@@ -36,9 +40,35 @@ export const handleNotificationRedirection = (notification: Notification) => {
       });
       break;
 
+    case NotificationType.CONTRACT_ACCEPTED:
+      navigationRef.navigate(ContractPreviewPage, {
+        contractId: redirect.contractId,
+      });
+      break;
+
+    case NotificationType.CONTRACT_CREATED:
+      navigationRef.navigate(ContractPreviewPage, {
+        contractId: redirect.contractId,
+      });
+      break;
+
     case NotificationType.MSG_RECEIVED:
       navigationRef.navigate(ChatScreenPage, {
         receiverId: redirect.senderId,
+      });
+      break;
+
+    case NotificationType.POST_LIKED:
+      navigationRef.navigate(ViewPostPage, {
+        postId: redirect.postId,
+        playerName: user?.fullName ?? '',
+      });
+      break;
+
+    case NotificationType.POST_COMMENTED:
+      navigationRef.navigate(ViewPostPage, {
+        postId: redirect.postId,
+        playerName: user?.fullName ?? '',
       });
       break;
 
