@@ -67,6 +67,13 @@ import PatronRequests, {
 } from '../../../SuperAdmin/PatronRequests/index.ts';
 import PatronDetailsVerification from '../../../SuperAdmin/PatronDetailsVerification/PatronDetailsVerification.tsx';
 import {PatronDetailsVerificationPage} from '../../../SuperAdmin/PatronDetailsVerification/index.ts';
+import ContractListing from '../../../Contract/ContractListing/ContractListing.tsx';
+import {ContractListingPage} from '../../../Contract/ContractListing/index.ts';
+import CreateContract, {
+  CreateContractPage,
+} from '../../../Patron/CreateContract/index.ts';
+import ContractPreview from '../../../Contract/ContractPreview/ContractPreview.tsx';
+import {ContractPreviewPage} from '../../../Contract/ContractPreview/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -117,6 +124,17 @@ export type RootStackParamList = {
   PatronRequestsPage: undefined;
   PatronDetailsVerificationPage: {
     patronId: string;
+  };
+  ContractListingPage: {
+    userId: string;
+  };
+  CreateContractPage: {
+    playerId: string;
+    isEditing: boolean;
+    contractId?: string;
+  };
+  ContractPreviewPage: {
+    contractId: string;
   };
 };
 
@@ -227,6 +245,8 @@ export const AppNavigator = () => {
         name={NotificationListingPage}
         component={NotificationListing}
       />
+      <Stack.Screen name={ContractListingPage} component={ContractListing} />
+
       <Stack.Screen
         name={MediaPreviewPage}
         component={MediaPreview}
@@ -276,6 +296,12 @@ export const AppNavigator = () => {
         name={WaitingforApprovalPage}
         component={WaitingforApproval}
       />
+      <Stack.Screen
+        name={CreateContractPage}
+        component={CreateContract}
+        initialParams={{isEditing: false}}
+      />
+      <Stack.Screen name={ContractPreviewPage} component={ContractPreview} />
 
       {/* Mentor Screens */}
       <Stack.Screen name={MentorRootPage} component={MentorRoot} />
