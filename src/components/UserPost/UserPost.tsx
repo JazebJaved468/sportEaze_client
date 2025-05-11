@@ -45,6 +45,11 @@ import {
 import {Loader} from '../Loader';
 import {navigateToProfilePage} from '../../utils/helpers/navigation';
 import {SharePost} from '../SharePost';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../utils/customHooks/storeHooks';
+import {updateToast} from '../../store/core/core.slice';
 
 const UserPost = ({post}: {post: Post}) => {
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
@@ -74,12 +79,24 @@ const UserPost = ({post}: {post: Post}) => {
 };
 
 const PostHeader = ({post}: {post: Post}) => {
+  const {isLoggedIn} = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+
   const navigation = useAppNavigation();
 
   const textColor = useTextColor();
   const lightTextColor = useLightTextColor();
 
   const handleSavePost = () => {
+    if (!isLoggedIn) {
+      dispatch(
+        updateToast({
+          isVisible: true,
+          message: 'Please login to perform this action',
+        }),
+      );
+      return;
+    }
     console.log('Save Post : POST ID -->', post.id);
   };
 
@@ -411,6 +428,9 @@ const PostFooter = ({
   setLikeCount: React.Dispatch<React.SetStateAction<number>>;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const {isLoggedIn} = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+
   const [
     getCommentsOnPost,
     {
@@ -513,6 +533,16 @@ const PostFooter = ({
     // console.log('Comment Data : ', data.new_comment);
 
     try {
+      if (!isLoggedIn) {
+        dispatch(
+          updateToast({
+            isVisible: true,
+            message: 'Please login to perform this action',
+          }),
+        );
+        return;
+      }
+
       await createComment({
         content: getValues('new_comment'),
         parentCommentId: null,
@@ -531,6 +561,16 @@ const PostFooter = ({
 
   const handlelikeOrUnlikePost = async () => {
     try {
+      if (!isLoggedIn) {
+        dispatch(
+          updateToast({
+            isVisible: true,
+            message: 'Please login to perform this action',
+          }),
+        );
+        return;
+      }
+
       setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
       setIsLiked(prev => !prev);
       await createLikeOrUnlike({
@@ -611,6 +651,15 @@ const PostFooter = ({
             activeOpacity={0.4}
             onPress={() => {
               console.log('Share Post : POST ID -->', post.id);
+              if (!isLoggedIn) {
+                dispatch(
+                  updateToast({
+                    isVisible: true,
+                    message: 'Please login to perform this action',
+                  }),
+                );
+                return;
+              }
               openShareBottomSheet();
             }}>
             <ShareIcon width={20} height={20} color={iconColor} />
