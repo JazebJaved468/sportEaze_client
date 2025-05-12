@@ -38,4 +38,5 @@ export type ContractMilestone = {
   amount: string;
   isAchieved: boolean;
   contractId: string;
+  isPaid: boolean;
 };
