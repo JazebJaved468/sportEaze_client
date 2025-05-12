@@ -21,6 +21,7 @@ export const sporteazeBaseApi = createApi({
     'PendingConnections',
     'ContractsByUserId',
     'ContractById',
+    'MyContracts',
   ],
 
   endpoints: builder => ({}),

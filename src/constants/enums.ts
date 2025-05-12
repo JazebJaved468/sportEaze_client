@@ -82,6 +82,7 @@ export enum NotificationType {
   CONTRACT_ACCEPTED = 9,
 }
 export enum ContractStatus {
+  All = 0,
   PENDING = 1,
   IN_PROGRESS = 2,
   COMPLETED = 3,

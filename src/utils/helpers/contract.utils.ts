@@ -15,6 +15,7 @@ export const onContractAccepted = (contractId: string) => {
     }),
   );
   dispatch(patronApi.util.invalidateTags(['ContractsByUserId']));
+  dispatch(patronApi.util.invalidateTags(['MyContracts']));
 };
 
 export const onContractUpdated = (
@@ -28,11 +29,13 @@ export const onContractUpdated = (
     }),
   );
   dispatch(patronApi.util.invalidateTags(['ContractsByUserId']));
+  dispatch(patronApi.util.invalidateTags(['MyContracts']));
 };
 
 export const onContractNotificationReceived = () => {
   dispatch(patronApi.util.invalidateTags(['ContractsByUserId']));
   dispatch(patronApi.util.invalidateTags(['ContractById']));
+  dispatch(patronApi.util.invalidateTags(['MyContracts']));
 };
 
 export const divideAmountIntoThreeMilestones = (

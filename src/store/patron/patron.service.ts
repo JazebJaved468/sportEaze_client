@@ -151,10 +151,25 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    getMyContracts: builder.query<Contract[], {filter: number; userId: string}>(
+      {
+        query: ({filter}) => ({
+          url: `/contracts?filter=${filter}`,
+        }),
+
+        serializeQueryArgs: ({queryArgs, endpointName}) => {
+          return `${endpointName}-${queryArgs.filter}-${queryArgs.userId}`;
+        },
+
+        providesTags: ['MyContracts'],
+      },
+    ),
   }),
 });
 
 export const {
+  useGetMyContractsQuery,
   useUpdateContractMutation,
   useAcceptContractMutation,
   useGetContractByIdQuery,

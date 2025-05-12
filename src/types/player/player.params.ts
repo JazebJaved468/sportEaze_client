@@ -22,10 +22,14 @@ export type FollowPlayerParams = {
 };
 
 export type CreateTextPostParams = {
+  contractId: string | null;
+  milestoneId: string | null;
   textContent: string;
   visibility: number;
 };
 export type CreateMediaPostParams = {
+  contractId: string | null;
+  milestoneId: string | null;
   textContent: string;
   visibility: number;
   media: MediaParam[];
