@@ -95,7 +95,7 @@ const PlayerProfile = () => {
       playerId: params.userId,
     },
     {
-      // refetchOnMountOrArgChange: true,
+      refetchOnMountOrArgChange: true,
     },
   );
 

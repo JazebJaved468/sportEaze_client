@@ -1,11 +1,12 @@
 import {
   ActivityIndicator,
+  BackHandler,
   FlatList,
   Image,
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import PageContainer from '../../../components/PageContainer';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import {CloudinaryUploadPresets} from '../../../constants/cloudinary';
@@ -24,9 +25,11 @@ import {
   CircularCheckIcon,
   CircularCrossIcon,
   CircularInfoIcon,
+  ContractIcon,
   CrossIcon,
   GalleryIcon,
   SparkleStarsIcon,
+  TickIcon,
   UserPlaceholderIcon,
 } from '../../../assets/icons';
 import GeneralHeader from '../../../components/GeneralHeader';
@@ -48,7 +51,11 @@ import {
 import {Part} from '@google/generative-ai';
 import RNFS from 'react-native-fs';
 import {getMediaType} from '../../../utils/helpers/media';
-import {MediaType, PostVisibility} from '../../../constants/enums';
+import {
+  ContractStatus,
+  MediaType,
+  PostVisibility,
+} from '../../../constants/enums';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {MediaPreviewPage} from '../../../components/MediaPreview';
 import {CustomDropDown} from '../../../components/CustomDropDown';
@@ -59,11 +66,25 @@ import {
   useCreateTextPostMutation,
 } from '../../../store/player/player.service';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
+import {useGetMyContractsQuery} from '../../../store/patron/patron.service';
+import CustomBottomSheet from '../../../components/CustomBottomSheet';
+import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {Loader} from '../../../components/Loader';
+import {Contract, ContractMilestone} from '../../../types/patron/patron.type';
+import {customHeight, customWidth} from '../../../styles/responsiveStyles';
+import {useContainerShadow} from '../../../utils/customHooks/customHooks';
+import {screenWidth} from '../../../constants/styles';
+import {ContractListingPage} from '../../Contract/ContractListing';
 
 type GeminiAnalysisType = {
   response?: GeminiAnalysisResponse;
   analysisDone: boolean;
   analysisCIP: boolean;
+};
+type ContractType = {
+  contractId: string | null;
+  milestoneId: string | null;
+  amount: number | null;
 };
 
 type GeminiAnalysisResponse = {
@@ -75,6 +96,14 @@ type GeminiAnalysisResponse = {
 export const CreatePost = () => {
   const navigation = useAppNavigation();
   const {isLoggedIn, user, userType} = useAppSelector(state => state.auth);
+
+  const {data: contracts, isLoading: contractsCIP} = useGetMyContractsQuery({
+    filter: ContractStatus.IN_PROGRESS,
+    userId: user?.id || '',
+  });
+
+  const contractsBttomSheetRef = useRef<BottomSheetModal>(null);
+  const isBottomSheetOpen = useRef(false);
 
   const [hashTags, setHashTags] = useState<string[]>([]);
   const [selectedMedia, setSelectedMedia] = useState<
@@ -93,6 +122,31 @@ export const CreatePost = () => {
   const [postVisibility, setPostVisibility] = useState<DropDownItemType | null>(
     postVisibilityOptions[0],
   );
+
+  const [selectedContract, setSelectedContract] = useState<ContractType>({
+    contractId: null,
+    milestoneId: null,
+    amount: null,
+  });
+
+  const onContractSelect = (milestone: ContractMilestone) => {
+    if (selectedContract.milestoneId === milestone.id) {
+      setSelectedContract({
+        contractId: null,
+        milestoneId: null,
+        amount: null,
+      });
+      return;
+    }
+
+    setSelectedContract({
+      contractId: milestone.contractId,
+      milestoneId: milestone.id,
+      amount: Number(milestone.amount),
+    });
+
+    closeContractsBottomSheet();
+  };
 
   const {
     register,
@@ -239,17 +293,19 @@ export const CreatePost = () => {
 
   const onSubmit = async (data: {caption: string}) => {
     try {
-      // const geminiRes: GeminiAnalysisResponse = await getGeminiResponse({
-      //   caption: data.caption,
-      // });
+      const geminiRes: GeminiAnalysisResponse = await getGeminiResponse({
+        caption: data.caption,
+      });
 
-      // if (geminiRes && !geminiRes.is_sports_related) {
-      //   return;
-      // }
+      if (geminiRes && !geminiRes.is_sports_related) {
+        return;
+      }
 
       // Text Only Post
       if (!selectedMedia || selectedMedia?.length < 1) {
         createTextPost({
+          contractId: selectedContract.contractId,
+          milestoneId: selectedContract.milestoneId,
           textContent: data.caption,
           visibility: postVisibility?.value || PostVisibility.PUBLIC,
         });
@@ -300,6 +356,8 @@ export const CreatePost = () => {
       // );
 
       createMediaPost({
+        contractId: selectedContract.contractId,
+        milestoneId: selectedContract.milestoneId,
         textContent: data.caption,
         visibility: postVisibility?.value || PostVisibility.PUBLIC,
         media: customizedMediaUploadResponse,
@@ -329,6 +387,19 @@ export const CreatePost = () => {
     );
   };
 
+  const openContractsBottomSheet = () => {
+    if (contractsBttomSheetRef.current) {
+      contractsBttomSheetRef.current.present();
+      isBottomSheetOpen.current = true;
+    }
+  };
+  const closeContractsBottomSheet = () => {
+    if (contractsBttomSheetRef.current) {
+      contractsBttomSheetRef.current.close();
+      isBottomSheetOpen.current = false;
+    }
+  };
+
   const backgroundColor = usePageBackgroundColor();
   const textColor = useTextColor();
   const inverseTextColor = useInverseTextColor();
@@ -345,6 +416,11 @@ export const CreatePost = () => {
       analysisDone: false,
       analysisCIP: false,
     });
+    setSelectedContract({
+      contractId: null,
+      milestoneId: null,
+      amount: null,
+    });
   };
 
   const isPublishing =
@@ -353,6 +429,24 @@ export const CreatePost = () => {
     geminiAnalysis.analysisCIP ||
     textPostCreationCIP ||
     mediaPostCreationCIP;
+
+  // Handle hardware back button press
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (isBottomSheetOpen.current) {
+          closeContractsBottomSheet();
+
+          return true;
+        }
+
+        return false; // return true to prevent default behavior
+      },
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <PageContainer>
@@ -546,7 +640,7 @@ export const CreatePost = () => {
             contentContainerStyle={{
               flexDirection: 'row',
               gap: 14,
-              marginTop: 20,
+              marginTop: selectedMedia?.length ? 20 : 0,
             }}
             showsHorizontalScrollIndicator={false}
             horizontal
@@ -589,6 +683,26 @@ export const CreatePost = () => {
             )}
           />
         </View>
+
+        <TouchableOpacity
+          onPress={openContractsBottomSheet}
+          activeOpacity={0.6}>
+          <View style={[styles.selectMediaBox]}>
+            <View>
+              <Text style={[fontRegular(14, textColor)]}>
+                {selectedContract.milestoneId
+                  ? `Contract Selected  `
+                  : `Select Contract  `}
+                {selectedContract.milestoneId ? (
+                  <Text style={[fontRegular(14, appColors.warmRed)]}>
+                    (Rs. {selectedContract.amount})
+                  </Text>
+                ) : null}
+              </Text>
+            </View>
+            <ContractIcon width={28} height={28} color={textColor} />
+          </View>
+        </TouchableOpacity>
 
         {/* AI Analysis */}
         {geminiAnalysis.analysisCIP ? (
@@ -704,7 +818,161 @@ export const CreatePost = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* bottom  */}
+
+      <CustomBottomSheet
+        bottomSheetRef={contractsBttomSheetRef}
+        customSnapPoints={['70%']}>
+        <View
+          style={{
+            marginTop: 16,
+            marginBottom: 4,
+            marginHorizontal: 16,
+          }}>
+          <Text style={[fontBold(18, textColor)]}>Your Contracts</Text>
+        </View>
+
+        {contractsCIP || !contracts ? (
+          <Loader />
+        ) : (
+          <BottomSheetScrollView>
+            {contracts?.map((contract, index) => (
+              <ContractCard
+                contract={contract}
+                key={index}
+                onContractSelect={onContractSelect}
+                selectedContract={selectedContract}
+                closeBottomSheet={closeContractsBottomSheet}
+              />
+            ))}
+          </BottomSheetScrollView>
+        )}
+      </CustomBottomSheet>
     </PageContainer>
+  );
+};
+
+const ContractCard = ({
+  contract,
+  onContractSelect,
+  closeBottomSheet,
+  selectedContract,
+}: {
+  contract: Contract;
+  onContractSelect: (milestone: ContractMilestone) => void;
+  selectedContract: ContractType;
+  closeBottomSheet: () => void;
+}) => {
+  const navigation = useAppNavigation();
+  const textColor = useTextColor();
+
+  const inverseTextColor = useInverseTextColor();
+
+  return (
+    <View
+      style={{
+        marginHorizontal: customWidth(16),
+        paddingVertical: customHeight(20),
+        borderBottomWidth: 0.5,
+        borderStyle: 'dashed',
+      }}>
+      <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
+        <Text style={fontBold(14, textColor)}>{`Contract With `}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            closeBottomSheet();
+            navigation.navigate(ContractListingPage, {
+              userId: contract.patron?.id,
+            });
+          }}>
+          <Text style={fontBold(14, appColors.warmRed)}>
+            {contract.patron?.fullName}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text
+        style={[
+          fontRegular(14, appColors.warmRed),
+          {marginVertical: customHeight(14)},
+        ]}>
+        Milestones
+      </Text>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          // alignItems: 'stretch',
+          justifyContent: 'space-between',
+          // gap: customWidth(10),
+        }}>
+        {contract.milestones.map((milestone, index) => {
+          const isSelected = selectedContract.milestoneId === milestone.id;
+          return (
+            <TouchableOpacity
+              style={[{borderRadius: 10}]}
+              onPress={
+                milestone.isAchieved
+                  ? () => {}
+                  : () => {
+                      onContractSelect(milestone);
+                    }
+              }
+              activeOpacity={milestone.isAchieved ? 1 : 0.5}>
+              <View
+                style={{
+                  height: customHeight(98),
+                  justifyContent: 'space-between',
+                  width: screenWidth / 3 - 22,
+                  borderWidth: 1,
+                  borderColor: isSelected
+                    ? appColors.warmRed
+                    : `${textColor}50`,
+                  borderRadius: 12,
+                  padding: customHeight(10),
+                  backgroundColor: milestone.isAchieved
+                    ? `${textColor}10`
+                    : appColors.transparent,
+                }}>
+                <Text
+                  numberOfLines={3}
+                  style={[
+                    fontRegular(14, textColor),
+                    // {marginBottom: customHeight(20)},
+                  ]}>
+                  {milestone.description}
+                </Text>
+                <Text style={[fontBold(14, textColor)]}>
+                  RS. {milestone.amount}
+                </Text>
+              </View>
+
+              {isSelected ? (
+                <View
+                  style={{
+                    width: customWidth(18),
+                    height: customHeight(18),
+                    backgroundColor: appColors.warmRed,
+                    borderRadius: 200,
+                    position: 'absolute',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    right: customWidth(-4),
+                    top: customHeight(-3),
+                  }}>
+                  <TickIcon
+                    color={inverseTextColor}
+                    width={customWidth(8)}
+                    height={customWidth(8)}
+                  />
+                </View>
+              ) : null}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
   );
 };
 
