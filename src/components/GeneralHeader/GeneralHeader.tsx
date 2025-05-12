@@ -73,9 +73,9 @@ export const GeneralHeader: React.FC<GeneralHeaderProps> = ({
       {/* <Text style={[styles.textStyle, {color: textColor}]}>
         {user?.username} -
       </Text> */}
-      <Text style={[styles.textStyle, {color: textColor, fontSize: 18}]}>
+      {/* <Text style={[styles.textStyle, {color: textColor, fontSize: 18}]}>
         {user?.username}
-      </Text>
+      </Text> */}
 
       <View style={{position: 'absolute', right: 20}}>
         {showRightElement ? (
