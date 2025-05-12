@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {User} from '../../types/auth/auth.type';
-import {Player} from '../../types/player/player.type';
+import {Player, Wallet} from '../../types/player/player.type';
+import {act} from 'react';
 
 interface AuthSliceType {
   userToken: string | null;
@@ -49,6 +50,24 @@ const authSlice = createSlice({
     removePlayer: state => {
       state.player = null;
     },
+
+    updatePlayerWallet: (state, action: PayloadAction<{wallet: Wallet}>) => {
+      if (state.user?.player) {
+        state.user.player.wallet = {
+          ...state.user.player.wallet,
+          ...action.payload.wallet,
+        };
+      }
+    },
+
+    updatePatronWallet: (state, action: PayloadAction<{wallet: Wallet}>) => {
+      if (state.user?.patron) {
+        state.user.patron.wallet = {
+          ...state.user.patron.wallet,
+          ...action.payload.wallet,
+        };
+      }
+    },
   },
 
   // extraReducers: builder => {
@@ -64,6 +83,8 @@ const authSlice = createSlice({
 });
 
 export const {
+  updatePatronWallet,
+  updatePlayerWallet,
   updateUserToken,
   updateIsLoggedIn,
   updateUserType,
