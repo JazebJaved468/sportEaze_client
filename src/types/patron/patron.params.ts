@@ -31,3 +31,8 @@ export type MilestoneCreate = {
 export type UpdateContractParams = {
   contractId: string;
 } & CreateContractParams;
+
+export type ReleaseFundsParams = {
+  playerId: string;
+  milestoneId: string;
+};

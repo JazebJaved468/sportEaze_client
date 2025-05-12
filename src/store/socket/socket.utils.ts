@@ -1,6 +1,12 @@
-import {NotificationType} from '../../constants/enums';
+import {NotificationType, USER_TYPE} from '../../constants/enums';
+import {Wallet} from '../../types/player/player.type';
 import {onContractNotificationReceived} from '../../utils/helpers/contract.utils';
 import {authApi} from '../auth/auth.service';
+import {
+  updatePatronWallet,
+  updatePlayer,
+  updatePlayerWallet,
+} from '../auth/auth.slice';
 import {coreApi} from '../core/core.service';
 import {updateToast} from '../core/core.slice';
 import {store} from '../store';
@@ -11,6 +17,8 @@ import {
 } from './socket.type';
 
 const dispatch = store.dispatch;
+
+const {user, userType} = store.getState().auth;
 
 export const onConnectionRequestReceived = (
   data: ConnectionRequestReceived,
@@ -56,8 +64,19 @@ export const onNotificationReceived = (data: NotificationResponse) => {
   if (
     data.notifications[0].type === NotificationType.CONTRACT_CREATED ||
     data.notifications[0].type === NotificationType.CONTRACT_ACCEPTED ||
-    data.notifications[0].type === NotificationType.CONTRACT_UPDATED
+    data.notifications[0].type === NotificationType.CONTRACT_UPDATED ||
+    data.notifications[0].type === NotificationType.MILESTONE_ACHIEVED ||
+    data.notifications[0].type === NotificationType.FUNDS_RELEASED ||
+    data.notifications[0].type === NotificationType.FUNDS_RECEIVED
   ) {
     onContractNotificationReceived();
+  }
+};
+
+export const onWalletUpdated = (data: Wallet) => {
+  if (userType === USER_TYPE.PATRON) {
+    dispatch(updatePatronWallet({wallet: data}));
+  } else if (userType === USER_TYPE.PLAYER) {
+    dispatch(updatePlayerWallet({wallet: data}));
   }
 };

@@ -64,7 +64,7 @@ const ContractListing = () => {
 
   return (
     <PageContainer>
-      <GeneralHeader title='Contracts' showRightElement={false} />
+      <GeneralHeader title='Contracts' showRightElement={true} />
 
       {contractsCIP || !contracts ? (
         <Loader />

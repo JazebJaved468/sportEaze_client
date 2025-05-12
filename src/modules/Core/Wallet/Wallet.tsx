@@ -52,7 +52,7 @@ const Wallet = () => {
         <WalletIcon width={80} height={80} strokeWidth={1} />
         <Text
           style={[fontRegular(16, textColor), {marginTop: customHeight(20)}]}>
-          {`You Have  `}
+          {`You have  `}
           <Text style={[fontBold(16, appColors.warmRed)]}>Rs. {cash}</Text>
           {`  in your Wallet`}
         </Text>
@@ -67,11 +67,11 @@ const Wallet = () => {
                 lineHeight: 24,
               },
             ]}>
-            {`You Have to Pay `}
+            {`You have to Pay `}
             <Text style={[fontBold(16, appColors.warmRed), {lineHeight: 24}]}>
               Rs. {payable}
             </Text>
-            {` to the Players based on your contracts`}
+            {` to the Players based on your Contracts`}
           </Text>
         ) : null}
       </View>

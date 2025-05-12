@@ -75,6 +75,8 @@ import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {screenWidth} from '../../../constants/styles';
 import {ContractListingPage} from '../../Contract/ContractListing';
+import {useFocusEffect} from '@react-navigation/native';
+import {onContractNotificationReceived} from '../../../utils/helpers/contract.utils';
 
 type GeminiAnalysisType = {
   response?: GeminiAnalysisResponse;
@@ -97,7 +99,12 @@ export const CreatePost = () => {
   const navigation = useAppNavigation();
   const {isLoggedIn, user, userType} = useAppSelector(state => state.auth);
 
-  const {data: contracts, isLoading: contractsCIP} = useGetMyContractsQuery({
+  const {
+    data: contracts,
+    isLoading: contractsCIP,
+    isFetching: contractsFIP,
+    refetch: refetchContracts,
+  } = useGetMyContractsQuery({
     filter: ContractStatus.IN_PROGRESS,
     userId: user?.id || '',
   });
@@ -145,8 +152,16 @@ export const CreatePost = () => {
       amount: Number(milestone.amount),
     });
 
-    closeContractsBottomSheet();
+    // closeContractsBottomSheet();
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!contracts) {
+        refetchContracts();
+      }
+    }, []),
+  );
 
   const {
     register,
@@ -282,6 +297,7 @@ export const CreatePost = () => {
 
   const afterPostCreation = useCallback(() => {
     cleanData();
+    onContractNotificationReceived();
 
     if (user?.id) {
       navigateToProfilePage({
@@ -833,7 +849,7 @@ export const CreatePost = () => {
           <Text style={[fontBold(18, textColor)]}>Your Contracts</Text>
         </View>
 
-        {contractsCIP || !contracts ? (
+        {contractsCIP || contractsFIP || !contracts ? (
           <Loader />
         ) : (
           <BottomSheetScrollView>
@@ -911,6 +927,7 @@ const ContractCard = ({
           const isSelected = selectedContract.milestoneId === milestone.id;
           return (
             <TouchableOpacity
+              key={milestone.id}
               style={[{borderRadius: 10}]}
               onPress={
                 milestone.isAchieved

@@ -72,6 +72,22 @@ export const handleNotificationRedirection = (notification: Notification) => {
       });
       break;
 
+    case NotificationType.MILESTONE_ACHIEVED:
+      navigationRef.navigate(ContractPreviewPage, {
+        contractId: redirect.contractId,
+      });
+      break;
+    case NotificationType.FUNDS_RECEIVED:
+      navigationRef.navigate(ContractPreviewPage, {
+        contractId: redirect.contractId,
+      });
+      break;
+    case NotificationType.FUNDS_RELEASED:
+      navigationRef.navigate(ContractPreviewPage, {
+        contractId: redirect.contractId,
+      });
+      break;
+
     default:
       console.warn('Unknown notification type:', type);
   }
