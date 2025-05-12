@@ -13,10 +13,9 @@ import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 import {
-  patronApi,
   useAcceptContractMutation,
   useGetContractByIdQuery,
-  useGetContractsByUserIdQuery,
+  useReleaseFundsMutation,
 } from '../../../store/patron/patron.service';
 import {fontBold, fontRegular} from '../../../styles/fonts';
 import {
@@ -34,6 +33,7 @@ import {
   MilestoneIcon,
   TickIcon,
   UserPlaceholderIcon,
+  WalletIcon,
 } from '../../../assets/icons';
 import {screenWidth} from '../../SuperAdmin/PatronRequests/PatronRequests';
 import {navigateToProfilePage} from '../../../utils/helpers/navigation';
@@ -51,6 +51,7 @@ import {CreateContractPage} from '../../Patron/CreateContract';
 import {ContractStatusBadge} from '../ContractListing/ContractListing';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 import {ChatScreenPage} from '../../Core/Chat/ChatScreen';
+import {WalletPage} from '../../Core/Wallet';
 
 type ContractPreviewPageRouteProp = RouteProp<
   RootStackParamList,
@@ -68,6 +69,8 @@ const ContractPreview = () => {
 
   const [acceptContract, {isLoading: acceptContractCIP}] =
     useAcceptContractMutation();
+  const [releaseFunds, {isLoading: releaseFundsCIP}] =
+    useReleaseFundsMutation();
 
   console.log('params', params);
 
@@ -123,6 +126,22 @@ const ContractPreview = () => {
                   </View>
                 </Button>
               </PulseEffect>
+            </View>
+          ) : contractData &&
+            (contractData.status === ContractStatus.IN_PROGRESS ||
+              contractData.status === ContractStatus.COMPLETED) ? (
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(WalletPage);
+                }}>
+                <WalletIcon
+                  width={customWidth(26)}
+                  height={customWidth(26)}
+                  color={textColor}
+                  strokeWidth={1.2}
+                />
+              </TouchableOpacity>
             </View>
           ) : null
         }
@@ -282,23 +301,73 @@ const ContractPreview = () => {
                         Amount : Rs. {item.amount}
                       </Text>
                     </View>
-                    {item.isAchieved ? (
-                      <View
-                        style={{
-                          width: customWidth(20),
-                          height: customWidth(20),
-                          backgroundColor: appColors.warmRed,
-                          borderRadius: 100,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <TickIcon
-                          width={customWidth(10)}
-                          height={customWidth(10)}
-                          color={cardColor}
-                        />
-                      </View>
-                    ) : null}
+
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        gap: customHeight(20),
+                      }}>
+                      {userType === USER_TYPE.PATRON &&
+                      item.isAchieved &&
+                      !item.isPaid ? (
+                        <PulseEffect>
+                          <Button
+                            isLoading={releaseFundsCIP}
+                            isDisabled={releaseFundsCIP}
+                            onPress={async () => {
+                              console.log('Release funds');
+                              try {
+                                await releaseFunds({
+                                  playerId: contractData.player.id,
+                                  milestoneId: item.id,
+                                });
+                              } catch (err) {
+                                console.log('Error while releasing funds', err);
+                              }
+                            }}
+                            style={styles.payBtn}>
+                            <Text style={fontRegular(12, appColors.white)}>
+                              Pay
+                            </Text>
+                          </Button>
+                        </PulseEffect>
+                      ) : null}
+
+                      {item.isAchieved && item.isPaid ? (
+                        <PulseEffect>
+                          <Button
+                            style={[
+                              styles.payBtn,
+                              {
+                                borderWidth: 1,
+                                borderColor: appColors.warmRed,
+                                backgroundColor: appColors.transparent,
+                              },
+                            ]}>
+                            <Text style={fontRegular(12, textColor)}>Paid</Text>
+                          </Button>
+                        </PulseEffect>
+                      ) : null}
+
+                      {item.isAchieved ? (
+                        <View
+                          style={{
+                            width: customWidth(20),
+                            height: customWidth(20),
+                            backgroundColor: appColors.warmRed,
+                            borderRadius: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <TickIcon
+                            width={customWidth(10)}
+                            height={customWidth(10)}
+                            color={cardColor}
+                          />
+                        </View>
+                      ) : null}
+                    </View>
                   </View>
                 );
               })}
@@ -463,5 +532,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
+  },
+  payBtn: {
+    height: customHeight(28),
+    padding: 0,
+    // marginVertical: 16,
+    borderRadius: 20,
+    width: customWidth(60),
   },
 });
