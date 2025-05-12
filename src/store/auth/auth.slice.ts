@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {User} from '../../types/auth/auth.type';
 import {Player, Wallet} from '../../types/player/player.type';
-import {act} from 'react';
 
 interface AuthSliceType {
   userToken: string | null;

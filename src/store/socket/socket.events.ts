@@ -9,4 +9,5 @@ export const SocketEvents = {
   CONNECTION_REQUEST: 'connection_request',
   CONNECTION_RESPONSE: 'connection_response',
   NOTIFICATION: 'notification',
+  WALLET_UPDATED: 'wallet_updated',
 };

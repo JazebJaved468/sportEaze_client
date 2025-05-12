@@ -12,12 +12,14 @@ import {
   onConnectionRequestReceived,
   onConnectionResponseReceived,
   onNotificationReceived,
+  onWalletUpdated,
 } from './socket.utils';
 import {
   ConnectionRequestReceived,
   ConnectionResponseReceived,
   NotificationResponse,
 } from './socket.type';
+import {Wallet} from '../../types/player/player.type';
 // const SOCKET_URL = 'http://192.168.100.18:3000'; // Replace with your backend URL
 const SOCKET_URL = 'ws://192.168.100.3:3000'; // Replace with your backend URL
 
@@ -85,6 +87,11 @@ export const connectSocket = () => {
     socket.on(SocketEvents.NOTIFICATION, (data: NotificationResponse) => {
       console.log('socket : notification received', JSON.stringify(data));
       onNotificationReceived(data);
+    });
+
+    socket.on(SocketEvents.WALLET_UPDATED, (data: Wallet) => {
+      console.log('socket : wallet updated received', JSON.stringify(data));
+      onWalletUpdated(data);
     });
 
     // socket.on('newComment', data =>

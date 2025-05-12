@@ -1,6 +1,7 @@
 import {
   CreateContractParams,
   RegisterPatronParams,
+  ReleaseFundsParams,
   UpdateContractParams,
 } from '../../types/patron/patron.params';
 import {Contract} from '../../types/patron/patron.type';
@@ -165,10 +166,37 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
         providesTags: ['MyContracts'],
       },
     ),
+
+    //
+    releaseFunds: builder.mutation<{}, ReleaseFundsParams>({
+      query: body => ({
+        url: `/contracts/release-funds`,
+        method: 'POST',
+        body,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+
+          // await onContractUpdated(args.contractId, data);
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while releasing   contract funds : patron.service.ts : Line 37',
+            err,
+          );
+        }
+      },
+    }),
   }),
 });
 
 export const {
+  useReleaseFundsMutation,
   useGetMyContractsQuery,
   useUpdateContractMutation,
   useAcceptContractMutation,
