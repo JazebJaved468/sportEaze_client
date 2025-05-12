@@ -2,19 +2,32 @@ import {User} from '../auth/auth.type';
 import {UserWindow} from '../core/core.type';
 
 export type Player = {
+  availableForSponsorship: boolean;
+  coachName: string | null;
+  commentsCount: number;
+  countSharedPosts: number;
+  currentTeam: string | null;
+  endorsementsReceived: number;
+  fbLink: string | null;
+  followerCount: number;
   id: string;
+  instaLink: string | null;
+  pendingConnectionCount: number;
+  playerBio: string;
+  playingLevel: number;
   primarySport: number;
   secondarySports: number[] | null;
-  playingLevel: number;
-  currentTeam: string | null;
-  coachName: string | null;
-  playerBio: string;
   trainingLocation: string | null;
-  fbLink: string | null;
-  instaLink: string | null;
+  userPostLikesCount: number;
+  wallet: Wallet;
   xLink: string | null;
-  availableForSponsorship: boolean;
-  followerCount: number;
+  postCount: number;
+};
+
+export type Wallet = {
+  cash: number;
+  id: string;
+  payables: number;
 };
 
 export type CreatePost = {

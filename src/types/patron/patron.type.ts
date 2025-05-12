@@ -1,5 +1,6 @@
 import {User} from '../auth/auth.type';
 import {UserWindow} from '../core/core.type';
+import {Wallet} from '../player/player.type';
 
 export type Patron = {
   id: string;
@@ -16,6 +17,7 @@ export type Patron = {
   status: number;
   reviewedByAdminId: string;
   adminReviewComment: string;
+  wallet: Wallet;
 };
 
 export type Contract = {

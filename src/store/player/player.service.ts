@@ -148,7 +148,7 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         },
       }),
       transformResponse: (response: GetPostsByPlayerIdResponse) => {
-        return response.posts;
+        return response;
       },
     }),
 

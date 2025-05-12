@@ -11,7 +11,9 @@ import GeneralHeader from '../../../components/GeneralHeader';
 import {
   AddUserIcon,
   CoachIcon,
+  EndorsementIcon,
   FlagIcon,
+  ImagePlaceholderIcon,
   RemoveUserIcon,
   SettingsIcon,
   TeamIcon,
@@ -49,6 +51,9 @@ import {
 import {updateToast} from '../../../store/core/core.slice';
 import {ViewPostPage} from '../../Core/ViewPost';
 import {MessageButton} from '../../../components/MessageButton/MessageButton';
+import {customHeight} from '../../../styles/responsiveStyles';
+import {UserPostsPage} from '../../Core/UserPosts';
+import {USER_TYPE} from '../../../constants/enums';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -85,15 +90,6 @@ const PlayerProfile = () => {
     isFetching: playerDataFIP,
   } = useGetUserByIdServiceQuery(
     {userId: params.userId},
-    {
-      // refetchOnMountOrArgChange: true,
-    },
-  );
-
-  const {data: playerPosts} = useGetPlayerPostsByPlayerIdServiceQuery(
-    {
-      playerId: params.userId,
-    },
     {
       refetchOnMountOrArgChange: true,
     },
@@ -334,40 +330,71 @@ const PlayerProfile = () => {
               title='Followers'
               count={playerData.player?.followerCount}
             />
-            <CountTile title='Posts' count={101} showSeparator />
-            <CountTile title='Achievements' count={0} showSeparator={false} />
+            <CountTile
+              title='Posts'
+              count={playerData.player.postCount}
+              showSeparator
+            />
+            <CountTile
+              title='Endorsemnts'
+              count={playerData.player.endorsementsReceived}
+              showSeparator={false}
+            />
           </View>
 
-          {playerPosts && (
-            <View style={styles.postsContainer}>
-              {playerPosts.map((post, index) => (
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() =>
-                    navigation.navigate(ViewPostPage, {
-                      postId: post.id,
-                      playerName: playerData.fullName,
-                    })
-                  }
-                  key={post.id}
-                  style={styles.postWindow}>
-                  <Text>HEllo</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-
-          {/* Tab View */}
-          {/* <TabView
-          style={{minHeight: 200}}
-          navigationState={{index, routes}}
-          renderScene={SceneMap({
-            first: PlayerPosts,
-            second: PlayerAchievements,
-          })}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
-        /> */}
+          <View style={styles.cardsContainer}>
+            {/* 1st */}
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                navigation.navigate(UserPostsPage, {
+                  userId: playerData.id,
+                  userType: USER_TYPE.PLAYER,
+                });
+              }}
+              style={[
+                styles.card,
+                {backgroundColor: cardColor},
+                containerShadow,
+              ]}>
+              <ImagePlaceholderIcon
+                width={45}
+                height={45}
+                color={textColor}
+                strokeWidth={1.1}
+              />
+              <Text
+                style={[
+                  fontBold(16, textColor),
+                  {marginTop: customHeight(10)},
+                ]}>
+                Posts
+              </Text>
+            </TouchableOpacity>
+            {/*  */}
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {}}
+              style={[
+                styles.card,
+                {backgroundColor: cardColor},
+                containerShadow,
+              ]}>
+              <EndorsementIcon
+                width={45}
+                height={45}
+                color={textColor}
+                strokeWidth={1.1}
+              />
+              <Text
+                style={[
+                  fontBold(16, textColor),
+                  {marginTop: customHeight(10)},
+                ]}>
+                Endorsements
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={{height: 40}} />
         </ScrollView>
@@ -526,10 +553,29 @@ const styles = StyleSheet.create({
     rowGap: 9,
     flexWrap: 'wrap',
   },
+
+  cardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    alignItems: 'center',
+    rowGap: 9,
+    flexWrap: 'wrap',
+  },
+
   postWindow: {
     width: '31.4%', // Adjust based on your requirement
     aspectRatio: 1, // Makes it a square
     backgroundColor: '#add8e6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  card: {
+    width: '48%',
+    // paddingVertical: customHeight(40),
+    height: customHeight(160),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,

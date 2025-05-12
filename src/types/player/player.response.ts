@@ -29,11 +29,7 @@ export type CreateTextPostResponse = {
   post: CreatePost;
 };
 
-export type GetPostsByPlayerIdResponse = {
-  posts: Post[];
-  success: boolean;
-};
-
+export type GetPostsByPlayerIdResponse = Post[];
 export type GetPostIdResponse = {
   post: Post;
   success: boolean;

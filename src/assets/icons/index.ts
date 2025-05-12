@@ -73,6 +73,8 @@ import {AddIcon} from './svgs/AddIcon';
 import {ContractIcon} from './svgs/ContractIcon';
 import {MilestoneIcon} from './svgs/MilestoneIcon';
 import {EditIcon} from './svgs/EditIcon';
+import {EndorsementIcon} from './svgs/EndorsementIcon';
+import {WalletIcon} from './svgs/WalletIcon';
 
 export {
   BackIcon,
@@ -150,4 +152,6 @@ export {
   ContractIcon,
   MilestoneIcon,
   EditIcon,
+  EndorsementIcon,
+  WalletIcon,
 };

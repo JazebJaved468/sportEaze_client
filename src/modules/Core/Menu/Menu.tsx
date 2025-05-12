@@ -30,6 +30,7 @@ import {
   SunIcon,
   TermsAndConditionsIcon,
   UserPlaceholderIcon,
+  WalletIcon,
 } from '../../../assets/icons';
 import {fontBold, fontRegular} from '../../../styles/fonts';
 import {
@@ -52,6 +53,7 @@ import {
 } from '../Networking';
 import {AccountSettingsPage} from '../AccountSettings';
 import {FollowerListingPage} from '../../Player/Followerlisting';
+import {WalletPage} from '../Wallet';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -238,30 +240,52 @@ const Menu = () => {
                     : navigation.navigate(FollowingListingPage);
                 }}
               />
-              <MenuSectionItem
-                title='Connections'
-                leftIcon={
-                  <ConnectionsIcon width={20} height={20} color={textColor} />
-                }
-                onPress={() => {
-                  navigation.navigate(AcceptedConnectionsPage);
-                }}
-              />
+              {userType !== USER_TYPE.PLAYER ? (
+                <MenuSectionItem
+                  title='Connections'
+                  leftIcon={
+                    <ConnectionsIcon width={20} height={20} color={textColor} />
+                  }
+                  onPress={() => {
+                    navigation.navigate(AcceptedConnectionsPage);
+                  }}
+                />
+              ) : null}
 
-              <MenuSectionItem
-                title='Connection Requests'
-                leftIcon={
-                  <ConnectionRequestIcon
-                    width={20}
-                    height={20}
-                    color={textColor}
-                    strokeWidth={1.1}
-                  />
-                }
-                onPress={() => {
-                  navigation.navigate(PendingConnectionsPage);
-                }}
-              />
+              {userType !== USER_TYPE.PLAYER ? (
+                <MenuSectionItem
+                  title='Connection Requests'
+                  leftIcon={
+                    <ConnectionRequestIcon
+                      width={20}
+                      height={20}
+                      color={textColor}
+                      strokeWidth={1.1}
+                    />
+                  }
+                  onPress={() => {
+                    navigation.navigate(PendingConnectionsPage);
+                  }}
+                />
+              ) : null}
+
+              {userType === USER_TYPE.PLAYER ||
+              userType === USER_TYPE.PATRON ? (
+                <MenuSectionItem
+                  title='My Wallet'
+                  leftIcon={
+                    <WalletIcon
+                      width={20}
+                      height={20}
+                      color={textColor}
+                      strokeWidth={1.1}
+                    />
+                  }
+                  onPress={() => {
+                    navigation.navigate(WalletPage);
+                  }}
+                />
+              ) : null}
             </MenuSection>
 
             {/* Account Settings */}

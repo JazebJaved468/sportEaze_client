@@ -74,6 +74,9 @@ import CreateContract, {
 } from '../../../Patron/CreateContract/index.ts';
 import ContractPreview from '../../../Contract/ContractPreview/ContractPreview.tsx';
 import {ContractPreviewPage} from '../../../Contract/ContractPreview/index.ts';
+import UserPosts, {UserPostsPage} from '../../UserPosts/index.ts';
+import Wallet from '../../Wallet/Wallet.tsx';
+import {WalletPage} from '../../Wallet/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -136,6 +139,11 @@ export type RootStackParamList = {
   ContractPreviewPage: {
     contractId: string;
   };
+  UserPostsPage: {
+    userId: string;
+    userType: number;
+  };
+  WalletPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -254,6 +262,7 @@ export const AppNavigator = () => {
           animation: 'fade',
         }}
       />
+      <Stack.Screen name={UserPostsPage} component={UserPosts} />
 
       <Stack.Screen
         name={ViewPostPage}
@@ -264,6 +273,7 @@ export const AppNavigator = () => {
       />
 
       <Stack.Screen name={AccountSettingsPage} component={AccountSettings} />
+      <Stack.Screen name={WalletPage} component={Wallet} />
 
       {/* Fan Screens */}
       <Stack.Screen name={FanRootPage} component={FanRoot} />

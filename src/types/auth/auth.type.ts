@@ -20,6 +20,9 @@ export type User = {
   player?: Player;
   mentor?: Mentor;
   patron?: Patron;
+  connectionCount?: number;
+  followerCount?: number;
+  sharedPostCount?: number;
 };
 
 export type Connection = {
