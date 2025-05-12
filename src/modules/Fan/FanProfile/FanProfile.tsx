@@ -10,6 +10,7 @@ import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {
   CrossIcon,
+  ImagePlaceholderIcon,
   RemoveUserIcon,
   SettingsIcon,
   TickIcon,
@@ -44,6 +45,8 @@ import {
 import {MessageButton} from '../../../components/MessageButton/MessageButton';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {AccountSettingsPage} from '../../Core/AccountSettings';
+import {customHeight} from '../../../styles/responsiveStyles';
+import {UserPostsPage} from '../../Core/UserPosts';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -65,7 +68,7 @@ export const FanProfile = () => {
     isFetching: fanDataFIP,
   } = useGetUserByIdServiceQuery(
     {userId: params.userId},
-    {refetchOnMountOrArgChange: true},
+    // {refetchOnMountOrArgChange: true},
   );
 
   const [requestConnection, {isLoading: requestConnectionCIP}] =
@@ -375,8 +378,48 @@ export const FanProfile = () => {
               styles.countsContainer,
               {backgroundColor: cardColor},
             ]}>
-            <CountTile title='Posts' count={101} />
-            <CountTile title='Connections' count={10} showSeparator={false} />
+            <CountTile
+              title='Connections'
+              count={fanData.connectionCount ?? 0}
+            />
+            <CountTile title='Followings' count={fanData.followerCount ?? 0} />
+            <CountTile
+              title='Posts'
+              count={fanData.sharedPostCount ?? 0}
+              showSeparator={false}
+            />
+          </View>
+
+          <View style={styles.cardsContainer}>
+            {/* 1st */}
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                navigation.navigate(UserPostsPage, {
+                  userId: fanData.id,
+
+                  userType: fanData.userType as USER_TYPE,
+                });
+              }}
+              style={[
+                styles.card,
+                {backgroundColor: cardColor},
+                containerShadow,
+              ]}>
+              <ImagePlaceholderIcon
+                width={55}
+                height={55}
+                color={textColor}
+                strokeWidth={1.1}
+              />
+              <Text
+                style={[
+                  fontBold(16, textColor),
+                  {marginTop: customHeight(10)},
+                ]}>
+                Shared Posts
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={{height: 40}} />
@@ -530,5 +573,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+
+  cardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    alignItems: 'center',
+    rowGap: 9,
+    flexWrap: 'wrap',
+  },
+
+  card: {
+    width: '100%',
+    // paddingVertical: customHeight(40),
+    height: customHeight(160),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    overflow: 'hidden',
   },
 });
