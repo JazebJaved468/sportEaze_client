@@ -34,6 +34,7 @@ import {Divider} from '../../../components/Divider';
 import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {PatronAccountStatusBadge} from '../PatronRequests/PatronRequests';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {formatPlayerLevels} from '../../../constants/player';
 
 type PatronDetailsVerificationPageRouteProp = RouteProp<
   RootStackParamList,
@@ -360,7 +361,10 @@ const PatronDetails = ({data}: {data: User}) => {
 
       <Tile title='Industry' value={data.patron?.industryType} />
       <Tile title='Sports To Support' value={data.patron?.industryType} />
-      <Tile title='Preferred Player Levels' value={data.username} />
+      <Tile
+        title='Preferred Player Levels'
+        value={formatPlayerLevels(data.patron?.preferredPlayerLevels)}
+      />
 
       <View style={{marginBottom: customHeight(20)}}>
         <Divider />
@@ -375,7 +379,7 @@ const PatronDetails = ({data}: {data: User}) => {
   );
 };
 
-const Tile = ({
+export const Tile = ({
   title,
   value = '',
   isLink = false,

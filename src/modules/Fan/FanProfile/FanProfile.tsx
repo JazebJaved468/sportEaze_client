@@ -429,7 +429,7 @@ export const FanProfile = () => {
   );
 };
 
-const CountTile = ({
+export const CountTile = ({
   title,
   count,
   showSeparator = true,
