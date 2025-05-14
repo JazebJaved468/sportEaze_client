@@ -361,7 +361,11 @@ const MentorBioAndExperience: React.FC<MentorBioAndExperienceProps> = ({
               placeholder='Enter your experience'
               value={value}
               maxLength={3}
-              onChangeText={onChange}
+              keyboardType='numeric'
+              onChangeText={text => {
+                const numericValue = text.replace(/[^0-9]/g, '');
+                onChange(numericValue);
+              }}
               isValid={errors.yearsOfExperience ? false : true}
               errorMessage={
                 errors.yearsOfExperience ? errors.yearsOfExperience.message : ''

@@ -452,7 +452,7 @@ const PlayerProfile = () => {
   );
 };
 
-const IconTitleName = ({
+export const IconTitleName = ({
   icon,
   title,
   name,

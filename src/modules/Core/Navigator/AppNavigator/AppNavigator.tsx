@@ -86,6 +86,12 @@ import EndorsementListing, {
 import MentorEndorsementListing, {
   MentorEndorsementListingPage,
 } from '../../../Mentor/MentorEndorsementListing/index.ts';
+import MentorProfile, {
+  MentorProfilePage,
+} from '../../../Mentor/MentorProfile/index.ts';
+import PatronProfile, {
+  PatronProfilePage,
+} from '../../../Patron/PatronProfile/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -126,11 +132,15 @@ export type RootStackParamList = {
   PendingConnectionsPage: undefined;
   AcceptedConnectionsPage: undefined;
   FollowingListingPage: undefined;
-  MentorRegistrationDetailsPage: undefined;
+  MentorRegistrationDetailsPage: {
+    isEditProfile?: boolean;
+  };
   AccountSettingsPage: undefined;
   SuperAdminRootPage: undefined;
   GDPRPage: undefined;
-  PatronRegistrationDetailsPage: undefined;
+  PatronRegistrationDetailsPage: {
+    isEditProfile?: boolean;
+  };
   WaitingforApprovalPage: undefined;
   FollowerListingPage: undefined;
   PatronRequestsPage: undefined;
@@ -164,6 +174,12 @@ export type RootStackParamList = {
   };
   MentorEndorsementListingPage: {
     mentorId: string;
+  };
+  MentorProfilePage: {
+    userId: string;
+  };
+  PatronProfilePage: {
+    userId: string;
   };
 };
 
@@ -326,6 +342,7 @@ export const AppNavigator = () => {
       <Stack.Screen
         name={PatronRegistrationDetailsPage}
         component={PatronRegistrationDetails}
+        initialParams={{isEditProfile: false}}
       />
       <Stack.Screen
         name={WaitingforApprovalPage}
@@ -337,18 +354,21 @@ export const AppNavigator = () => {
         initialParams={{isEditing: false}}
       />
       <Stack.Screen name={ContractPreviewPage} component={ContractPreview} />
+      <Stack.Screen name={PatronProfilePage} component={PatronProfile} />
 
       {/* Mentor Screens */}
       <Stack.Screen name={MentorRootPage} component={MentorRoot} />
       <Stack.Screen
         name={MentorRegistrationDetailsPage}
         component={MentorRegistrationDetails}
+        initialParams={{isEditProfile: false}}
       />
       <Stack.Screen name={GiveEndorsementPage} component={GiveEndorsement} />
       <Stack.Screen
         name={MentorEndorsementListingPage}
         component={MentorEndorsementListing}
       />
+      <Stack.Screen name={MentorProfilePage} component={MentorProfile} />
 
       {/* Super Admin Screens */}
       <Stack.Screen name={SuperAdminRootPage} component={SuperAdminRoot} />
