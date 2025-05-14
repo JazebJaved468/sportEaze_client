@@ -21,6 +21,8 @@ export const sporteazeBaseApi = createApi({
     'ContractsByUserId',
     'ContractById',
     'MyContracts',
+    'PlayerEndorsements',
+    'MentorEndorsements',
   ],
 
   endpoints: builder => ({}),
