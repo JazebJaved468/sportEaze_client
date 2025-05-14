@@ -30,6 +30,7 @@ import {customHeight, customWidth} from '../../../../styles/responsiveStyles';
 import {PulseEffect} from '../../../../components/PulseEffect';
 import {USER_TYPE} from '../../../../constants/enums';
 import {ContractListingPage} from '../../../Contract/ContractListing';
+import {useTextColor} from '../../../../utils/customHooks/colorHooks';
 
 export type ChatScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -146,12 +147,13 @@ const TextMessage: React.FC<ChatMessage> = ({
           paddingVertical: 12,
           paddingLeft: 12,
           paddingRight: 16,
-          borderRadius: 16,
+          borderRadius: 18,
           maxWidth: '78%',
-          gap: customHeight(8),
+          gap: customHeight(10),
+          minWidth: customWidth(80),
         }}>
-        <Text style={fontRegular(14, messageColor)}>{content}</Text>
-        <Text style={[fontRegular(9, messageColor), {alignSelf: 'flex-end'}]}>
+        <Text style={fontRegular(13, messageColor)}>{content}</Text>
+        <Text style={[fontRegular(8, messageColor), {alignSelf: 'flex-end'}]}>
           {format(sentAt, 'hh:mm a')}
         </Text>
       </View>
@@ -306,6 +308,8 @@ const ChatScreenFooter: React.FC<ChatScreenFooterProps> = ({
     }
   }, [appState]);
 
+  const textColor = useTextColor();
+
   return (
     <View style={styles.chatFooterContainer}>
       <View style={{flex: 1}}>
@@ -318,34 +322,39 @@ const ChatScreenFooter: React.FC<ChatScreenFooterProps> = ({
           render={({field: {onChange, onBlur, value}}) => (
             <Input
               placeholder='Write Your Message...'
-              borderRadius={8}
-              borderColor={appColors.placeHolder}
+              borderRadius={10}
+              borderColor={appColors.warmRed}
+              outlineColor={appColors.warmRed}
               _focus={{backgroundColor: appColors.transparent}}
               value={value}
               onChangeText={onChange}
+              borderWidth={0.6}
+              focusOutlineColor={textColor}
             />
           )}
         />
       </View>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => {
-          if (getValues('message').trim().length) {
-            handleSubmit(sendMessage)();
-          }
-        }}>
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 16,
-            backgroundColor: appColors.warmRed,
-            justifyContent: 'center',
-            alignItems: 'center',
+      <PulseEffect>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            if (getValues('message').trim().length) {
+              handleSubmit(sendMessage)();
+            }
           }}>
-          <MessageSendIcon color={appColors.white} />
-        </View>
-      </TouchableOpacity>
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 16,
+              backgroundColor: appColors.warmRed,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <MessageSendIcon color={appColors.white} />
+          </View>
+        </TouchableOpacity>
+      </PulseEffect>
     </View>
   );
 };
