@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Image,
+  Linking,
 } from 'react-native';
 import {Avatar, Input, Button, Skeleton} from 'native-base';
 import {useLazyGetPlayerComparisonQuery} from '../../../store/player/player.service';
@@ -635,6 +636,7 @@ export const PlayerComparision = () => {
                 justifyContent: 'center',
                 gap: customWidth(8),
               }}
+              onPress={() => Linking.openURL('https://gemini.google.com')}
               hitSlop={20}
               activeOpacity={0.6}>
               <CircularInfoIcon
