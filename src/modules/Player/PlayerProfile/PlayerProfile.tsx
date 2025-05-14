@@ -54,6 +54,9 @@ import {MessageButton} from '../../../components/MessageButton/MessageButton';
 import {customHeight} from '../../../styles/responsiveStyles';
 import {UserPostsPage} from '../../Core/UserPosts';
 import {USER_TYPE} from '../../../constants/enums';
+import {AccountSettingsPage} from '../../Core/AccountSettings';
+import {GiveEndorsementPage} from '../../Mentor/GiveEndorsement';
+import {EndorsementListingPage} from '../EndorsementListing';
 
 export type PlayerProfilePageRouteProp = RouteProp<
   RootStackParamList,
@@ -91,7 +94,7 @@ const PlayerProfile = () => {
   } = useGetUserByIdServiceQuery(
     {userId: params.userId},
     {
-      refetchOnMountOrArgChange: true,
+      // refetchOnMountOrArgChange: true,
     },
   );
 
@@ -246,7 +249,9 @@ const PlayerProfile = () => {
               ) : (
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.navigate(AccountSettingsPage);
+                  }}
                   hitSlop={20}
                   style={{}}>
                   <SettingsIcon width={20} height={20} color={textColor} />
@@ -374,7 +379,11 @@ const PlayerProfile = () => {
             {/*  */}
             <TouchableOpacity
               activeOpacity={0.6}
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate(EndorsementListingPage, {
+                  playerId: playerData.id,
+                });
+              }}
               style={[
                 styles.card,
                 {backgroundColor: cardColor},
@@ -396,7 +405,47 @@ const PlayerProfile = () => {
             </TouchableOpacity>
           </View>
 
-          <View style={{height: 40}} />
+          {userType === USER_TYPE.MENTOR ? (
+            <PulseEffect>
+              <Button
+                style={{
+                  height: customHeight(44),
+                  marginVertical: customHeight(20),
+                  marginHorizontal: 16,
+                  ...{
+                    borderWidth: 1,
+                    backgroundColor: appColors.transparent,
+                    borderColor: appColors.warmRed,
+                  },
+                }}
+                onPress={() => {
+                  navigation.navigate(GiveEndorsementPage, {
+                    playerId: playerData.id,
+                    playerName: playerData.fullName,
+                    playerImage: playerData.profilePicUrl,
+                    playerUsername: playerData.username,
+                  });
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                  }}>
+                  <EndorsementIcon
+                    width={22}
+                    height={22}
+                    strokeWidth={1.6}
+                    color={appColors.warmRed}
+                  />
+                  <Text style={[fontBold(13, appColors.warmRed)]}>Endorse</Text>
+                </View>
+              </Button>
+            </PulseEffect>
+          ) : (
+            <View style={{height: 40}} />
+          )}
         </ScrollView>
       )}
     </PageContainer>
