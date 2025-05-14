@@ -1,5 +1,4 @@
-import MentorProfile from "./MentorProfile";
-export default 
-MentorProfile;
+import MentorProfile from './MentorProfile';
+export default MentorProfile;
 
 export const MentorProfilePage = 'MentorProfilePage';
