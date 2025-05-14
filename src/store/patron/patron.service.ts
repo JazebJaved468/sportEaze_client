@@ -1,10 +1,11 @@
 import {
   CreateContractParams,
+  GiveEndorsementParams,
   RegisterPatronParams,
   ReleaseFundsParams,
   UpdateContractParams,
 } from '../../types/patron/patron.params';
-import {Contract} from '../../types/patron/patron.type';
+import {Contract, Endorsement} from '../../types/patron/patron.type';
 import {RegisterPlayerParams} from '../../types/player/player.params';
 import {registerPlayerResponse} from '../../types/player/player.response';
 import {updateUserTypeOnRegister} from '../../utils/helpers/auth';
@@ -13,6 +14,7 @@ import {
   onContractCreated,
   onContractUpdated,
 } from '../../utils/helpers/contract.utils';
+import {updateEndorsementListings} from '../../utils/helpers/patron.utils';
 import {updateUser} from '../auth/auth.slice';
 import {sporteazeBaseApi} from '../baseApi.service';
 
@@ -192,10 +194,58 @@ export const patronApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    //
+    giveEndorsement: builder.mutation<{}, GiveEndorsementParams>({
+      query: body => ({
+        url: `/user/mentor/endorse`,
+        method: 'POST',
+        body,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        // // `onStart` side-effect
+
+        try {
+          const {data} = await queryFulfilled;
+          // `onSuccess` side-effect
+
+          // await onContractUpdated(args.contractId, data);
+          updateEndorsementListings();
+        } catch (err) {
+          // `onError` side-effect
+          console.log(
+            'Error while endorsing  player: patron.service.ts : Line 37',
+            err,
+          );
+        }
+      },
+    }),
+
+    //
+
+    getPlayerEndorsements: builder.query<Endorsement[], {playerId: string}>({
+      query: ({playerId}) => ({
+        url: `/user/player/endorsements/${playerId}`,
+      }),
+
+      providesTags: ['PlayerEndorsements'],
+    }),
+
+    getMentorEndorsements: builder.query<Endorsement[], {mentorId: string}>({
+      query: ({mentorId}) => ({
+        url: `/user/mentor/endorsements/${mentorId}`,
+      }),
+
+      providesTags: ['MentorEndorsements'],
+    }),
   }),
 });
 
 export const {
+  useGetMentorEndorsementsQuery,
+  useGetPlayerEndorsementsQuery,
+  useGiveEndorsementMutation,
   useReleaseFundsMutation,
   useGetMyContractsQuery,
   useUpdateContractMutation,

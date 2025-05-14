@@ -83,6 +83,7 @@ export enum NotificationType {
   MILESTONE_ACHIEVED = 10,
   FUNDS_RELEASED = 11,
   FUNDS_RECEIVED = 12,
+  ENDORSEMENT_RECEIVED = 13,
 }
 export enum ContractStatus {
   All = 0,

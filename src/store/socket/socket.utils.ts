@@ -1,6 +1,7 @@
 import {NotificationType, USER_TYPE} from '../../constants/enums';
 import {Wallet} from '../../types/player/player.type';
 import {onContractNotificationReceived} from '../../utils/helpers/contract.utils';
+import {updateEndorsementListings} from '../../utils/helpers/patron.utils';
 import {authApi} from '../auth/auth.service';
 import {
   updatePatronWallet,
@@ -70,6 +71,10 @@ export const onNotificationReceived = (data: NotificationResponse) => {
     data.notifications[0].type === NotificationType.FUNDS_RECEIVED
   ) {
     onContractNotificationReceived();
+  }
+
+  if (data.notifications[0].type === NotificationType.ENDORSEMENT_RECEIVED) {
+    updateEndorsementListings();
   }
 };
 

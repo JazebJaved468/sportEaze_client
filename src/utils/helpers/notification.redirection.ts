@@ -6,6 +6,7 @@ import {
   PendingConnectionsPage,
 } from '../../modules/Core/Networking';
 import {ViewPostPage} from '../../modules/Core/ViewPost';
+import {EndorsementListingPage} from '../../modules/Player/EndorsementListing';
 import {store} from '../../store/store';
 import {Notification} from '../../types/core/core.type';
 import {navigateToProfilePage, navigationRef} from './navigation';
@@ -85,6 +86,11 @@ export const handleNotificationRedirection = (notification: Notification) => {
     case NotificationType.FUNDS_RELEASED:
       navigationRef.navigate(ContractPreviewPage, {
         contractId: redirect.contractId,
+      });
+      break;
+    case NotificationType.ENDORSEMENT_RECEIVED:
+      navigationRef.navigate(EndorsementListingPage, {
+        playerId: redirect.playerId,
       });
       break;
 

@@ -36,3 +36,8 @@ export type ReleaseFundsParams = {
   playerId: string;
   milestoneId: string;
 };
+export type GiveEndorsementParams = {
+  playerId: string;
+  rating?: number;
+  review: string;
+};

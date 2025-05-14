@@ -40,3 +40,12 @@ export type ContractMilestone = {
   contractId: string;
   isPaid: boolean;
 };
+
+export type Endorsement = {
+  id: string;
+  mentor: UserWindow;
+  player: UserWindow;
+  rating: number;
+  review: string;
+  createdAt: string;
+};
