@@ -152,6 +152,8 @@ const Menu = () => {
   const navigation = useAppNavigation();
   const cardColor = useCardColor();
 
+  console.log('user ID ', user?.id);
+
   const dispatch = useAppDispatch();
 
   return (
