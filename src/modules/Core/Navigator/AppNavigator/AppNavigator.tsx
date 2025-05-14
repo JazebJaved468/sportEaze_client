@@ -86,6 +86,9 @@ import EndorsementListing, {
 import MentorEndorsementListing, {
   MentorEndorsementListingPage,
 } from '../../../Mentor/MentorEndorsementListing/index.ts';
+import MentorProfile, {
+  MentorProfilePage,
+} from '../../../Mentor/MentorProfile/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -164,6 +167,9 @@ export type RootStackParamList = {
   };
   MentorEndorsementListingPage: {
     mentorId: string;
+  };
+  MentorProfilePage: {
+    userId: string;
   };
 };
 
@@ -349,6 +355,7 @@ export const AppNavigator = () => {
         name={MentorEndorsementListingPage}
         component={MentorEndorsementListing}
       />
+      <Stack.Screen name={MentorProfilePage} component={MentorProfile} />
 
       {/* Super Admin Screens */}
       <Stack.Screen name={SuperAdminRootPage} component={SuperAdminRoot} />
