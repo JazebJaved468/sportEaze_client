@@ -80,6 +80,15 @@ import {WalletPage} from '../../Wallet/index.ts';
 import PlayerComparision, {
   PlayerComparisionPage,
 } from '../../../Player/PlayerComparision/index.ts';
+import GiveEndorsement, {
+  GiveEndorsementPage,
+} from '../../../Mentor/GiveEndorsement/index.ts';
+import EndorsementListing, {
+  EndorsementListingPage,
+} from '../../../Player/EndorsementListing/index.ts';
+import MentorEndorsementListing, {
+  MentorEndorsementListingPage,
+} from '../../../Mentor/MentorEndorsementListing/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -148,6 +157,18 @@ export type RootStackParamList = {
   };
   WalletPage: undefined;
   PlayerComparisionPage: undefined;
+  GiveEndorsementPage: {
+    playerId: string;
+    playerName: string;
+    playerImage: string | null;
+    playerUsername: string;
+  };
+  EndorsementListingPage: {
+    playerId: string;
+  };
+  MentorEndorsementListingPage: {
+    mentorId: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -299,6 +320,10 @@ export const AppNavigator = () => {
       />
       <Stack.Screen name={PlayerProfilePage} component={PlayerProfile} />
       <Stack.Screen name={FollowerListingPage} component={FollowerListing} />
+      <Stack.Screen
+        name={EndorsementListingPage}
+        component={EndorsementListing}
+      />
 
       {/* Patron Screens */}
       <Stack.Screen name={PatronRootPage} component={PatronRoot} />
@@ -322,6 +347,11 @@ export const AppNavigator = () => {
       <Stack.Screen
         name={MentorRegistrationDetailsPage}
         component={MentorRegistrationDetails}
+      />
+      <Stack.Screen name={GiveEndorsementPage} component={GiveEndorsement} />
+      <Stack.Screen
+        name={MentorEndorsementListingPage}
+        component={MentorEndorsementListing}
       />
 
       {/* Super Admin Screens */}
