@@ -23,6 +23,7 @@ import {CircularInfoIcon, UserPlaceholderIcon} from '../../../assets/icons';
 import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
+import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 
 type GeminiComparisonResponse = {
   winner: string;
@@ -47,7 +48,7 @@ export const PlayerComparision = () => {
     analysisCIP: false,
   });
 
-  const [getPlayerComparison, {data, isLoading, error}] = useLazyGetPlayerComparisonQuery();
+  const [getPlayerComparison, {data, isFetching, error}] = useLazyGetPlayerComparisonQuery();
 
   const {data: sports} = useGetAvailableSportsQuery();
 
@@ -379,7 +380,7 @@ export const PlayerComparision = () => {
   const renderLoadingScreen = () => {
     return (
       <View style={styles.contentContainer}>
-        <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+        <ScrollView contentContainerStyle={{paddingBottom: customHeight(100)}}>
           {/* Player Profiles Skeletons */}
           <View style={styles.profilesRow}>
             <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
@@ -471,7 +472,7 @@ export const PlayerComparision = () => {
 
     return (
       <View style={styles.contentContainer}>
-        <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+        <ScrollView contentContainerStyle={{paddingBottom: customHeight(100)}}>
           {/* Player Profiles */}
           <View style={styles.profilesRow}>
             <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
@@ -480,17 +481,17 @@ export const PlayerComparision = () => {
                   <Image
                     source={{uri: playerOne.profilePicUrl}}
                     style={{
-                      width: 80,
-                      height: 80,
+                      width: customWidth(80),
+                      height: customHeight(80),
                       objectFit: 'contain',
                       borderRadius: 100,
                     }}
                   />
                 ) : (
-                  <UserPlaceholderIcon width={28} height={28} color={textColor} />
+                  <UserPlaceholderIcon width={customWidth(28)} height={customHeight(28)} color={textColor} />
                 )}
               </View>
-              <Text style={[fontBold(16), {color: textColor, marginTop: 10}]}>
+              <Text style={[fontBold(16), {color: textColor, marginTop: customHeight(10)}]}>
                 {playerOne.fullName}
               </Text>
               <Text style={[fontRegular(14), {color: textColor}]}>
@@ -504,17 +505,17 @@ export const PlayerComparision = () => {
                   <Image
                     source={{uri: playerTwo.profilePicUrl}}
                     style={{
-                      width: 80,
-                      height: 80,
+                      width: customWidth(80),
+                      height: customHeight(80),
                       objectFit: 'contain',
                       borderRadius: 100,
                     }}
                   />
                 ) : (
-                  <UserPlaceholderIcon width={28} height={28} color={textColor} />
+                  <UserPlaceholderIcon width={customWidth(28)} height={customHeight(28)} color={textColor} />
                 )}
               </View>
-              <Text style={[fontBold(16), {color: textColor, marginTop: 10}]}>
+              <Text style={[fontBold(16), {color: textColor, marginTop: customHeight(10)}]}>
                 {playerTwo.fullName}
               </Text>
               <Text style={[fontRegular(14), {color: textColor}]}>
@@ -525,7 +526,7 @@ export const PlayerComparision = () => {
 
           {/* Comparison Metrics */}
           <View style={[styles.metricsContainer, {backgroundColor: cardColor}]}>
-            <Text style={[fontBold(16), {color: textColor, marginBottom: 10, textAlign: 'center'}]}>
+            <Text style={[fontBold(16), {color: textColor, marginBottom: customHeight(10), textAlign: 'center'}]}>
               Player Metrics
             </Text>
 
@@ -599,11 +600,11 @@ export const PlayerComparision = () => {
           {/* AI Analysis */}
           {geminiAnalysis.analysisCIP && (
             <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-              <Text style={[fontBold(16), {color: textColor, marginBottom: 10}]}>
+              <Text style={[fontBold(16), {color: textColor, marginBottom: customHeight(10)}]}>
                 AI Comparison Analysis
               </Text>
               <ActivityIndicator size="small" color={appColors.warmRed} />
-              <Text style={[fontRegular(14), {color: textColor, marginTop: 10}]}>
+              <Text style={[fontRegular(14), {color: textColor, marginTop: customHeight(10)}]}>
                 AI is analyzing player metrics...
               </Text>
             </View>
@@ -611,11 +612,11 @@ export const PlayerComparision = () => {
 
           {geminiAnalysis.analysisDone && geminiAnalysis.response && (
             <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-              <Text style={[fontBold(16), {color: textColor, marginBottom: 10}]}>
+              <Text style={[fontBold(16), {color: textColor, marginBottom: customHeight(10)}]}>
                 AI Comparison Analysis
               </Text>
               
-              <Text style={[fontRegular(14), {color: textColor, marginBottom: 5}]}>
+              <Text style={[fontRegular(14), {color: textColor, marginBottom: customHeight(5)}]}>
                 <Text style={fontBold(14)}>Winner: </Text>
                 {geminiAnalysis.response.winner} ({geminiAnalysis.response.score})
               </Text>
@@ -626,19 +627,19 @@ export const PlayerComparision = () => {
             </View>
           )}
 
-          <View style={{marginTop: 20, marginBottom: 30}}>
+          <View style={{marginTop: customHeight(20), marginBottom: customHeight(30)}}>
             <TouchableOpacity
               style={{
                 alignItems: 'center',
                 flexDirection: 'row',
                 justifyContent: 'center',
-                gap: 8,
+                gap: customWidth(8),
               }}
               hitSlop={20}
               activeOpacity={0.6}>
               <CircularInfoIcon
-                width={16}
-                height={16}
+                width={customWidth(16)}
+                height={customHeight(16)}
                 color={appColors.warmRed}
               />
               <Text
@@ -671,7 +672,7 @@ export const PlayerComparision = () => {
       return renderInputScreen();
     }
 
-    if (isLoading) {
+    if (isFetching) {
       return renderLoadingScreen();
     }
 
@@ -703,22 +704,22 @@ export const PlayerComparision = () => {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    padding: 16,
+    padding: customWidth(16),
     position: 'relative',
   },
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
-    marginBottom: 30,
+    marginTop: customHeight(20),
+    marginBottom: customHeight(30),
   },
   profileImagePlaceholder: {
     width: '48%',
     alignItems: 'center',
   },
   profilePicContainer: {
-    width: 80,
-    height: 80,
+    width: customWidth(80),
+    height: customHeight(80),
     backgroundColor: `${appColors.whisperGray}90`,
     justifyContent: 'center',
     alignItems: 'center',
@@ -727,35 +728,35 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 20,
-    left: 16,
-    right: 16,
+    bottom: customHeight(20),
+    left: customWidth(16),
+    right: customWidth(16),
   },
   compareButton: {
-    height: 50,
+    height: customHeight(50),
     borderRadius: 10,
   },
   profilesRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: customHeight(20),
   },
   profileCard: {
     width: '48%',
-    padding: 16,
+    padding: customWidth(16),
     borderRadius: 10,
     alignItems: 'center',
   },
   metricsContainer: {
-    padding: 16,
+    padding: customWidth(16),
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: customHeight(20),
   },
   comparisonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: customHeight(15),
   },
   comparisonLabel: {
     fontSize: 14,
@@ -768,9 +769,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   aiContainer: {
-    padding: 16,
+    padding: customWidth(16),
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: customHeight(20),
   },
   loadingContainer: {
     flex: 1,
