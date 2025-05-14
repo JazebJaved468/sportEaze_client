@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {Avatar, Input, Button} from 'native-base';
+import {Avatar, Input, Button, Skeleton} from 'native-base';
 import {useLazyGetPlayerComparisonQuery} from '../../../store/player/player.service';
 import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {fontBold, fontRegular} from '../../../styles/fonts';
@@ -378,9 +378,51 @@ export const PlayerComparision = () => {
 
   const renderLoadingScreen = () => {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={appColors.warmRed} />
-        <Text style={{color: textColor, marginTop: 10}}>Loading comparison...</Text>
+      <View style={styles.contentContainer}>
+        <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+          {/* Player Profiles Skeletons */}
+          <View style={styles.profilesRow}>
+            <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
+              <Skeleton rounded="full" h="80px" w="80px" startColor={`${appColors.whisperGray}60`} />
+              <Skeleton.Text mt="4" lines={2} startColor={`${appColors.whisperGray}60`} w="80%" />
+            </View>
+            
+            <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
+              <Skeleton rounded="full" h="80px" w="80px" startColor={`${appColors.whisperGray}60`} />
+              <Skeleton.Text mt="4" lines={2} startColor={`${appColors.whisperGray}60`} w="80%" />
+            </View>
+          </View>
+
+          {/* Metrics Skeleton */}
+          <View style={[styles.metricsContainer, {backgroundColor: cardColor}]}>
+            <Skeleton h="6" rounded="md" w="50%" alignSelf="center" mb="4" startColor={`${appColors.whisperGray}60`} />
+            
+            {[...Array(10)].map((_, index) => (
+              <View key={index} style={styles.comparisonRow}>
+                <Skeleton h="5" rounded="md" w="30%" startColor={`${appColors.whisperGray}60`} />
+                <Skeleton h="5" rounded="md" w="30%" startColor={`${appColors.whisperGray}60`} />
+                <Skeleton h="5" rounded="md" w="30%" startColor={`${appColors.whisperGray}60`} />
+              </View>
+            ))}
+          </View>
+
+          {/* AI Analysis Skeleton */}
+          <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
+            <Skeleton h="6" rounded="md" w="70%" mb="4" startColor={`${appColors.whisperGray}60`} />
+            <Skeleton.Text lines={3} startColor={`${appColors.whisperGray}60`} />
+          </View>
+        </ScrollView>
+        
+        <View style={styles.buttonContainer}>
+          <Button
+            style={styles.compareButton}
+            isDisabled={true}
+            _text={{ color: 'white', fontWeight: 'bold' }}
+            backgroundColor={appColors.warmRed}
+          >
+            Compare Different Players
+          </Button>
+        </View>
       </View>
     );
   };
