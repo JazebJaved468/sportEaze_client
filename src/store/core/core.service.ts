@@ -1,5 +1,6 @@
 import {POST_FEED_PAGE_SIZE} from '../../constants/core';
 import {ConnectionReqResponse, ConnectionStatus} from '../../constants/enums';
+import {User} from '../../types/auth/auth.type';
 import {
   ConnectUserParams,
   MarkChatAsReadParams,
@@ -315,10 +316,41 @@ export const coreApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    //
+
+    getRankedPlayer: builder.query<User[], {userId: string}>({
+      query: () => ({
+        url: `/user/player/preferred`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
+
+    getMatchedPatrons: builder.query<User[], {userId: string}>({
+      query: () => ({
+        url: `/user/patron/preferred`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
+    getMatchedMentors: builder.query<User[], {userId: string}>({
+      query: () => ({
+        url: `/user/mentor/preferred`,
+      }),
+      serializeQueryArgs: ({queryArgs, endpointName}) => {
+        return `${endpointName}-${queryArgs.userId}`;
+      },
+    }),
   }),
 });
 
 export const {
+  useGetMatchedMentorsQuery,
+  useGetRankedPlayerQuery,
+  useGetMatchedPatronsQuery,
   useMarkNotificationsAsReadMutation,
   useGetNotificationsQuery,
   useMarkChatAsReadMutation,
