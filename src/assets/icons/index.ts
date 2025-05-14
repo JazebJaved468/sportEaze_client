@@ -75,6 +75,7 @@ import {MilestoneIcon} from './svgs/MilestoneIcon';
 import {EditIcon} from './svgs/EditIcon';
 import {EndorsementIcon} from './svgs/EndorsementIcon';
 import {WalletIcon} from './svgs/WalletIcon';
+import {IndustryIcon} from './svgs/IndustryIcon';
 
 export {
   BackIcon,
@@ -154,4 +155,5 @@ export {
   EditIcon,
   EndorsementIcon,
   WalletIcon,
+  IndustryIcon,
 };
