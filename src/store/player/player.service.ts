@@ -17,6 +17,7 @@ import {
   GetPostIdResponse,
   GetPostsByPlayerIdResponse,
   LikesByPostIdResponse,
+  PlayerComparisonResponse,
   registerPlayerResponse,
   SharePostResponse,
 } from '../../types/player/player.response';
@@ -403,6 +404,23 @@ export const playerApi = sporteazeBaseApi.injectEndpoints({
         return `${endpointName}-${queryArgs.userId}`;
       },
     }),
+
+    getPlayerComparison: builder.query<
+      PlayerComparisonResponse,
+      { playerOneUsername: string; playerTwoUsername: string }
+    >({
+      query: ({ playerOneUsername, playerTwoUsername }) => ({
+        url: `/user/player/compare`,
+        method: 'POST',
+        body: {
+          playerOneUsername,
+          playerTwoUsername,
+        },
+      }),
+      transformResponse: (response: PlayerComparisonResponse) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -421,4 +439,5 @@ export const {
   useLazyGetLikesByPostIdServiceQuery,
   useCreateLikeOrUnLikeMutation,
   useSharePostMutation,
+  useLazyGetPlayerComparisonQuery,
 } = playerApi;

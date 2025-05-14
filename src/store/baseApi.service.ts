@@ -5,7 +5,8 @@ import {getFromLocalStorage} from '../utils/helpers/asyncStorage';
 export const sporteazeBaseApi = createApi({
   reducerPath: 'sporteazeBaseApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.SPORTEAZE_BASE_API}/api`,
+    // baseUrl: `${process.env.SPORTEAZE_BASE_API}/api`,
+    baseUrl: `http://192.168.100.46:3000/api`,
     prepareHeaders: headers => {
       const {userToken} = store.getState().auth;
       if (userToken) {

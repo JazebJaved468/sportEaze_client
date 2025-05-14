@@ -77,6 +77,9 @@ import {ContractPreviewPage} from '../../../Contract/ContractPreview/index.ts';
 import UserPosts, {UserPostsPage} from '../../UserPosts/index.ts';
 import Wallet from '../../Wallet/Wallet.tsx';
 import {WalletPage} from '../../Wallet/index.ts';
+import PlayerComparision, {
+  PlayerComparisionPage,
+} from '../../../Player/PlayerComparision/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -144,6 +147,7 @@ export type RootStackParamList = {
     userType: number;
   };
   WalletPage: undefined;
+  PlayerComparisionPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -327,6 +331,11 @@ export const AppNavigator = () => {
       <Stack.Screen
         name={PatronDetailsVerificationPage}
         component={PatronDetailsVerification}
+      />
+
+      <Stack.Screen
+        name={PlayerComparisionPage}
+        component={PlayerComparision}
       />
 
       {/* Samples  */}
