@@ -615,7 +615,7 @@ export const CreatePost = () => {
                 )}
               </View>
 
-              <Text style={fontRegular(16)}>{user?.username}</Text>
+              <Text style={fontRegular(16)}>{user?.fullName}</Text>
             </View>
 
             <CustomDropDown

@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
@@ -19,7 +26,11 @@ import {fontBold, fontRegular} from '../../../styles/fonts';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {Button} from 'native-base';
 import {appColors} from '../../../constants/colors';
-import {AddIcon, ContractIcon} from '../../../assets/icons';
+import {
+  AddIcon,
+  ContractIcon,
+  UserPlaceholderIcon,
+} from '../../../assets/icons';
 import {Contract} from '../../../types/patron/patron.type';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {
@@ -136,7 +147,13 @@ const ContractListing = () => {
   );
 };
 
-const ContractCard = ({data}: {data: Contract}) => {
+export const ContractCard = ({
+  data,
+  showPlayerInfo = false,
+}: {
+  data: Contract;
+  showPlayerInfo?: boolean;
+}) => {
   const {userType} = useAppSelector(state => state.auth);
   const textColor = useTextColor();
   const containerShadow = useContainerShadow();
@@ -159,6 +176,29 @@ const ContractCard = ({data}: {data: Contract}) => {
             paddingVertical: customHeight(18),
           },
         ]}>
+        {showPlayerInfo ? (
+          <View style={styles.picAndName}>
+            <View style={styles.profilePicContainer}>
+              {data.player?.profilePicUrl ? (
+                <Image
+                  source={{uri: data.player?.profilePicUrl}}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    objectFit: 'contain',
+                    borderRadius: 9,
+                  }}
+                />
+              ) : (
+                <UserPlaceholderIcon width={28} height={28} color={textColor} />
+              )}
+            </View>
+
+            <Text style={fontRegular(13, textColor)}>
+              {data.player?.fullName}
+            </Text>
+          </View>
+        ) : null}
         <View style={{marginBottom: customHeight(20), alignSelf: 'flex-start'}}>
           <ContractStatusBadge status={data.status} />
         </View>
@@ -270,4 +310,20 @@ export const ContractStatusBadge = ({status}: {status: number}) => {
 
 export default ContractListing;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  picAndName: {
+    flexDirection: 'row',
+    gap: 14,
+    alignItems: 'center',
+    marginBottom: customHeight(16),
+  },
+  profilePicContainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: `${appColors.whisperGray}90`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 200,
+    overflow: 'hidden',
+  },
+});
