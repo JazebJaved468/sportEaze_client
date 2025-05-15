@@ -33,7 +33,7 @@ import {
   useAppSelector,
 } from '../../../utils/customHooks/storeHooks';
 import {useGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.service';
-import {updateUserConsent} from '../../../store/core/core.slice';
+import {updateToast, updateUserConsent} from '../../../store/core/core.slice';
 import {PatronAccountStatus, USER_TYPE} from '../../../constants/enums';
 
 const AccountSettings = () => {
@@ -88,7 +88,9 @@ const AccountSettings = () => {
           />
         ) : null}
         <SettingsItemCard
-          onCardPress={() => {}}
+          onCardPress={() => {
+            dispatch(updateToast({isVisible: true, message: 'Coming Soon'}));
+          }}
           icon={
             <VerifyIcon
               strokeWidth={1.3}

@@ -41,3 +41,15 @@ export const formatPlayerLevels = (
     .map(levelId => playerLevels[levelId] || `Unknown (${levelId})`)
     .join(', ');
 };
+export const formatSports = (
+  sports: number[] | null | undefined,
+  sportsMap: Record<string, string>,
+): string => {
+  if (!sports || !sports.length) {
+    return 'None specified';
+  }
+
+  return sports
+    .map(sportsId => sportsMap[sportsId] || `Unknown (${sportsId})`)
+    .join(', ');
+};
