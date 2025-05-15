@@ -786,7 +786,7 @@ export const PlayerComparison = () => {
                   textAlign: 'center',
                 },
               ]}>
-              Player Metrics
+              Players Statistics
             </Text>
 
             {renderComparisonItem(
@@ -811,11 +811,11 @@ export const PlayerComparison = () => {
               playerTwo.player.followerCount,
             )}
 
-            {renderComparisonItem(
+            {/* {renderComparisonItem(
               'Connections',
               playerOne.connectionCount,
               playerTwo.connectionCount,
-            )}
+            )} */}
 
             {renderComparisonItem(
               'Sponsorships',

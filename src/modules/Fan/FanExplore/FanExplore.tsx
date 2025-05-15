@@ -269,6 +269,8 @@ const FanExplore = () => {
                           justifyContent: 'center',
                           backgroundColor: cardColor,
                           gap: 10,
+                          width: '100%',
+                          height: '100%',
                         },
                       ]}>
                       <ComparisonIcon
