@@ -1,3 +1,16 @@
+// {
+//   "extends": "@react-native/typescript-config/tsconfig.json",
+//   "compilerOptions": {
+//     "strict": true,
+//     "strictNullChecks": true,
+//     "noImplicitAny": true,
+//     "noImplicitThis": true,
+//     "alwaysStrict": true
+//   },
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules"]
+// }
+
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
@@ -5,8 +18,9 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "alwaysStrict": true
+    "alwaysStrict": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "node_modules/react-native/**/*"], 
   "exclude": ["node_modules"]
 }
+
