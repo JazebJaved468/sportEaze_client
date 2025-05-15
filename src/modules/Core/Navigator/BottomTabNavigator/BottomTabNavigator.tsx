@@ -11,6 +11,7 @@ import PostFeed from '../../PostFeed';
 import FanMenu from '../../../Fan/Menu';
 import ChatListing from '../../Chat/ChatListing';
 import CreatePost from '../../../Player/CreatePost';
+import PatronProfile from '../../../Patron/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,13 +46,16 @@ export const PlayerBottomTabNavigator = () => {
   );
 };
 
+// PATRON BOTTOM TAB NAVIGATOR //
+
 export const PatronBottomTabNavigator = () => {
   return (
     <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Screen name='Profile' component={PatronProfile} />
       <Tab.Screen name='Feed' component={PostFeed} />
-      <Tab.Screen name='Players' component={PlayerProfile} />
-      <Tab.Screen name='Inbox' component={PlayerProfile} />
-      <Tab.Screen name='Menu' component={PlayerProfile} />
+      <Tab.Screen name='Search' component={PlayerProfile} />
+      <Tab.Screen name='Chat' component={PlayerProfile} />
+      {/* <Tab.Screen name='Profile' component={PatronProfile} /> */}
     </Tab.Navigator>
   );
 };
