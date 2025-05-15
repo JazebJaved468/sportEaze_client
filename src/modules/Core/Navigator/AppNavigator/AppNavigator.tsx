@@ -33,9 +33,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const getInitialRouteName = ({userType}: {userType: string}) => {
   const {isFirstVisit} = store.getState().core;
 
-  if (isFirstVisit) {
-    return OnBoardingPage;
-  }
+  // if (isFirstVisit) {
+  //   return OnBoardingPage;
+  // }
 
   switch (userType) {
     case USER_TYPE.FAN:
@@ -54,7 +54,7 @@ const getInitialRouteName = ({userType}: {userType: string}) => {
 export const AppNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName={getInitialRouteName({userType: USER_TYPE.PLAYER})} //usertype will be coming from backend
+      initialRouteName={getInitialRouteName({userType: USER_TYPE.PATRON})} //usertype will be coming from backend
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
