@@ -22,7 +22,7 @@ export const apiStatusLogger = store => next => action => {
 
     const error = action?.payload?.data?.message;
 
-    if (action?.payload?.status > 400) {
+    if (action?.payload?.status === 500) {
       console.log('Error message:', error);
     } else {
       console.log('Error message not found');
