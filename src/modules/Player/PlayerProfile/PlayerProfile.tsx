@@ -341,8 +341,8 @@ const PlayerProfile = () => {
               showSeparator
             />
             <CountTile
-              title='Endorsemnts'
-              count={playerData.player.endorsementsReceived}
+              title='Sponsorships'
+              count={playerData.player.totalContracts}
               showSeparator={false}
             />
           </View>

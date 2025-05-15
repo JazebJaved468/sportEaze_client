@@ -54,6 +54,7 @@ import {
 import {AccountSettingsPage} from '../AccountSettings';
 import {FollowerListingPage} from '../../Player/Followerlisting';
 import {WalletPage} from '../Wallet';
+import {PlayerComparisonPage} from '../../Player/PlayerComparison';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -341,6 +342,24 @@ const Menu = () => {
                     key: 'colorMode',
                     value: colorMode === 'light' ? 'dark' : 'light',
                   });
+                }}
+              />
+            </MenuSection>
+
+            <MenuSection>
+              <MenuSectionHeader title='Explore' />
+              <MenuSectionItem
+                activeOpacity={1}
+                title='Compare Players'
+                leftIcon={
+                  <TermsAndConditionsIcon
+                    width={18}
+                    height={18}
+                    color={textColor}
+                  />
+                }
+                onPress={() => {
+                  navigation.navigate(PlayerComparisonPage);
                 }}
               />
             </MenuSection>

@@ -22,6 +22,7 @@ export type Player = {
   wallet: Wallet;
   xLink: string | null;
   postCount: number;
+  totalContracts: number;
 };
 
 export type Wallet = {

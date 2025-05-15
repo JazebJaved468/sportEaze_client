@@ -20,7 +20,9 @@ import {
   NotificationResponse,
 } from './socket.type';
 import {Wallet} from '../../types/player/player.type';
-const SOCKET_URL = process.env.SPORTEAZE_SOCKET_API; // Replace with your backend URL
+import {SPORTEAZE_SOCKET_API} from '../baseApi.service';
+
+const SOCKET_URL = SPORTEAZE_SOCKET_API; // Replace with your backend URL
 
 let socket: Socket | null = null;
 
