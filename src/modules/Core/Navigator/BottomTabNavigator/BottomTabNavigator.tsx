@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {appColors} from '../../../../constants/colors';
 import PostFeed from '../../PostFeed';
-import ChatListing from '../../Chat/ChatListing';
+import ChatListing, {ChatListingPage} from '../../Chat/ChatListing';
 import CreatePost from '../../../Player/CreatePost';
 import {useColorModeValue} from 'native-base';
 import {
@@ -583,9 +583,9 @@ export const MentorBottomTabNavigator = () => {
         };
       }}>
       <Tab.Screen name={BottomTabNames.Feed} component={PostFeed} />
-      <Tab.Screen name={BottomTabNames.Explore} component={PostFeed} />
+      <Tab.Screen name={BottomTabNames.Explore} component={FanExplore} />
       <Tab.Screen name={BottomTabNames.Create} component={CreatePost} />
-      <Tab.Screen name={BottomTabNames.Messages} component={PlayerProfile} />
+      <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
       <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
   );

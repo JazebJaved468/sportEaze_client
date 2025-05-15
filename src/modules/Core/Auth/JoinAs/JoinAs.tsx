@@ -115,10 +115,14 @@ export const JoinAs = () => {
   }, [navigation]);
 
   const navigateToMentorRegistration = useCallback(() => {
-    navigation.navigate(MentorRegistrationDetailsPage);
+    navigation.navigate(MentorRegistrationDetailsPage, {
+      isEditProfile: false,
+    });
   }, [navigation]);
   const navigateToPatronRegistration = useCallback(() => {
-    navigation.navigate(PatronRegistrationDetailsPage);
+    navigation.navigate(PatronRegistrationDetailsPage, {
+      isEditProfile: false,
+    });
   }, [navigation]);
 
   const joiningOptions = useMemo(

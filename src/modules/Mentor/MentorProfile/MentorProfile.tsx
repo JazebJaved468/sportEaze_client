@@ -1,31 +1,13 @@
 import {
   Image,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import React from 'react';
-import PageContainer from '../../../components/PageContainer';
-import GeneralHeader from '../../../components/GeneralHeader';
-import {
-  CrossIcon,
-  ImagePlaceholderIcon,
-  RemoveUserIcon,
-  SettingsIcon,
-  TickIcon,
-  UserPlaceholderIcon,
-} from '../../../assets/icons';
-import {appColors} from '../../../constants/colors';
-import {fontBold, fontRegular} from '../../../styles/fonts';
-import {Button, View} from 'native-base';
-import {
-  useTextColor,
-  useLightTextColor,
-  useCardColor,
-} from '../../../utils/customHooks/colorHooks';
-import {useContainerShadow} from '../../../utils/customHooks/customHooks';
-import {useAppSelector} from '../../../utils/customHooks/storeHooks';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
 import {
@@ -34,38 +16,74 @@ import {
   useRequestConnectUserMutation,
   useRespondConnectionRequestMutation,
 } from '../../../store/core/core.service';
-import {PulseEffect} from '../../../components/PulseEffect';
+import {useAppNavigation} from '../../../utils/customHooks/navigator';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
 import {useGetUserByIdServiceQuery} from '../../../store/auth/auth.service';
+import {Button, FavouriteIcon} from 'native-base';
+import {
+  CoachIcon,
+  ConnectionRequestIcon,
+  CrossIcon,
+  EndorsementIcon,
+  FlagIcon,
+  FollowingsIcon,
+  ImagePlaceholderIcon,
+  RemoveUserIcon,
+  SettingsIcon,
+  TeamIcon,
+  TickIcon,
+  UserPlaceholderIcon,
+} from '../../../assets/icons';
 import {Loader} from '../../../components/Loader';
+import {PulseEffect} from '../../../components/PulseEffect';
+import {appColors} from '../../../constants/colors';
 import {
   ConnectionReqResponse,
   ConnectionStatus,
   USER_TYPE,
 } from '../../../constants/enums';
-import {MessageButton} from '../../../components/MessageButton/MessageButton';
-import {useAppNavigation} from '../../../utils/customHooks/navigator';
-import {AccountSettingsPage} from '../../Core/AccountSettings';
+import {fontBold, fontRegular} from '../../../styles/fonts';
 import {customHeight} from '../../../styles/responsiveStyles';
+import {
+  useTextColor,
+  useLightTextColor,
+  useCardColor,
+} from '../../../utils/customHooks/colorHooks';
+import {useContainerShadow} from '../../../utils/customHooks/customHooks';
+import GeneralHeader from '../../../components/GeneralHeader';
+import {MessageButton} from '../../../components/MessageButton/MessageButton';
+import PageContainer from '../../../components/PageContainer';
+import {AccountSettingsPage} from '../../Core/AccountSettings';
 import {UserPostsPage} from '../../Core/UserPosts';
+import {CountTile} from '../../Fan/FanProfile/FanProfile';
+import {MentorEndorsementListingPage} from '../MentorEndorsementListing';
+import {IconTitleName} from '../../Player/PlayerProfile/PlayerProfile';
+import {MentorRoles} from '../../../constants/mentor';
+import {updateToast} from '../../../store/core/core.slice';
 
-export type PlayerProfilePageRouteProp = RouteProp<
+export type MentorProfilePageRouteProp = RouteProp<
   RootStackParamList,
-  'PlayerProfilePage'
+  'MentorProfilePage'
 >;
 
-export const FanProfile = () => {
-  const {params} = useRoute<PlayerProfilePageRouteProp>();
+const MentorProfile = () => {
+  const {params} = useRoute<MentorProfilePageRouteProp>();
   const navigation = useAppNavigation();
   const {user, isLoggedIn, userType} = useAppSelector(state => state.auth);
+
+  const dispatch = useAppDispatch();
 
   const isVisitor = user?.id !== params.userId;
 
   const {data: sports} = useGetAvailableSportsQuery();
 
   const {
-    data: fanData,
-    isLoading: fanDataCIP,
-    isFetching: fanDataFIP,
+    data: mentorData,
+    isLoading: mentorDataCIP,
+    isFetching: mentorDataFIP,
   } = useGetUserByIdServiceQuery(
     {userId: params.userId},
     // {refetchOnMountOrArgChange: true},
@@ -95,7 +113,7 @@ export const FanProfile = () => {
 
   const handleRequestConnection = async () => {
     try {
-      await requestConnection({receiverId: fanData?.id as string}).unwrap();
+      await requestConnection({receiverId: mentorData?.id as string}).unwrap();
     } catch (err) {
       console.log('error while adding connection', err);
     }
@@ -105,9 +123,9 @@ export const FanProfile = () => {
     action: ConnectionReqResponse,
   ) => {
     try {
-      if (fanData?.id) {
+      if (mentorData?.id) {
         await respondConnectionRequest({
-          requesterId: fanData?.id,
+          requesterId: mentorData?.id,
           action: action,
         }).unwrap();
       }
@@ -118,9 +136,9 @@ export const FanProfile = () => {
 
   const handleCancelConnectionRequest = async () => {
     try {
-      if (fanData?.id) {
+      if (mentorData?.id) {
         removeConnection({
-          connectionId: fanData?.id,
+          connectionId: mentorData?.id,
         }).unwrap();
       }
     } catch (err) {
@@ -129,7 +147,10 @@ export const FanProfile = () => {
   };
 
   const ConnectionActionButtons = () => {
-    if (fanData && fanData.connection.status === ConnectionStatus.REJECTED) {
+    if (
+      mentorData &&
+      mentorData.connection.status === ConnectionStatus.REJECTED
+    ) {
       return (
         <PulseEffect>
           <Button
@@ -149,8 +170,8 @@ export const FanProfile = () => {
         </PulseEffect>
       );
     } else if (
-      fanData &&
-      fanData.connection.status === ConnectionStatus.ACCEPTED
+      mentorData &&
+      mentorData.connection.status === ConnectionStatus.ACCEPTED
     ) {
       return (
         <View style={styles.acceptRejectButtonContainer}>
@@ -190,10 +211,10 @@ export const FanProfile = () => {
         </View>
       );
     } else if (
-      fanData &&
-      fanData.connection.status === ConnectionStatus.PENDING
+      mentorData &&
+      mentorData.connection.status === ConnectionStatus.PENDING
     ) {
-      if (user && fanData.connection.receiverId === user.id) {
+      if (user && mentorData.connection.receiverId === user.id) {
         return respondConnectionRequestCIP ? (
           <View style={{width: 50, height: 32}}>
             <Loader size={26} />
@@ -289,9 +310,9 @@ export const FanProfile = () => {
 
   return (
     <PageContainer>
-      <GeneralHeader title='Fan Profile' />
+      <GeneralHeader title='Mentor Profile' />
 
-      {fanDataCIP || fanDataFIP || !fanData ? (
+      {mentorDataCIP || mentorDataFIP || !mentorData ? (
         <Loader />
       ) : (
         <ScrollView contentContainerStyle={styles.container}>
@@ -299,9 +320,9 @@ export const FanProfile = () => {
             <View style={styles.picNameSettings}>
               <View style={styles.picName}>
                 <View style={styles.profilePicContainer}>
-                  {fanData.profilePicUrl ? (
+                  {mentorData.profilePicUrl ? (
                     <Image
-                      source={{uri: fanData.profilePicUrl}}
+                      source={{uri: mentorData.profilePicUrl}}
                       style={{
                         width: 90,
                         height: 90,
@@ -319,10 +340,10 @@ export const FanProfile = () => {
                 </View>
                 <View style={{gap: 6}}>
                   <Text style={fontBold(18, textColor)}>
-                    {fanData.fullName}
+                    {mentorData.fullName}
                   </Text>
                   <Text style={fontRegular(14, lightTextColor)}>
-                    {fanData.username}
+                    {mentorData.username}
                   </Text>
                 </View>
               </View>
@@ -342,14 +363,44 @@ export const FanProfile = () => {
               )}
             </View>
 
+            {/* Bio */}
+            {mentorData.mentor?.bio ? (
+              <View style={styles.bio}>
+                <Text style={fontRegular(14, textColor)}>
+                  {mentorData.mentor?.bio}
+                </Text>
+              </View>
+            ) : null}
+
+            {/* Send Message */}
+
+            <View style={{}}>
+              {isVisitor ? <MessageButton receiverId={mentorData.id} /> : null}
+            </View>
+
             {/* SPorts */}
             {sports && (
               <View style={styles.interestedSportsContainer}>
-                <Text style={fontBold(16, textColor)}>Interested Sports</Text>
+                <Text
+                  style={[
+                    fontBold(16, textColor),
+                    {marginBottom: 16, marginTop: 10},
+                  ]}>
+                  Interested Sports
+                </Text>
 
-                {fanData.sportInterests && (
+                {mentorData.mentor?.primarySport && (
+                  <View>
+                    <Text
+                      style={[fontRegular(14, textColor), styles.primarySport]}>
+                      {sports[mentorData.mentor.primarySport]}
+                    </Text>
+                  </View>
+                )}
+
+                {mentorData.mentor?.sportInterests && (
                   <View style={styles.secondarySportsWrapper}>
-                    {fanData.sportInterests.map(sport => (
+                    {mentorData.mentor.sportInterests.map(sport => (
                       <Text
                         key={sport}
                         style={[
@@ -365,10 +416,30 @@ export const FanProfile = () => {
             )}
           </View>
 
-          {/* Send Message */}
-
-          <View style={{marginHorizontal: 16}}>
-            {isVisitor ? <MessageButton receiverId={fanData.id} /> : null}
+          <View style={{marginBottom: 24, gap: 16, marginHorizontal: 16}}>
+            {mentorData.mentor?.role && (
+              <IconTitleName
+                icon={<FlagIcon width={14} height={14} color={textColor} />}
+                title='Role : '
+                name={MentorRoles[mentorData.mentor.role]}
+              />
+            )}
+            {mentorData.mentor?.currentAffiliation && (
+              <IconTitleName
+                icon={<CoachIcon width={14} height={14} color={textColor} />}
+                title='Affiliated With : '
+                name={mentorData.mentor.currentAffiliation}
+              />
+            )}
+            {mentorData.mentor?.yearsOfExperience && (
+              <IconTitleName
+                icon={
+                  <FollowingsIcon width={14} height={14} color={textColor} />
+                }
+                title='Years Of Experience : '
+                name={mentorData.mentor.yearsOfExperience ?? 5}
+              />
+            )}
           </View>
 
           {/* Counts */}
@@ -380,14 +451,18 @@ export const FanProfile = () => {
             ]}>
             <CountTile
               title='Connections'
-              count={fanData.connectionCount ?? 0}
+              count={mentorData.connectionCount ?? 0}
             />
-            <CountTile title='Followings' count={fanData.followerCount ?? 0} />
             <CountTile
-              title='Posts'
-              count={fanData.sharedPostCount ?? 0}
+              title='Followings'
+              count={mentorData.followerCount ?? 0}
               showSeparator={false}
             />
+            {/* <CountTile
+              title='Posts'
+              count={mentorData.sharedPostCount ?? 0}
+              showSeparator={false}
+            /> */}
           </View>
 
           <View style={styles.cardsContainer}>
@@ -396,9 +471,9 @@ export const FanProfile = () => {
               activeOpacity={0.6}
               onPress={() => {
                 navigation.navigate(UserPostsPage, {
-                  userId: fanData.id,
+                  userId: mentorData.id,
 
-                  userType: fanData.userType as USER_TYPE,
+                  userType: mentorData.userType as USER_TYPE,
                 });
               }}
               style={[
@@ -420,6 +495,72 @@ export const FanProfile = () => {
                 Shared Posts
               </Text>
             </TouchableOpacity>
+
+            {/* 2nd */}
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                navigation.navigate(MentorEndorsementListingPage, {
+                  mentorId: mentorData.id,
+                });
+              }}
+              style={[
+                styles.card,
+                {backgroundColor: cardColor},
+                containerShadow,
+              ]}>
+              <EndorsementIcon
+                width={45}
+                height={45}
+                color={textColor}
+                strokeWidth={1.1}
+              />
+              <Text
+                style={[
+                  fontBold(16, textColor),
+                  {marginTop: customHeight(10)},
+                ]}>
+                Endorsements
+              </Text>
+            </TouchableOpacity>
+
+            {/* 3rd */}
+
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                try {
+                  Linking.openURL(mentorData.mentor?.website ?? '');
+                } catch (err) {
+                  dispatch(
+                    updateToast({
+                      isVisible: true,
+                      message: 'Sorry! Portfolio link is not working',
+                    }),
+                  );
+                  console.log('error while opening website', err);
+                }
+              }}
+              style={[
+                styles.card,
+
+                {backgroundColor: cardColor, width: '100%'},
+                containerShadow,
+              ]}>
+              <ConnectionRequestIcon
+                width={45}
+                height={45}
+                color={textColor}
+                strokeWidth={1.1}
+              />
+              <Text
+                style={[
+                  fontBold(16, textColor),
+                  {marginTop: customHeight(10)},
+                ]}>
+                Portfolio
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={{height: 40}} />
@@ -429,32 +570,7 @@ export const FanProfile = () => {
   );
 };
 
-export const CountTile = ({
-  title,
-  count,
-  showSeparator = true,
-}: {
-  title: string;
-  count: number;
-  showSeparator?: boolean;
-}) => {
-  const textColor = useTextColor();
-
-  const lightTextColor = useLightTextColor();
-  return (
-    <View
-      style={[
-        styles.countTile,
-        {
-          borderRightWidth: showSeparator ? 1 : 0,
-          borderRightColor: `${textColor}30`,
-        },
-      ]}>
-      <Text style={fontRegular(13, textColor)}>{title}</Text>
-      <Text style={fontBold(18, textColor)}>{count}</Text>
-    </View>
-  );
-};
+export default MentorProfile;
 
 const styles = StyleSheet.create({
   container: {
@@ -513,7 +629,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingVertical: 7,
     paddingHorizontal: 14,
-    marginVertical: 16,
+    marginBottom: 16,
   },
   interestedSportsContainer: {
     marginBottom: 26,
@@ -530,7 +646,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginTop: 16,
+    // marginTop: 16,
   },
 
   postsContainer: {
@@ -585,7 +701,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: '100%',
+    width: '48%',
     // paddingVertical: customHeight(40),
     height: customHeight(160),
     alignItems: 'center',

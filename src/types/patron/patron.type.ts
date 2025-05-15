@@ -18,6 +18,7 @@ export type Patron = {
   reviewedByAdminId: string;
   adminReviewComment: string;
   wallet: Wallet;
+  totalContracts: number;
 };
 
 export type Contract = {
