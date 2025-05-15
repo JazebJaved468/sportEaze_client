@@ -10,4 +10,5 @@ export const appColors = {
   richBlack: '#030712',
   lavender: '#8660F1',
   charcoalBlue: '#060813',
+  lightGrey:'#A6A6AA'
 };
