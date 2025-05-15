@@ -34,7 +34,8 @@ import {Divider} from '../../../components/Divider';
 import {useContainerShadow} from '../../../utils/customHooks/customHooks';
 import {PatronAccountStatusBadge} from '../PatronRequests/PatronRequests';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {formatPlayerLevels} from '../../../constants/player';
+import {formatPlayerLevels, formatSports} from '../../../constants/player';
+import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
 
 type PatronDetailsVerificationPageRouteProp = RouteProp<
   RootStackParamList,
@@ -59,6 +60,8 @@ const PatronDetailsVerification = () => {
   });
 
   const patronData = data?.[0];
+
+  // console.log('Patron Data', patronData);
 
   const {
     handleSubmit,
@@ -285,6 +288,8 @@ const PatronDetails = ({data}: {data: User}) => {
 
   const containerShadow = useContainerShadow();
 
+  const {data: sportsMap} = useGetAvailableSportsQuery();
+
   return (
     <View
       style={[
@@ -354,22 +359,23 @@ const PatronDetails = ({data}: {data: User}) => {
           )}
         </View>
       </View>
-
       <View style={{marginBottom: customHeight(20)}}>
         <Divider />
       </View>
-
       <Tile title='Industry' value={data.patron?.industryType} />
-      <Tile title='Sports To Support' value={data.patron?.industryType} />
+      {sportsMap ? (
+        <Tile
+          title='Sports To Support'
+          value={formatSports(data.patron?.supportedSports, sportsMap)}
+        />
+      ) : null}
       <Tile
         title='Preferred Player Levels'
         value={formatPlayerLevels(data.patron?.preferredPlayerLevels)}
       />
-
       <View style={{marginBottom: customHeight(20)}}>
         <Divider />
       </View>
-
       <Tile title='Portfolio Website' value={data.patron?.website} isLink />
       <Tile title='Facebook' value={data.patron?.fbLink} isLink />
       <Tile title='Instagram' value={data.patron?.instaLink} isLink />

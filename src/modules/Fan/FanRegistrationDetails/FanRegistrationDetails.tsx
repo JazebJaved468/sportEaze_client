@@ -41,6 +41,7 @@ import {useGetAppSettingsQuery} from '../../../store/superAdmin/superAdmin.servi
 import {CustomModal} from '../../../components/CustomModal/CustomModal';
 import {customHeight} from '../../../styles/responsiveStyles';
 import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
+import {FanRootPage} from '../Root';
 
 type FanRegistrationDetailsPageRouteProp = RouteProp<
   RootStackParamList,
@@ -232,7 +233,7 @@ const ChooseSportsInterest: React.FC<ChooseSportsInterestProps> = ({
       await registerFan(apiData).unwrap();
       navigation.reset({
         index: 0,
-        routes: [{name: RecommendationsPage}],
+        routes: [{name: FanRootPage}],
       });
     } catch (error) {
       console.log(
