@@ -45,8 +45,8 @@ type GeminiAnalysisType = {
 
 export const PlayerComparison = () => {
   const navigation = useAppNavigation();
-  const [playerOneUsername, setPlayerOneUsername] = useState('@jazeb_player');
-  const [playerTwoUsername, setPlayerTwoUsername] = useState('@player1234');
+  const [playerOneUsername, setPlayerOneUsername] = useState('');
+  const [playerTwoUsername, setPlayerTwoUsername] = useState('');
   const [showComparison, setShowComparison] = useState(false);
   const [geminiAnalysis, setGeminiAnalysis] = useState<GeminiAnalysisType>({
     response: undefined,
@@ -382,13 +382,26 @@ export const PlayerComparison = () => {
         <ScrollView
           contentContainerStyle={{paddingBottom: 100}}
           showsVerticalScrollIndicator={false}>
+          {/* <Text style={fontBold(14, textColor)}> Enter Player Usernames</Text> */}
+          <Text
+            style={[
+              fontBold(13, textColor),
+              {
+                marginTop: customHeight(6),
+                marginBottom: customHeight(20),
+              },
+            ]}>
+            Enter the usernames of the players you want to compare.
+          </Text>
+
           <View style={styles.inputContainer}>
             <View style={styles.profileImagePlaceholder}>
               <View style={styles.profilePicContainer}>
-                <UserPlaceholderIcon width={28} height={28} color={textColor} />
+                <UserPlaceholderIcon width={30} height={30} color={textColor} />
               </View>
               <Input
-                placeholder='Enter first username'
+                borderRadius={12}
+                placeholder='@player_1'
                 value={playerOneUsername}
                 onChangeText={setPlayerOneUsername}
                 mt={3}
@@ -396,15 +409,16 @@ export const PlayerComparison = () => {
                 variant='filled'
                 backgroundColor={cardColor}
                 color={textColor}
+                focusOutlineColor={textColor}
               />
             </View>
 
             <View style={styles.profileImagePlaceholder}>
               <View style={styles.profilePicContainer}>
-                <UserPlaceholderIcon width={28} height={28} color={textColor} />
+                <UserPlaceholderIcon width={30} height={30} color={textColor} />
               </View>
               <Input
-                placeholder='Enter second username'
+                placeholder='@player_2'
                 value={playerTwoUsername}
                 onChangeText={setPlayerTwoUsername}
                 mt={3}
@@ -412,6 +426,8 @@ export const PlayerComparison = () => {
                 variant='filled'
                 backgroundColor={cardColor}
                 color={textColor}
+                borderRadius={12}
+                focusOutlineColor={textColor}
               />
             </View>
           </View>
@@ -422,7 +438,9 @@ export const PlayerComparison = () => {
             <Button
               style={[styles.compareButton]}
               onPress={handleCompare}
-              isDisabled={!playerOneUsername || !playerTwoUsername}
+              isDisabled={
+                !playerOneUsername.trim() || !playerTwoUsername.trim()
+              }
               _text={{color: 'white', fontWeight: 'bold'}}
               backgroundColor={appColors.warmRed}>
               Compare Players
@@ -933,6 +951,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: customHeight(20),
     marginBottom: customHeight(30),
+    marginHorizontal: customWidth(16),
   },
   profileImagePlaceholder: {
     width: '48%',

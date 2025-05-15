@@ -66,6 +66,9 @@ export type Post = {
   commentCount: number;
   sharedId?: string;
   share?: Share;
+  contractId?: string | null;
+  milestoneId?: string | null;
+  patron?: UserWindow;
 };
 
 export type Comment = {

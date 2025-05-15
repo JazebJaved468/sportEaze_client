@@ -13,6 +13,7 @@ import {appColors} from '../../../constants/colors';
 import {fontRegular} from '../../../styles/fonts';
 import {useTextColor} from '../../../utils/customHooks/colorHooks';
 import {useAppSelector} from '../../../utils/customHooks/storeHooks';
+import {Post} from '../../../types/player/player.type';
 
 export const PostFeed = () => {
   const {user, isLoggedIn} = useAppSelector(state => state.auth);
@@ -65,7 +66,22 @@ export const PostFeed = () => {
   }, [isLoggedIn]);
 
   const mergedData = {
-    posts: posts?.pages.flatMap(page => page) ?? [],
+    posts: (() => {
+      if (!posts?.pages) return [];
+
+      const seenKeys = new Set();
+      const uniquePosts: Post[] = [];
+
+      posts.pages.flat().forEach(post => {
+        const uniqueKey = `${post.id}-${post.sharedId}`;
+        if (!seenKeys.has(uniqueKey)) {
+          seenKeys.add(uniqueKey);
+          uniquePosts.push(post);
+        }
+      });
+
+      return uniquePosts;
+    })(),
   };
 
   // const numberOfPages = posts?.pages.length ?? 0;
@@ -92,7 +108,7 @@ export const PostFeed = () => {
           refreshControl={
             <PullToRefresh
               onRefresh={async () => {
-                refetchPostFeed();
+                await refetchPostFeed();
               }}
             />
           }

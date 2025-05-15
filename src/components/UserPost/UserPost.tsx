@@ -31,7 +31,7 @@ import {Media, Post} from '../../types/player/player.type';
 import {fontBold, fontRegular} from '../../styles/fonts';
 import {format} from 'date-fns';
 import {FallBackPostImage} from '../FallBackPostImage';
-import {MediaType} from '../../constants/enums';
+import {MediaType, USER_TYPE} from '../../constants/enums';
 import VideoPlayer from '../VideoPlayer';
 import {CustomTextInputField} from '../CustomInputField';
 import {Controller, useForm} from 'react-hook-form';
@@ -50,6 +50,7 @@ import {
   useAppSelector,
 } from '../../utils/customHooks/storeHooks';
 import {updateToast} from '../../store/core/core.slice';
+import {customHeight, customWidth} from '../../styles/responsiveStyles';
 
 const UserPost = ({post}: {post: Post}) => {
   const [isLiked, setIsLiked] = useState(post.isLiked ?? false);
@@ -101,6 +102,9 @@ const PostHeader = ({post}: {post: Post}) => {
   };
 
   const isSharedPost = post.sharedId ? true : false;
+
+  const isSponsoredPost = post.contractId && !post.sharedId ? true : false;
+
   const profilePicUrl = isSharedPost
     ? post.share?.user.profilePicUrl
     : post.user.profilePicUrl;
@@ -112,46 +116,84 @@ const PostHeader = ({post}: {post: Post}) => {
     ? post.share?.user.userType
     : post.user.userType;
 
-  return (
-    <View style={styles.postHeader}>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={() => {
-          if (!userId || !userType) return;
-          navigateToProfilePage({
-            userId,
-            userType,
-          });
-        }}>
-        <View style={styles.picName}>
-          <View style={styles.profilePicContainer}>
-            {profilePicUrl ? (
-              <Image
-                source={{uri: profilePicUrl}}
-                style={{
-                  width: 50,
-                  height: 50,
-                  objectFit: 'contain',
-                  borderRadius: 200,
-                }}
-              />
-            ) : (
-              <UserPlaceholderIcon width={40} height={40} color={textColor} />
-            )}
-          </View>
-          <View style={{gap: 4}}>
-            <Text style={fontBold(14, textColor)}>{fullName}</Text>
-            <Text style={fontRegular(10, lightTextColor)}>
-              {format(post.createdAt, 'MMM d h:mm aaa')}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+  const overlayColor = useColorModeValue(
+    `${appColors.warmRed}30`,
+    `${appColors.warmRed}`,
+  );
 
-      <TouchableOpacity activeOpacity={0.4} onPress={handleSavePost}>
-        {/* <SaveTickIcon width={20} height={20} style={{marginLeft: 'auto'}} /> */}
-        <SaveAddIcon width={20} height={20} color={textColor} />
-      </TouchableOpacity>
+  return (
+    <View>
+      <View style={styles.postHeader}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            if (!userId || !userType) return;
+            navigateToProfilePage({
+              userId,
+              userType,
+            });
+          }}>
+          <View style={styles.picName}>
+            <View style={styles.profilePicContainer}>
+              {profilePicUrl ? (
+                <Image
+                  source={{uri: profilePicUrl}}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    objectFit: 'contain',
+                    borderRadius: 200,
+                  }}
+                />
+              ) : (
+                <UserPlaceholderIcon width={40} height={40} color={textColor} />
+              )}
+            </View>
+            <View style={{gap: 4}}>
+              <Text style={fontBold(14, textColor)}>{fullName}</Text>
+              <Text style={fontRegular(10, lightTextColor)}>
+                {format(post.createdAt, 'MMM d h:mm aaa')}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        {isSponsoredPost ? (
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => {
+              if (!post.patron) return;
+              navigateToProfilePage({
+                userId: post.patron.id,
+                userType: USER_TYPE.PATRON,
+              });
+            }}>
+            <View
+              style={{
+                gap: 4,
+                backgroundColor: overlayColor,
+                paddingHorizontal: 14,
+                paddingVertical: 6,
+                borderRadius: 10,
+              }}>
+              <Text style={fontBold(10, textColor)}>
+                {post.patron?.fullName}
+              </Text>
+              <Text style={fontRegular(10, lightTextColor)}>Sponsor</Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
+      {isSharedPost ? (
+        <View
+          style={{
+            marginBottom: customHeight(10),
+            marginHorizontal: customWidth(20),
+          }}>
+          <Text style={fontRegular(13, textColor)}>{post.share?.message}</Text>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -303,6 +345,12 @@ const SharedPostHeader = ({post}: {post: Post}) => {
   const postBackgroundColor = usePostBackgroundColor();
   const lightTextColor = useLightTextColor();
 
+  const overlayColor = useColorModeValue(
+    `${appColors.warmRed}30`,
+    `${appColors.warmRed}`,
+  );
+  const isSponsoredPost = post.contractId ? true : false;
+
   return (
     <View
       style={[
@@ -347,6 +395,30 @@ const SharedPostHeader = ({post}: {post: Post}) => {
           </View>
         </View>
       </TouchableOpacity>
+
+      {isSponsoredPost ? (
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            if (!post.patron) return;
+            navigateToProfilePage({
+              userId: post.patron.id,
+              userType: USER_TYPE.PATRON,
+            });
+          }}>
+          <View
+            style={{
+              gap: 4,
+              backgroundColor: overlayColor,
+              paddingHorizontal: 14,
+              paddingVertical: 6,
+              borderRadius: 10,
+            }}>
+            <Text style={fontBold(10, textColor)}>{post.patron?.fullName}</Text>
+            <Text style={fontRegular(10, lightTextColor)}>Sponsor</Text>
+          </View>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

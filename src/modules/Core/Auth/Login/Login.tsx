@@ -19,8 +19,11 @@ export const Login = () => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      email: 'jazeb.player@gmail.com',
-      password: 'SecurePassword!123',
+      email: '',
+      password: '',
+
+      // email: 'jazeb.player@gmail.com',
+      // password: 'SecurePassword!123',
     },
   });
   const onSubmit = async (data: {email: string; password: string}) => {

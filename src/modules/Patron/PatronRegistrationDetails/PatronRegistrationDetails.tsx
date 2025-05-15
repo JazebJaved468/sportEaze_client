@@ -254,8 +254,8 @@ const PatronRegistrationGeneralDetails: React.FC<
       fullName: formData.fullName || '',
       username: formData.username || '',
       industryType: formData.industryType || '',
-      website: formData.website || 'https://www.instagram.com/yourprofile',
-      pic: ' ',
+      website: formData.website || '',
+      pic: '',
     },
   });
 
@@ -728,10 +728,10 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      fbLink: 'https://www.facebook.com/yourprofile',
+      fbLink: '',
       xLink: '',
-      instaLink: 'https://www.instagram.com/yourprofile',
-      linkedIn: 'https://www.linkedin.com/in/muhammad-jazeb-javed-9472ab225/',
+      instaLink: '',
+      linkedIn: '',
     },
   });
 
@@ -776,10 +776,10 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
           name='linkedIn'
           control={control}
           rules={{
-            required: {
-              value: true,
-              message: 'Kindly enter your Linkedin profile link',
-            },
+            // required: {
+            //   value: true,
+            //   message: 'Kindly enter your Linkedin profile link',
+            // },
             validate: {
               validUrl: value =>
                 value ? isValidLinkedinProfileUrl(value) : true,

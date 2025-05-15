@@ -57,10 +57,13 @@ export const Register = () => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      email: 'jazeb.fan@gmail.com',
-      password: 'SecurePassword!123',
+      email: '',
+      password: '',
     },
   });
+
+  // email: 'jazeb.fan@gmail.com',
+  // password: 'SecurePassword!123',
   const onSubmit = async (data: {email: string; password: string}) => {
     try {
       if (isLogin) {

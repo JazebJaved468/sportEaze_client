@@ -232,10 +232,10 @@ const MentorBioAndExperience: React.FC<MentorBioAndExperienceProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      currentAffiliation: 'Sports Academy',
-      yearsOfExperience: '4',
-      mentorBio: '223',
-      website: 'https://www.instagram.com/yourprofile',
+      currentAffiliation: '',
+      yearsOfExperience: '',
+      mentorBio: '',
+      website: '',
     },
   });
 
@@ -448,9 +448,9 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      fbLink: 'https://www.facebook.com/yourprofile',
+      fbLink: '',
       xLink: '',
-      instaLink: 'https://www.instagram.com/yourprofile',
+      instaLink: '',
     },
   });
 
@@ -525,10 +525,10 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
           name='instaLink'
           control={control}
           rules={{
-            required: {
-              value: true,
-              message: 'Kindly enter your instagram profile link',
-            },
+            // required: {
+            //   value: true,
+            //   message: 'Kindly enter your instagram profile link',
+            // },
             validate: {
               validUrl: value =>
                 value ? isValidInstagramProfileUrl(value) : true,

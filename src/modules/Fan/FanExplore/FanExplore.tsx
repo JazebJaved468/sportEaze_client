@@ -20,6 +20,7 @@ import {
   ExploreIcon,
   UserPlaceholderIcon,
   CrossIcon,
+  ComparisonIcon,
 } from '../../../assets/icons';
 import {View} from 'native-base';
 import {fontBold, fontRegular} from '../../../styles/fonts';
@@ -40,6 +41,7 @@ import {useAppSelector} from '../../../utils/customHooks/storeHooks';
 import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 import PullToRefresh from '../../../components/PullToRefresh';
 import {Loader} from '../../../components/Loader';
+import {PlayerComparisonPage} from '../../Player/PlayerComparison';
 
 const FanExplore = () => {
   const {user} = useAppSelector(state => state.auth);
@@ -117,11 +119,20 @@ const FanExplore = () => {
     return () => clearTimeout(delayDebounce); // Cleanup timeout on each key press
   }, [searchQuery]);
 
+  const containerShadow = useContainerShadow(4);
+
+  const lightTextColor = useLightTextColor();
+  const cardColor = useCardColor();
+
+  const navigation = useAppNavigation();
+
   return (
     <PageContainer>
       <GeneralHeader title='Explore' />
 
       <FlatList
+        keyboardShouldPersistTaps='handled'
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
         }}
@@ -181,178 +192,242 @@ const FanExplore = () => {
               />
             </View>
 
-            {searchQuery.length > 0 ? (
-              // Search Results
-              searchUsersCIP || searchUsersFIP ? (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 10,
-                    marginTop: customHeight(140),
-                  }}>
-                  <ActivityIndicator color={textColor} />
-                  <Text style={fontRegular(16, textColor)}>Searching...</Text>
-                </View>
-              ) : searchedUsers?.length === 0 &&
-                !(searchUsersCIP || searchUsersFIP) ? (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+            {
+              searchQuery.length > 0 ? (
+                // Search Results
+                searchUsersCIP || searchUsersFIP ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 10,
+                      marginTop: customHeight(140),
+                    }}>
+                    <ActivityIndicator color={textColor} />
+                    <Text style={fontRegular(16, textColor)}>Searching...</Text>
+                  </View>
+                ) : searchedUsers?.length === 0 &&
+                  !(searchUsersCIP || searchUsersFIP) ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
 
-                    marginTop: customHeight(140),
-                  }}>
-                  <Text style={fontRegular(16, textColor)}>
-                    Sorry, No Users found
-                  </Text>
-                </View>
+                      marginTop: customHeight(140),
+                    }}>
+                    <Text style={fontRegular(16, textColor)}>
+                      Sorry, No Users found
+                    </Text>
+                  </View>
+                ) : (
+                  <FlatList
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps='handled'
+                    style={{
+                      paddingHorizontal: customWidth(18),
+                      flexGrow: 1,
+                      // backgroundColor: 'red',
+                    }}
+                    data={searchedUsers ?? []}
+                    renderItem={({item, index}) => (
+                      <UserWindow
+                        fullName={item.fullName}
+                        profilePicUrl={item.profilePicUrl}
+                        userId={item.id}
+                        userType={item.userType}
+                        username={item.username}
+                      />
+                    )}
+                    keyExtractor={item => item.id.toString()}
+                  />
+                )
               ) : (
-                <FlatList
-                  showsVerticalScrollIndicator={false}
-                  keyboardShouldPersistTaps='handled'
-                  style={{
-                    paddingHorizontal: customWidth(18),
-                    flexGrow: 1,
-                    // backgroundColor: 'red',
-                  }}
-                  data={searchedUsers ?? []}
-                  renderItem={({item, index}) => (
-                    <UserWindow
-                      fullName={item.fullName}
-                      profilePicUrl={item.profilePicUrl}
-                      userId={item.id}
-                      userType={item.userType}
-                      username={item.username}
-                    />
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={[
+                      {
+                        backgroundColor: cardColor,
+                        marginBottom: customHeight(20),
+                        height: customHeight(100),
+                        marginHorizontal: 16,
+                        justifyContent: 'center',
+                        borderRadius: 16,
+                        overflow: 'hidden',
+                      },
+                      containerShadow,
+                    ]}
+                    onPress={() => {
+                      navigation.navigate(PlayerComparisonPage);
+                    }}>
+                    <View
+                      style={[
+                        {
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: cardColor,
+                          gap: 10,
+                        },
+                      ]}>
+                      <ComparisonIcon
+                        width={customWidth(32)}
+                        height={customWidth(32)}
+                        color={appColors.warmRed}
+                      />
+                      <Text style={fontBold(13, textColor)}>
+                        Player Comparison
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  {rankedPlayersCIP ||
+                  matchedMentorsCIP ||
+                  matchedPatronsCIP ? (
+                    <View style={{marginTop: '60%'}}>
+                      <Loader />
+                    </View>
+                  ) : (
+                    <>
+                      {rankedPlayers ? (
+                        <View
+                          style={{
+                            marginBottom: customHeight(20),
+                          }}>
+                          <Text
+                            style={[
+                              fontBold(18, textColor),
+                              {
+                                marginBottom: customHeight(16),
+                                marginHorizontal: 16,
+                              },
+                            ]}>
+                            Rising Players
+                          </Text>
+
+                          <FlatList
+                            refreshControl={
+                              <PullToRefresh onRefresh={onRefresh} />
+                            }
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps='handled'
+                            contentContainerStyle={{
+                              paddingHorizontal: 16,
+                              gap: 16,
+                            }}
+                            data={rankedPlayers ?? []}
+                            renderItem={({item, index}) => (
+                              <UserCard
+                                // data={item}
+                                count={item.followerCount ?? 0}
+                                name={item.fullName}
+                                userName={item.username}
+                                profilePicUrl={item.profilePicUrl}
+                                userId={item.id}
+                                userType={item.userType}
+                                isPlayer={true}
+                                sport={
+                                  sports?.[item.player?.primarySport ?? ''] ??
+                                  ''
+                                }
+                              />
+                            )}
+                            keyExtractor={item => item.id.toString()}
+                          />
+                        </View>
+                      ) : null}
+
+                      {matchedPatrons ? (
+                        <View
+                          style={{
+                            marginBottom: customHeight(20),
+                          }}>
+                          <Text
+                            style={[
+                              fontBold(18, textColor),
+                              {
+                                marginBottom: customHeight(16),
+                                marginHorizontal: 16,
+                              },
+                            ]}>
+                            Patrons
+                          </Text>
+
+                          <FlatList
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps='handled'
+                            contentContainerStyle={{
+                              paddingHorizontal: 16,
+                              gap: customWidth(16),
+                            }}
+                            data={matchedPatrons ?? []}
+                            renderItem={({item, index}) => (
+                              <UserCard
+                                isPatron
+                                count={item.patron?.totalContracts ?? 0}
+                                name={item.fullName}
+                                userName={item.username}
+                                profilePicUrl={item.profilePicUrl}
+                                userId={item.id}
+                                userType={item.userType}
+                              />
+                            )}
+                            keyExtractor={item => item.id.toString()}
+                          />
+                        </View>
+                      ) : null}
+
+                      {matchedMentors ? (
+                        <View
+                          style={{
+                            marginBottom: customHeight(20),
+                          }}>
+                          <Text
+                            style={[
+                              fontBold(18, textColor),
+                              {
+                                marginBottom: customHeight(16),
+                                marginHorizontal: 16,
+                              },
+                            ]}>
+                            Mentors
+                          </Text>
+
+                          <FlatList
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps='handled'
+                            contentContainerStyle={{
+                              paddingHorizontal: 16,
+                              gap: customWidth(16),
+                            }}
+                            data={matchedMentors ?? []}
+                            renderItem={({item, index}) => (
+                              <UserCard
+                                isMentor
+                                count={item.connectionCount ?? 0}
+                                name={item.fullName}
+                                userName={item.username}
+                                profilePicUrl={item.profilePicUrl}
+                                userId={item.id}
+                                userType={item.userType}
+                              />
+                            )}
+                            keyExtractor={item => item.id.toString()}
+                          />
+                        </View>
+                      ) : null}
+                    </>
                   )}
-                  keyExtractor={item => item.id.toString()}
-                />
-              )
-            ) : // If Not search results
-            rankedPlayersCIP || matchedMentorsCIP || matchedPatronsCIP ? (
-              <View style={{marginTop: '60%'}}>
-                <Loader />
-              </View>
-            ) : (
-              <>
-                <View
-                  style={{
-                    marginBottom: customHeight(20),
-                  }}>
-                  <Text
-                    style={[
-                      fontBold(18, textColor),
-                      {marginBottom: customHeight(16), marginHorizontal: 16},
-                    ]}>
-                    Rising Players
-                  </Text>
-
-                  <FlatList
-                    refreshControl={<PullToRefresh onRefresh={onRefresh} />}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                      paddingHorizontal: 16,
-                      gap: 16,
-                    }}
-                    data={rankedPlayers ?? []}
-                    renderItem={({item, index}) => (
-                      <UserCard
-                        // data={item}
-                        count={item.followerCount ?? 0}
-                        name={item.fullName}
-                        userName={item.username}
-                        profilePicUrl={item.profilePicUrl}
-                        userId={item.id}
-                        userType={item.userType}
-                        isPlayer={true}
-                        sport={sports?.[item.player?.primarySport ?? ''] ?? ''}
-                      />
-                    )}
-                    keyExtractor={item => item.id.toString()}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    marginBottom: customHeight(20),
-                  }}>
-                  <Text
-                    style={[
-                      fontBold(18, textColor),
-                      {marginBottom: customHeight(16), marginHorizontal: 16},
-                    ]}>
-                    Patrons
-                  </Text>
-
-                  <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                      paddingHorizontal: 16,
-                      gap: customWidth(16),
-                    }}
-                    data={matchedPatrons ?? []}
-                    renderItem={({item, index}) => (
-                      <UserCard
-                        isPatron
-                        count={item.patron?.totalContracts ?? 0}
-                        name={item.fullName}
-                        userName={item.username}
-                        profilePicUrl={item.profilePicUrl}
-                        userId={item.id}
-                        userType={item.userType}
-                      />
-                    )}
-                    keyExtractor={item => item.id.toString()}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    marginBottom: customHeight(20),
-                  }}>
-                  <Text
-                    style={[
-                      fontBold(18, textColor),
-                      {marginBottom: customHeight(16), marginHorizontal: 16},
-                    ]}>
-                    Mentors
-                  </Text>
-
-                  <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                      paddingHorizontal: 16,
-                      gap: customWidth(16),
-                    }}
-                    data={matchedMentors ?? []}
-                    renderItem={({item, index}) => (
-                      <UserCard
-                        isMentor
-                        count={item.connectionCount ?? 0}
-                        name={item.fullName}
-                        userName={item.username}
-                        profilePicUrl={item.profilePicUrl}
-                        userId={item.id}
-                        userType={item.userType}
-                      />
-                    )}
-                    keyExtractor={item => item.id.toString()}
-                  />
-                </View>
-              </>
-            )}
+                </>
+              ) // If Not search results
+            }
           </View>
         }
       />

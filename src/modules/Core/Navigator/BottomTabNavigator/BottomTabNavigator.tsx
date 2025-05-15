@@ -11,6 +11,7 @@ import ChatListing, {ChatListingPage} from '../../Chat/ChatListing';
 import CreatePost from '../../../Player/CreatePost';
 import {useColorModeValue} from 'native-base';
 import {
+  ContractIcon,
   CreateIcon,
   ExploreIcon,
   HomeIcon,
@@ -56,6 +57,7 @@ const BottomTabNames = {
   Messages: 'Messages',
   Menu: 'Menu',
   Explore: 'Explore',
+  Contracts: 'Contracts',
 };
 
 const TabBarItem = ({
@@ -195,7 +197,6 @@ export const FanBottomTabNavigator = () => {
       <Tab.Screen name={BottomTabNames.Feed} component={PostFeed} />
       <Tab.Screen name={BottomTabNames.Explore} component={FanExplore} />
       <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
-      {/* <Tab.Screen name={BottomTabNames.Profile} component={FanMenu} /> */}
       <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
   );
@@ -398,19 +399,15 @@ export const PatronBottomTabNavigator = () => {
                   />
                 )}
 
-                {route.name === BottomTabNames.Create && (
+                {route.name === BottomTabNames.Contracts && (
                   <TabBarItem
                     color={color}
                     focused={focused}
                     icon={
-                      <CreateIcon
+                      <ContractIcon
                         color={color}
-                        width={
-                          focused ? TAB_ICONS_SIZE + 10 : TAB_ICONS_SIZE + 24
-                        }
-                        height={
-                          focused ? TAB_ICONS_SIZE + 10 : TAB_ICONS_SIZE + 24
-                        }
+                        width={TAB_ICONS_SIZE + 6}
+                        height={TAB_ICONS_SIZE + 6}
                         strokeWidth={focused ? 1.1 : 0.7}
                       />
                     }
@@ -454,7 +451,10 @@ export const PatronBottomTabNavigator = () => {
       }}>
       <Tab.Screen name={BottomTabNames.Feed} component={PostFeed} />
       <Tab.Screen name={BottomTabNames.Explore} component={FanExplore} />
-      <Tab.Screen name={BottomTabNames.Create} component={CreatePost} />
+      {/* <Tab.Screen name={BottomTabNames.Create} component={CreatePost} /> */}
+
+      <Tab.Screen name={BottomTabNames.Contracts} component={FanExplore} />
+
       <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
       <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>
@@ -584,7 +584,7 @@ export const MentorBottomTabNavigator = () => {
       }}>
       <Tab.Screen name={BottomTabNames.Feed} component={PostFeed} />
       <Tab.Screen name={BottomTabNames.Explore} component={FanExplore} />
-      <Tab.Screen name={BottomTabNames.Create} component={CreatePost} />
+      {/* <Tab.Screen name={BottomTabNames.Create} component={CreatePost} /> */}
       <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
       <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
     </Tab.Navigator>

@@ -17,16 +17,22 @@ export const apiStatusLogger = store => next => action => {
     );
   } else if (isRejected(action)) {
     console.log(
-      `REJECTED ----> ENDPOINT = ${action.meta.arg.endpointName} | PAYLOAD = ${JSON.stringify(action.payload)} | ERROR = ${JSON.stringify(action.error)} | TYPE = ${action.type} | STATUS = ${action.meta.requestStatus} | REMAINING = ${action}`,
+      `REJECTED ----> ENDPOINT = ${action.meta.arg.endpointName} | PAYLOAD = ${JSON.stringify(action.payload)} | ERROR = ${JSON.stringify(action.error)} | TYPE = ${action.type} | STATUS = ${action.meta.requestStatus} | REMAINING = ${JSON.stringify(action)}`,
     );
 
     const error = action?.payload?.data?.message;
-    dispatch(
-      updateToast({
-        isVisible: true,
-        message: error,
-      }),
-    );
+
+    if (action?.payload?.status > 400) {
+      console.log('Error message:', error);
+    } else {
+      console.log('Error message not found');
+      dispatch(
+        updateToast({
+          isVisible: true,
+          message: error,
+        }),
+      );
+    }
   }
   return next(action);
 };

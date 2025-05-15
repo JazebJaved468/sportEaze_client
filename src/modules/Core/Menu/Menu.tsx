@@ -346,24 +346,6 @@ const Menu = () => {
               />
             </MenuSection>
 
-            <MenuSection>
-              <MenuSectionHeader title='Explore' />
-              <MenuSectionItem
-                activeOpacity={1}
-                title='Compare Players'
-                leftIcon={
-                  <TermsAndConditionsIcon
-                    width={18}
-                    height={18}
-                    color={textColor}
-                  />
-                }
-                onPress={() => {
-                  navigation.navigate(PlayerComparisonPage);
-                }}
-              />
-            </MenuSection>
-
             {/* App Policies */}
             <MenuSection>
               <MenuSectionHeader title='App Policies' />

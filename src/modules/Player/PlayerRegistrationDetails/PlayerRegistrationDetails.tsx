@@ -433,7 +433,7 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      fbLink: 'https://www.facebook.com/yourprofile', // number
+      fbLink: '', // number
       xLink: '', // number
       instaLink: '',
     },
