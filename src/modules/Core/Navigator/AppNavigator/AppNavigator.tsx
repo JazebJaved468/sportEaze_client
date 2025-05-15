@@ -97,6 +97,12 @@ import PatronProfile, {
 } from '../../../Patron/PatronProfile/index.ts';
 import PatronContractListing from '../../../Patron/PatronContractListing/PatronContractListing.tsx';
 import {PatronContractListingPage} from '../../../Patron/PatronContractListing/index.ts';
+import {
+  PrivacyPolicyPage,
+  TermsAndConditionsPage,
+} from '../../PrivacyPolicy/index.ts';
+import {PrivacyPolicy} from '../../PrivacyPolicy/PrivacyPolicy.tsx';
+import {TermsAndConditions} from '../../PrivacyPolicy/TermsAndConditions.tsx';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -190,6 +196,8 @@ export type RootStackParamList = {
   PatronContractListingPage: {
     userId: string;
   };
+  PrivacyPolicyPage: undefined;
+  TermsAndConditionsPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -320,6 +328,11 @@ export const AppNavigator = () => {
 
       <Stack.Screen name={AccountSettingsPage} component={AccountSettings} />
       <Stack.Screen name={WalletPage} component={Wallet} />
+      <Stack.Screen name={PrivacyPolicyPage} component={PrivacyPolicy} />
+      <Stack.Screen
+        name={TermsAndConditionsPage}
+        component={TermsAndConditions}
+      />
 
       {/* Fan Screens */}
       <Stack.Screen name={FanRootPage} component={FanRoot} />

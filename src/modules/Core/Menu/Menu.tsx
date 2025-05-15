@@ -55,6 +55,7 @@ import {AccountSettingsPage} from '../AccountSettings';
 import {FollowerListingPage} from '../../Player/Followerlisting';
 import {WalletPage} from '../Wallet';
 import {PlayerComparisonPage} from '../../Player/PlayerComparison';
+import {PrivacyPolicyPage, TermsAndConditionsPage} from '../PrivacyPolicy';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -358,14 +359,18 @@ const Menu = () => {
                     color={textColor}
                   />
                 }
-                onPress={() => {}}
+                onPress={() => {
+                  navigation.navigate(TermsAndConditionsPage);
+                }}
               />
               <MenuSectionItem
                 title='Privacy Policy'
                 leftIcon={
                   <PrivacyPolicyIcon width={20} height={20} color={textColor} />
                 }
-                onPress={() => {}}
+                onPress={() => {
+                  navigation.navigate(PrivacyPolicyPage);
+                }}
               />
             </MenuSection>
 

@@ -4,12 +4,12 @@ import {getFromLocalStorage} from '../utils/helpers/asyncStorage';
 
 // console.log('Base URL:', process.env.SPORTEAZE_BASE_API);
 
-export const SPORTEAZE_BASE_API = 'http://192.168.100.3:3000';
-export const SPORTEAZE_SOCKET_API = 'ws://192.168.100.3:3000';
+// export const SPORTEAZE_BASE_API = 'http://192.168.100.3:3000';
+// export const SPORTEAZE_SOCKET_API = 'ws://192.168.100.3:3000';
 
 // release
-// export const SPORTEAZE_BASE_API = 'https://sporteaze-server.onrender.com'
-// export const SPORTEAZE_SOCKET_API = 'ws://sporteaze-server.onrender.com'  // Log the base URL
+export const SPORTEAZE_BASE_API = 'https://sporteaze-server.onrender.com';
+export const SPORTEAZE_SOCKET_API = 'ws://sporteaze-server.onrender.com'; // Log the base URL
 
 export const sporteazeBaseApi = createApi({
   reducerPath: 'sporteazeBaseApi',
