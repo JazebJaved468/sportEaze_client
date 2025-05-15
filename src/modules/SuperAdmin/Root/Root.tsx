@@ -24,12 +24,16 @@ import {GDPRPage} from '../GDPR';
 import {PulseEffect} from '../../../components/PulseEffect';
 import {BUTTON_BORDER_RADIUS} from '../../../constants/styles';
 import {PatronRequestsPage} from '../PatronRequests';
+import {useAppDispatch} from '../../../utils/customHooks/storeHooks';
+import {updateToast} from '../../../store/core/core.slice';
 
 const SuperAdminRoot = () => {
   const textColor = useTextColor();
   const containerShadow = useContainerShadow(10);
   const cardColor = useCardColor();
   const navigation = useAppNavigation();
+  const dispatch = useAppDispatch();
+
   return (
     <PageContainer>
       {/* Header */}
@@ -73,7 +77,15 @@ const SuperAdminRoot = () => {
       </View>
 
       <View style={styles.cardRow}>
-        <HomeItemCard onCardPress={() => {}}>
+        <HomeItemCard
+          onCardPress={() => {
+            dispatch(
+              updateToast({
+                isVisible: true,
+                message: 'Coming Soon.',
+              }),
+            );
+          }}>
           <View style={{alignItems: 'center', gap: 16}}>
             <CustomerSupportIcon
               width={customWidth(40)}
