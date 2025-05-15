@@ -17,3 +17,21 @@ export type UpdateFanParams = {
   sportInterests?: number[];
   password?: string;
 };
+export type UpdatePatronParams = {
+  fullName?: string;
+  profilePicUrl?: string | null;
+  dob?: string;
+  gender?: number;
+  patronType?: number;
+  industryType?: string;
+  supportedSports?: number[];
+  preferredPlayerLevels?: number[];
+  preferredFundingTypes?: number[];
+  website?: string;
+  linkedIn?: string;
+  fbLink?: string;
+  xLink?: string;
+  instaLink?: string;
+  walletTotal?: number;
+  walletPending?: number;
+};

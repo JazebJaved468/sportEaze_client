@@ -1,4 +1,5 @@
 import {NotificationType, USER_TYPE} from '../../constants/enums';
+import {User} from '../../types/auth/auth.type';
 import {Wallet} from '../../types/player/player.type';
 import {onContractNotificationReceived} from '../../utils/helpers/contract.utils';
 import {updateEndorsementListings} from '../../utils/helpers/patron.utils';
@@ -11,6 +12,7 @@ import {
 import {coreApi} from '../core/core.service';
 import {updateToast} from '../core/core.slice';
 import {store} from '../store';
+import {superAdminApi} from '../superAdmin/superAdmin.service';
 import {
   ConnectionRequestReceived,
   ConnectionResponseReceived,
@@ -84,4 +86,22 @@ export const onWalletUpdated = (data: Wallet) => {
   } else if (userType === USER_TYPE.PLAYER) {
     dispatch(updatePlayerWallet({wallet: data}));
   }
+};
+
+export const onPatronUpdate = (data: User) => {
+  console.log('patron data in func');
+  // dispatch(
+  //   superAdminApi.util.updateQueryData(
+  //     'getPatronRequests',
+  //     undefined,
+  //     draft => {
+  //       console.log('patron data in draft', draft);
+  //       const index = draft.findIndex(item => item.id === data.id);
+  //       if (index !== -1) {
+  //         console.log('patron data in draft', draft[index]);
+  //         draft[index] = data;
+  //       }
+  //     },
+  //   ),
+  // );
 };

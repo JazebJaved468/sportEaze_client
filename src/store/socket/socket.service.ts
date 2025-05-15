@@ -12,6 +12,7 @@ import {
   onConnectionRequestReceived,
   onConnectionResponseReceived,
   onNotificationReceived,
+  onPatronUpdate,
   onWalletUpdated,
 } from './socket.utils';
 import {
@@ -21,6 +22,7 @@ import {
 } from './socket.type';
 import {Wallet} from '../../types/player/player.type';
 import {SPORTEAZE_SOCKET_API} from '../baseApi.service';
+import {User} from '../../types/auth/auth.type';
 
 const SOCKET_URL = SPORTEAZE_SOCKET_API; // Replace with your backend URL
 
@@ -93,6 +95,11 @@ export const connectSocket = () => {
     socket.on(SocketEvents.WALLET_UPDATED, (data: Wallet) => {
       console.log('socket : wallet updated received', JSON.stringify(data));
       onWalletUpdated(data);
+    });
+
+    socket.on(SocketEvents.PATRON_UPDATED, (data: User) => {
+      console.log('socket : patron updated', JSON.stringify(data));
+      onPatronUpdate(data);
     });
 
     // socket.on('newComment', data =>

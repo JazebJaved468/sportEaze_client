@@ -27,7 +27,10 @@ import {PulseEffect} from '../../../components/PulseEffect';
 import {Button} from 'native-base';
 import {CustomTextInputField} from '../../../components/CustomInputField';
 import {Controller, useForm} from 'react-hook-form';
-import {useAppSelector} from '../../../utils/customHooks/storeHooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
 import {
   openImageCamera,
   openImagePicker,
@@ -48,6 +51,11 @@ import {MultiItemSelector} from '../../../components/MultiItemSelector';
 import {customHeight} from '../../../styles/responsiveStyles';
 import {playerLevels} from '../../../constants/player';
 import {WaitingforApprovalPage} from '../WaitingForApproval';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../../Core/Navigator/AppNavigator/AppNavigator';
+import {useUpdatePatronMutation} from '../../../store/auth/auth.service';
+import {AccountSettingsPage} from '../../Core/AccountSettings';
+import {updateToast} from '../../../store/core/core.slice';
 
 export type RegisterPatronFormData = {
   profilePic?: ImageType | null;
@@ -63,8 +71,16 @@ export type RegisterPatronFormData = {
   linkedIn?: string;
 };
 
+type PatronRegistrationDetailsPageRouteProp = RouteProp<
+  RootStackParamList,
+  'PatronRegistrationDetailsPage'
+>;
+
 const PatronRegistrationDetails = () => {
   const navigation = useAppNavigation();
+  const {user} = useAppSelector(state => state.auth);
+  const {params} = useRoute<PatronRegistrationDetailsPageRouteProp>();
+  const dispatch = useAppDispatch();
 
   const [registrationStep, setRegistrationStep] = useState(1);
   const [formData, setFormData] = useState<RegisterPatronFormData>({});
@@ -75,6 +91,8 @@ const PatronRegistrationDetails = () => {
 
   const [registerPatron, {isLoading: registerPatronCIP}] =
     useRegisterPatronMutation();
+  const [updatePatron, {isLoading: updatePatronCIP}] =
+    useUpdatePatronMutation();
 
   const textColor = useTextColor();
 
@@ -100,6 +118,9 @@ const PatronRegistrationDetails = () => {
   };
 
   const uploadToCloudinary = async () => {
+    if (params.isEditProfile && !selectedImage) {
+      return user?.profilePicUrl || '';
+    }
     if (selectedImage) {
       try {
         const uploadedImage = await uploadImagesToCloudinary({
@@ -141,6 +162,21 @@ const PatronRegistrationDetails = () => {
         ...(data.instaLink && {instaLink: data.instaLink}),
         ...(data.xLink && {xLink: data.xLink}),
       };
+
+      if (params.isEditProfile) {
+        const {username, ...updatedData} = apiData;
+        await updatePatron(updatedData).unwrap();
+        navigation.navigate(AccountSettingsPage);
+
+        dispatch(
+          updateToast({
+            message: 'Profile updated successfully',
+            isVisible: true,
+          }),
+        );
+        return;
+      }
+
       await registerPatron(apiData).unwrap();
       navigation.reset({
         index: 0,
@@ -181,6 +217,7 @@ const PatronRegistrationDetails = () => {
                     setRegistrationStep={setRegistrationStep}
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
+                    isEditingProfile={params?.isEditProfile}
                   />
                 );
 
@@ -201,7 +238,9 @@ const PatronRegistrationDetails = () => {
                     setFormData={setFormData}
                     setRegistrationStep={setRegistrationStep}
                     onSubmitForm={submitForm}
-                    submissionCIP={imageUploadCIP || registerPatronCIP}
+                    submissionCIP={
+                      imageUploadCIP || registerPatronCIP || updatePatronCIP
+                    }
                   />
                 );
             }
@@ -251,10 +290,10 @@ const PatronRegistrationGeneralDetails: React.FC<
     formState: {errors},
   } = useForm({
     defaultValues: {
-      fullName: formData.fullName || '',
-      username: formData.username || '',
-      industryType: formData.industryType || '',
-      website: formData.website || '',
+      fullName: formData.fullName || user?.fullName || '',
+      username: formData.username || user?.username || '',
+      industryType: formData.industryType || user?.patron?.industryType || '',
+      website: formData.website || user?.patron?.website || '',
       pic: '',
     },
   });
@@ -570,6 +609,10 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
   const {data: sports} = useGetAvailableSportsQuery();
   const navigation = useAppNavigation();
 
+  const {user} = useAppSelector(state => state.auth);
+
+  const {params} = useRoute<PatronRegistrationDetailsPageRouteProp>();
+
   const textColor = useTextColor();
   const {
     handleSubmit,
@@ -577,8 +620,12 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
     formState: {errors},
   } = useForm({
     defaultValues: {
-      preferredPlayerLevels: formData.preferredPlayerLevels || [],
-      supportedSports: formData.supportedSports || [],
+      preferredPlayerLevels:
+        formData.preferredPlayerLevels ||
+        user?.patron?.preferredPlayerLevels ||
+        [],
+      supportedSports:
+        formData.supportedSports || user?.patron?.supportedSports || [],
     },
   });
 
@@ -686,7 +733,7 @@ const SportsExperience: React.FC<SportsExperienceProps> = ({
                 preferredPlayerLevels: data.preferredPlayerLevels,
               });
             })}>
-            Done
+            Next
           </Button>
         </PulseEffect>
       </View>
@@ -722,16 +769,20 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
   const textColor = useTextColor();
   const cardColor = useCardColor();
 
+  const {user} = useAppSelector(state => state.auth);
+
+  const {params} = useRoute<PatronRegistrationDetailsPageRouteProp>();
+
   const {
     handleSubmit,
     control,
     formState: {errors},
   } = useForm({
     defaultValues: {
-      fbLink: '',
-      xLink: '',
-      instaLink: '',
-      linkedIn: '',
+      fbLink: user?.patron?.fbLink || '',
+      xLink: user?.patron?.xLink || '',
+      instaLink: user?.patron?.instaLink || '',
+      linkedIn: user?.patron?.linkedIn || '',
     },
   });
 

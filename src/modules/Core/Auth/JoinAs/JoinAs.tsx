@@ -18,7 +18,6 @@ import {useAppNavigation} from '../../../../utils/customHooks/navigator';
 import {FanRegistrationDetailsPage} from '../../../Fan/FanRegistrationDetails';
 import {BUTTON_BORDER_RADIUS} from '../../../../constants/styles';
 import {fontBold} from '../../../../styles/fonts';
-import {RecommendationsPage} from '../../../Fan/Recommendations';
 import {PlayerRegistrationDetailsPage} from '../../../Player/PlayerRegistrationDetails';
 import {MentorRegistrationDetailsPage} from '../../../Mentor/MentorRegistrationDetails.tsx';
 import {onLogout} from '../../../../utils/helpers/auth.ts';

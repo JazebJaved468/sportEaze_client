@@ -3,6 +3,7 @@ import {
   LoginParams,
   RegisterUserParams,
   UpdateFanParams,
+  UpdatePatronParams,
 } from '../../types/auth/auth.params';
 import {
   GetUserSettingsResponse,
@@ -61,6 +62,31 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
         }
       },
     }),
+
+    //
+
+    updatePatron: builder.mutation<{user: User}, UpdatePatronParams>({
+      query: body => ({
+        url: `/user/patron`,
+        method: 'PATCH',
+        body,
+      }),
+
+      async onQueryStarted(args, {dispatch, queryFulfilled}) {
+        try {
+          const {data} = await queryFulfilled;
+
+          dispatch(updateUser(data.user));
+        } catch (error) {
+          console.log(
+            'Error while Updating patron data : auth.service.ts : Line 60',
+            error,
+          );
+        }
+      },
+    }),
+
+    //
 
     loginUser: builder.mutation<LoginUserResponse, LoginParams>({
       query: body => ({
@@ -152,6 +178,7 @@ export const authApi = sporteazeBaseApi.injectEndpoints({
 });
 
 export const {
+  useUpdatePatronMutation,
   useRegisterUserMutation,
   useLoginUserMutation,
   useLazyGetUserSettingsQuery,
