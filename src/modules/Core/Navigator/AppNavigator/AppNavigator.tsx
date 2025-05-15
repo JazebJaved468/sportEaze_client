@@ -95,6 +95,8 @@ import MentorProfile, {
 import PatronProfile, {
   PatronProfilePage,
 } from '../../../Patron/PatronProfile/index.ts';
+import PatronContractListing from '../../../Patron/PatronContractListing/PatronContractListing.tsx';
+import {PatronContractListingPage} from '../../../Patron/PatronContractListing/index.ts';
 
 export type RootStackParamList = {
   PlayerHomePage: undefined;
@@ -183,6 +185,9 @@ export type RootStackParamList = {
     userId: string;
   };
   PatronProfilePage: {
+    userId: string;
+  };
+  PatronContractListingPage: {
     userId: string;
   };
 };
@@ -359,6 +364,10 @@ export const AppNavigator = () => {
       />
       <Stack.Screen name={ContractPreviewPage} component={ContractPreview} />
       <Stack.Screen name={PatronProfilePage} component={PatronProfile} />
+      <Stack.Screen
+        name={PatronContractListingPage}
+        component={PatronContractListing}
+      />
 
       {/* Mentor Screens */}
       <Stack.Screen name={MentorRootPage} component={MentorRoot} />
