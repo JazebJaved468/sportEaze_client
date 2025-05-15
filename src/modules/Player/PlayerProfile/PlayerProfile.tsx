@@ -191,7 +191,7 @@ const PlayerProfile = () => {
               </View>
 
               {/* use isFollowing Bit for handling state */}
-              {isVisitor ? (
+              {isVisitor && userType !== USER_TYPE.PLAYER ? (
                 <PulseEffect>
                   <Button
                     style={{
@@ -246,7 +246,7 @@ const PlayerProfile = () => {
                     </View>
                   </Button>
                 </PulseEffect>
-              ) : (
+              ) : isVisitor ? null : (
                 <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() => {

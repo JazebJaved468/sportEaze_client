@@ -122,6 +122,8 @@ const FanExplore = () => {
       <GeneralHeader title='Explore' />
 
       <FlatList
+        keyboardShouldPersistTaps='handled'
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
         }}
