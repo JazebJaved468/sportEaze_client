@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {ShareIcon, UserPlaceholderIcon} from '../../assets/icons';
@@ -15,9 +22,13 @@ import {PulseEffect} from '../PulseEffect';
 import {Button} from 'native-base';
 import {useAppNavigation} from '../../utils/customHooks/navigator';
 import {AcceptedConnectionsPage} from '../../modules/Core/Networking';
-import {useAppSelector} from '../../utils/customHooks/storeHooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../utils/customHooks/storeHooks';
 import {useContainerShadow} from '../../utils/customHooks/customHooks';
 import {useSharePostMutation} from '../../store/player/player.service';
+import {updateToast} from '../../store/core/core.slice';
 
 type SharePostProps = {
   postId: string;
@@ -34,6 +45,8 @@ const SharePost: React.FC<SharePostProps> = ({postId, closeBottomSheet}) => {
   const inverseTextColor = useInverseTextColor();
   const lightTextColor = useLightTextColor();
   const containerShadow = useContainerShadow(3, `${appColors.black}90`);
+
+  const dispatch = useAppDispatch();
 
   const [sharePost, {isLoading: sharePostCIP}] = useSharePostMutation();
   const {
@@ -57,6 +70,15 @@ const SharePost: React.FC<SharePostProps> = ({postId, closeBottomSheet}) => {
       }).unwrap();
 
       closeBottomSheet();
+
+      dispatch(
+        updateToast({
+          isVisible: true,
+          message: 'Post shared successfully to your network',
+        }),
+      );
+
+      Keyboard.dismiss();
     } catch (error) {
       console.log('Error while sharing post:', error);
     }

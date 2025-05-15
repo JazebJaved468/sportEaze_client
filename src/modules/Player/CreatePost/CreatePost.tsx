@@ -39,7 +39,10 @@ import {
   useTextColor,
 } from '../../../utils/customHooks/colorHooks';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useAppSelector} from '../../../utils/customHooks/storeHooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../utils/customHooks/storeHooks';
 import {fontBold, fontLight, fontRegular} from '../../../styles/fonts';
 import {appColors} from '../../../constants/colors';
 import {CustomTextInputField} from '../../../components/CustomInputField';
@@ -77,6 +80,7 @@ import {screenWidth} from '../../../constants/styles';
 import {ContractListingPage} from '../../Contract/ContractListing';
 import {useFocusEffect} from '@react-navigation/native';
 import {onContractNotificationReceived} from '../../../utils/helpers/contract.utils';
+import {updateToast} from '../../../store/core/core.slice';
 
 type GeminiAnalysisType = {
   response?: GeminiAnalysisResponse;
@@ -97,6 +101,7 @@ type GeminiAnalysisResponse = {
 
 export const CreatePost = () => {
   const navigation = useAppNavigation();
+  const dispatch = useAppDispatch();
   const {isLoggedIn, user, userType} = useAppSelector(state => state.auth);
 
   const {
@@ -299,6 +304,13 @@ export const CreatePost = () => {
     cleanData();
     onContractNotificationReceived();
 
+    dispatch(
+      updateToast({
+        isVisible: true,
+        message: 'Published Successfully',
+      }),
+    );
+
     if (user?.id) {
       navigateToProfilePage({
         userId: user.id,
@@ -494,232 +506,6 @@ export const CreatePost = () => {
         }
       />
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Caption Box */}
-        <View style={[styles.shadowBox, styles.textBox, {backgroundColor}]}>
-          <View style={styles.metaData}>
-            <View style={styles.picAndName}>
-              <View style={styles.profilePicContainer}>
-                {user?.profilePicUrl ? (
-                  <Image
-                    source={{uri: user?.profilePicUrl}}
-                    style={{
-                      width: 54,
-                      height: 54,
-                      objectFit: 'contain',
-                      borderRadius: 9,
-                    }}
-                  />
-                ) : (
-                  <UserPlaceholderIcon
-                    width={28}
-                    height={28}
-                    color={textColor}
-                  />
-                )}
-              </View>
-
-              <Text style={fontRegular(16)}>{user?.username}</Text>
-            </View>
-
-            <CustomDropDown
-              buttonTitle='Visibility'
-              sheetTitle='Select Post Visibility'
-              data={postVisibilityOptions}
-              selectedItem={postVisibility}
-              snapPoints={['25%']}
-              onItemSelect={handlePostVisibilitySelection}
-              style={{
-                buttonWidth: 90,
-              }}
-            />
-
-            {/* <TouchableOpacity
-              style={styles.visibilityDropDown}
-              activeOpacity={0.6}>
-              <Text style={fontRegular(14, inverseTextColor)}>Post</Text>
-              <View style={{marginTop: 3}}>
-                <ArrowDownIcon color={inverseTextColor} width={16} height={6} />
-              </View>
-            </TouchableOpacity> */}
-          </View>
-
-          {/* Caption Wrapper */}
-          <View style={{marginBottom: 10}}>
-            <Controller
-              name='caption'
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: 'Caption is required',
-                },
-                maxLength: {
-                  value: 1000,
-                  message: 'Caption cannot exceed 1000 characters',
-                },
-              }}
-              render={({field: {onChange, onBlur, value}}) => (
-                <CustomTextInputField
-                  borderWidth={0}
-                  placeholder="What's on your mind?"
-                  value={value}
-                  maxLength={1001}
-                  numberOfLines={5}
-                  onChangeText={onChange}
-                  isValid={errors.caption ? false : true}
-                  errorMessage={errors.caption ? errors.caption.message : ''}
-                  autoCapitalize='sentences'
-                  height={'auto'}
-                  textAlignVertical='top'
-                />
-              )}
-            />
-          </View>
-        </View>
-
-        {/* HashTags Section */}
-        <View style={[styles.shadowBox, styles.hashTagsBox, {backgroundColor}]}>
-          <View
-            style={{flexDirection: 'row', flex: 1, flexWrap: 'wrap', gap: 8}}>
-            {hashTags.length > 0 ? (
-              hashTags.map((hashtag, index) => (
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => {
-                    setHashTags(prev => prev.filter(tag => tag !== hashtag));
-                  }}>
-                  <View style={styles.hashTag}>
-                    <Text key={index} style={fontRegular(12, textColor)}>
-                      {hashtag}
-                    </Text>
-
-                    <CrossIcon width={8} height={8} color={textColor} />
-                  </View>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <>
-                <Text style={fontRegular(14, textColor)}>
-                  #SportEaze #Achievement #Sponsored
-                </Text>
-              </>
-            )}
-          </View>
-
-          <PulseEffect>
-            <Button
-              onPress={generateHashTags}
-              // isLoading={registerFanCIP || loginUserCIP}
-              isDisabled={isPublishing}
-              style={{
-                backgroundColor: appColors.warmRed,
-                borderRadius: 12,
-                width: 110,
-                height: 34,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 4,
-                }}>
-                <View>
-                  <SparkleStarsIcon
-                    width={24}
-                    height={24}
-                    color={appColors.white}
-                  />
-                </View>
-                <Text style={[fontRegular(14, appColors.white)]}>Generate</Text>
-              </View>
-            </Button>
-          </PulseEffect>
-        </View>
-
-        {/* Select Media Button */}
-        <TouchableOpacity onPress={selectMedia} activeOpacity={0.6}>
-          <View style={[styles.selectMediaBox]}>
-            <View>
-              <Text style={[fontRegular(14, textColor)]}>
-                {`Select Media  `}
-                <Text style={[fontLight(12, textColor)]}>(Upto 5)</Text>
-              </Text>
-            </View>
-            <GalleryIcon width={28} height={28} color={textColor} />
-          </View>
-        </TouchableOpacity>
-
-        {/* Media Previews  */}
-        <View>
-          <FlatList
-            contentContainerStyle={{
-              flexDirection: 'row',
-              gap: 14,
-              marginTop: selectedMedia?.length ? 20 : 0,
-            }}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={selectedMedia}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => {
-                  navigation.navigate(MediaPreviewPage, {
-                    mediaPath: item.path,
-                    mediaType: getMediaType(item.mime),
-                    onRemove: () => {
-                      removeMedia(item.path);
-                    },
-                  });
-                }}>
-                <View>
-                  <Image
-                    source={{uri: item.path}}
-                    style={{
-                      width: 150,
-                      height: 180,
-                      borderRadius: 24,
-                    }}
-                  />
-
-                  <View style={styles.removeMedia}>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      hitSlop={30}
-                      onPress={() => {
-                        removeMedia(item.path);
-                      }}>
-                      <CrossIcon width={8} height={8} color={appColors.white} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={openContractsBottomSheet}
-          activeOpacity={0.6}>
-          <View style={[styles.selectMediaBox]}>
-            <View>
-              <Text style={[fontRegular(14, textColor)]}>
-                {selectedContract.milestoneId
-                  ? `Contract Selected  `
-                  : `Select Contract  `}
-                {selectedContract.milestoneId ? (
-                  <Text style={[fontRegular(14, appColors.warmRed)]}>
-                    (Rs. {selectedContract.amount})
-                  </Text>
-                ) : null}
-              </Text>
-            </View>
-            <ContractIcon width={28} height={28} color={textColor} />
-          </View>
-        </TouchableOpacity>
-
         {/* AI Analysis */}
         {geminiAnalysis.analysisCIP ? (
           <View
@@ -805,6 +591,232 @@ export const CreatePost = () => {
           </View>
         ) : null}
 
+        {/* Caption Box */}
+        <View style={[styles.shadowBox, styles.textBox, {backgroundColor}]}>
+          <View style={styles.metaData}>
+            <View style={styles.picAndName}>
+              <View style={styles.profilePicContainer}>
+                {user?.profilePicUrl ? (
+                  <Image
+                    source={{uri: user?.profilePicUrl}}
+                    style={{
+                      width: 54,
+                      height: 54,
+                      objectFit: 'contain',
+                      borderRadius: 9,
+                    }}
+                  />
+                ) : (
+                  <UserPlaceholderIcon
+                    width={28}
+                    height={28}
+                    color={textColor}
+                  />
+                )}
+              </View>
+
+              <Text style={fontRegular(16)}>{user?.username}</Text>
+            </View>
+
+            <CustomDropDown
+              buttonTitle='Visibility'
+              sheetTitle='Select Post Visibility'
+              data={postVisibilityOptions}
+              selectedItem={postVisibility}
+              snapPoints={['25%']}
+              onItemSelect={handlePostVisibilitySelection}
+              style={{
+                buttonWidth: 90,
+              }}
+            />
+
+            {/* <TouchableOpacity
+              style={styles.visibilityDropDown}
+              activeOpacity={0.6}>
+              <Text style={fontRegular(14, inverseTextColor)}>Post</Text>
+              <View style={{marginTop: 3}}>
+                <ArrowDownIcon color={inverseTextColor} width={16} height={6} />
+              </View>
+            </TouchableOpacity> */}
+          </View>
+
+          {/* Caption Wrapper */}
+          <View style={{marginBottom: 10}}>
+            <Controller
+              name='caption'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Caption is required',
+                },
+                maxLength: {
+                  value: 1000,
+                  message: 'Caption cannot exceed 1000 characters',
+                },
+              }}
+              render={({field: {onChange, onBlur, value}}) => (
+                <CustomTextInputField
+                  borderWidth={0}
+                  placeholder="What's on your mind?"
+                  value={value}
+                  maxLength={1001}
+                  numberOfLines={5}
+                  onChangeText={onChange}
+                  isValid={errors.caption ? false : true}
+                  errorMessage={errors.caption ? errors.caption.message : ''}
+                  autoCapitalize='sentences'
+                  height={'auto'}
+                  textAlignVertical='top'
+                />
+              )}
+            />
+          </View>
+        </View>
+
+        {/* HashTags Section
+        <View style={[styles.shadowBox, styles.hashTagsBox, {backgroundColor}]}>
+          <View
+            style={{flexDirection: 'row', flex: 1, flexWrap: 'wrap', gap: 8}}>
+            {hashTags.length > 0 ? (
+              hashTags.map((hashtag, index) => (
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setHashTags(prev => prev.filter(tag => tag !== hashtag));
+                  }}>
+                  <View style={styles.hashTag}>
+                    <Text key={index} style={fontRegular(12, textColor)}>
+                      {hashtag}
+                    </Text>
+
+                    <CrossIcon width={8} height={8} color={textColor} />
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <>
+                <Text style={fontRegular(14, textColor)}>
+                  #SportEaze #Achievement #Sponsored
+                </Text>
+              </>
+            )}
+          </View>
+
+          <PulseEffect>
+            <Button
+              onPress={generateHashTags}
+              // isLoading={registerFanCIP || loginUserCIP}
+              isDisabled={isPublishing}
+              style={{
+                backgroundColor: appColors.warmRed,
+                borderRadius: 12,
+                width: 110,
+                height: 34,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 4,
+                }}>
+                <View>
+                  <SparkleStarsIcon
+                    width={24}
+                    height={24}
+                    color={appColors.white}
+                  />
+                </View>
+                <Text style={[fontRegular(14, appColors.white)]}>Generate</Text>
+              </View>
+            </Button>
+          </PulseEffect>
+        </View> */}
+
+        {/* Select Media Button */}
+        <TouchableOpacity onPress={selectMedia} activeOpacity={0.6}>
+          <View style={[styles.selectMediaBox]}>
+            <View>
+              <Text style={[fontRegular(14, textColor)]}>
+                {`Select Media  `}
+                <Text style={[fontLight(12, textColor)]}>(Upto 5)</Text>
+              </Text>
+            </View>
+            <GalleryIcon width={28} height={28} color={textColor} />
+          </View>
+        </TouchableOpacity>
+
+        {/* Media Previews  */}
+        <View>
+          <FlatList
+            contentContainerStyle={{
+              flexDirection: 'row',
+              gap: 14,
+              marginTop: selectedMedia?.length ? 20 : 0,
+            }}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={selectedMedia}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  navigation.navigate(MediaPreviewPage, {
+                    mediaPath: item.path,
+                    mediaType: getMediaType(item.mime),
+                    onRemove: () => {
+                      removeMedia(item.path);
+                    },
+                  });
+                }}>
+                <View>
+                  <Image
+                    source={{uri: item.path}}
+                    style={{
+                      width: 150,
+                      height: 180,
+                      borderRadius: 24,
+                    }}
+                  />
+
+                  <View style={styles.removeMedia}>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      hitSlop={30}
+                      onPress={() => {
+                        removeMedia(item.path);
+                      }}>
+                      <CrossIcon width={8} height={8} color={appColors.white} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+
+        <TouchableOpacity
+          onPress={openContractsBottomSheet}
+          activeOpacity={0.6}>
+          <View style={[styles.selectMediaBox]}>
+            <View>
+              <Text style={[fontRegular(14, textColor)]}>
+                {selectedContract.milestoneId
+                  ? `Contract Selected  `
+                  : `Select Contract  `}
+                {selectedContract.milestoneId ? (
+                  <Text style={[fontRegular(14, appColors.warmRed)]}>
+                    (Rs. {selectedContract.amount})
+                  </Text>
+                ) : null}
+              </Text>
+            </View>
+            <ContractIcon width={28} height={28} color={textColor} />
+          </View>
+        </TouchableOpacity>
+
         {/* Terms And Policies */}
 
         <View style={{marginTop: 'auto', marginBottom: 20}}>
@@ -851,6 +863,22 @@ export const CreatePost = () => {
 
         {contractsCIP || contractsFIP || !contracts ? (
           <Loader />
+        ) : contracts.length === 0 || !contracts ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 16,
+            }}>
+            <ContractIcon
+              width={50}
+              height={50}
+              strokeWidth={1.2}
+              color={textColor}
+            />
+            <Text style={[fontBold(14, textColor)]}>No Contracts Found</Text>
+          </View>
         ) : (
           <BottomSheetScrollView>
             {contracts?.map((contract, index) => (
