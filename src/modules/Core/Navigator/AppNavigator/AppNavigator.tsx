@@ -77,9 +77,9 @@ import {ContractPreviewPage} from '../../../Contract/ContractPreview/index.ts';
 import UserPosts, {UserPostsPage} from '../../UserPosts/index.ts';
 import Wallet from '../../Wallet/Wallet.tsx';
 import {WalletPage} from '../../Wallet/index.ts';
-import PlayerComparision, {
-  PlayerComparisionPage,
-} from '../../../Player/PlayerComparision/index.ts';
+import PlayerComparison, {
+  PlayerComparisonPage,
+} from '../../../Player/PlayerComparison/index.ts';
 import GiveEndorsement, {
   GiveEndorsementPage,
 } from '../../../Mentor/GiveEndorsement/index.ts';
@@ -156,7 +156,7 @@ export type RootStackParamList = {
     userType: number;
   };
   WalletPage: undefined;
-  PlayerComparisionPage: undefined;
+  PlayerComparisonPage: undefined;
   GiveEndorsementPage: {
     playerId: string;
     playerName: string;
@@ -363,10 +363,7 @@ export const AppNavigator = () => {
         component={PatronDetailsVerification}
       />
 
-      <Stack.Screen
-        name={PlayerComparisionPage}
-        component={PlayerComparision}
-      />
+      <Stack.Screen name={PlayerComparisonPage} component={PlayerComparison} />
 
       {/* Samples  */}
       <Stack.Screen name={PlayerHomePage} component={PlayerHome} />

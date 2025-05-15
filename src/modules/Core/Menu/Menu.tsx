@@ -54,7 +54,7 @@ import {
 import {AccountSettingsPage} from '../AccountSettings';
 import {FollowerListingPage} from '../../Player/Followerlisting';
 import {WalletPage} from '../Wallet';
-import {PlayerComparisionPage} from '../../Player/PlayerComparision';
+import {PlayerComparisonPage} from '../../Player/PlayerComparison';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -359,7 +359,7 @@ const Menu = () => {
                   />
                 }
                 onPress={() => {
-                  navigation.navigate(PlayerComparisionPage);
+                  navigation.navigate(PlayerComparisonPage);
                 }}
               />
             </MenuSection>

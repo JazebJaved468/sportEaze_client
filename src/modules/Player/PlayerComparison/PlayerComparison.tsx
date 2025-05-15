@@ -15,7 +15,10 @@ import {useGetAvailableSportsQuery} from '../../../store/core/core.service';
 import {fontBold, fontRegular} from '../../../styles/fonts';
 import {appColors} from '../../../constants/colors';
 import {PlayingLevel} from '../../../constants/enums';
-import {useCardColor, useTextColor} from '../../../utils/customHooks/colorHooks';
+import {
+  useCardColor,
+  useTextColor,
+} from '../../../utils/customHooks/colorHooks';
 import {
   extractValidJSONFromGeminiResponse,
   geminiModel,
@@ -28,7 +31,7 @@ import {customHeight, customWidth} from '../../../styles/responsiveStyles';
 
 type GeminiComparisonResponse = {
   winner: string;
-  score: string; 
+  score: string;
   explanation: string;
 };
 
@@ -38,7 +41,7 @@ type GeminiAnalysisType = {
   analysisCIP: boolean;
 };
 
-export const PlayerComparision = () => {
+export const PlayerComparison = () => {
   const navigation = useAppNavigation();
   const [playerOneUsername, setPlayerOneUsername] = useState('');
   const [playerTwoUsername, setPlayerTwoUsername] = useState('');
@@ -49,7 +52,8 @@ export const PlayerComparision = () => {
     analysisCIP: false,
   });
 
-  const [getPlayerComparison, {data, isFetching, error}] = useLazyGetPlayerComparisonQuery();
+  const [getPlayerComparison, {data, isFetching, error}] =
+    useLazyGetPlayerComparisonQuery();
 
   const {data: sports} = useGetAvailableSportsQuery();
 
@@ -64,14 +68,14 @@ export const PlayerComparision = () => {
 
   const performGeminiAnalysis = async () => {
     if (!data) return;
-    
+
     try {
       setGeminiAnalysis(prev => ({
         ...prev,
         analysisDone: false,
         analysisCIP: true,
       }));
-      
+
       const playerOneMetrics = {
         name: data.playerOne.fullName,
         username: data.playerOne.username,
@@ -86,7 +90,7 @@ export const PlayerComparision = () => {
         userPostLikesCount: data.playerOne.player.userPostLikesCount || 0,
         postCount: data.playerOne.player.postCount || 0,
       };
-      
+
       const playerTwoMetrics = {
         name: data.playerTwo.fullName,
         username: data.playerTwo.username,
@@ -101,7 +105,7 @@ export const PlayerComparision = () => {
         userPostLikesCount: data.playerTwo.player.userPostLikesCount || 0,
         postCount: data.playerTwo.player.postCount || 0,
       };
-      
+
       const prompt = `
         TASK: Compare two sports players and output a clear winner based on their metrics.
 
@@ -143,12 +147,25 @@ export const PlayerComparision = () => {
 
       try {
         const geminiResponse = await geminiModel.generateContent([prompt]);
-        console.log("🚀 ~ performGeminiAnalysis ~ geminiResponse:", geminiResponse);
-        
-        if (geminiResponse && geminiResponse.response && geminiResponse.response.candidates && geminiResponse.response.candidates.length > 0) {
-          const responseText = geminiResponse.response.candidates[0]?.content?.parts?.[0]?.text || '';
-          console.log("🚀 ~ performGeminiAnalysis ~ responseText:", responseText);
-          
+        console.log(
+          '🚀 ~ performGeminiAnalysis ~ geminiResponse:',
+          geminiResponse,
+        );
+
+        if (
+          geminiResponse &&
+          geminiResponse.response &&
+          geminiResponse.response.candidates &&
+          geminiResponse.response.candidates.length > 0
+        ) {
+          const responseText =
+            geminiResponse.response.candidates[0]?.content?.parts?.[0]?.text ||
+            '';
+          console.log(
+            '🚀 ~ performGeminiAnalysis ~ responseText:',
+            responseText,
+          );
+
           // Try to parse the JSON response directly
           try {
             if (responseText) {
@@ -159,20 +176,27 @@ export const PlayerComparision = () => {
               } else if (responseText.includes('```')) {
                 cleanedText = responseText.replace(/```\n|\n```/g, '');
               }
-              
+
               // Find JSON in the text
               const jsonStart = cleanedText.indexOf('{');
               const jsonEnd = cleanedText.lastIndexOf('}');
-              
+
               if (jsonStart >= 0 && jsonEnd > jsonStart) {
                 const jsonText = cleanedText.substring(jsonStart, jsonEnd + 1);
-                console.log("🚀 ~ performGeminiAnalysis ~ jsonText:", jsonText);
-                
+                console.log('🚀 ~ performGeminiAnalysis ~ jsonText:', jsonText);
+
                 const parsedResponse = JSON.parse(jsonText);
-                console.log("🚀 ~ performGeminiAnalysis ~ parsedResponse:", parsedResponse);
-                
+                console.log(
+                  '🚀 ~ performGeminiAnalysis ~ parsedResponse:',
+                  parsedResponse,
+                );
+
                 // Verify the required fields exist
-                if (parsedResponse.winner && parsedResponse.score && parsedResponse.explanation) {
+                if (
+                  parsedResponse.winner &&
+                  parsedResponse.score &&
+                  parsedResponse.explanation
+                ) {
                   setGeminiAnalysis(prev => ({
                     ...prev,
                     response: parsedResponse,
@@ -181,26 +205,29 @@ export const PlayerComparision = () => {
                   }));
                   return;
                 } else {
-                  console.log("Missing required fields in the response");
-                  throw new Error("Missing required fields in the response");
+                  console.log('Missing required fields in the response');
+                  throw new Error('Missing required fields in the response');
                 }
               } else {
-                console.log("No JSON found in the response");
-                throw new Error("No JSON found in the response");
+                console.log('No JSON found in the response');
+                throw new Error('No JSON found in the response');
               }
             }
           } catch (parseError) {
-            console.log("JSON parsing failed:", parseError);
+            console.log('JSON parsing failed:', parseError);
             throw parseError; // Rethrow to trigger fallback
           }
         } else {
-          console.log("Invalid response from Gemini");
-          throw new Error("Invalid response from Gemini");
+          console.log('Invalid response from Gemini');
+          throw new Error('Invalid response from Gemini');
         }
       } catch (error) {
-        console.log("Error with Gemini API:", error);
+        console.log('Error with Gemini API:', error);
         // Create a fallback response if API errors
-        const fallbackResponse = createFallbackResponse(data.playerOne, data.playerTwo);
+        const fallbackResponse = createFallbackResponse(
+          data.playerOne,
+          data.playerTwo,
+        );
         setGeminiAnalysis(prev => ({
           ...prev,
           response: fallbackResponse,
@@ -211,7 +238,10 @@ export const PlayerComparision = () => {
     } catch (error) {
       console.log('Gemini analysis error:', error);
       // Create a fallback response on general error
-      const fallbackResponse = createFallbackResponse(data.playerOne, data.playerTwo);
+      const fallbackResponse = createFallbackResponse(
+        data.playerOne,
+        data.playerTwo,
+      );
       setGeminiAnalysis(prev => ({
         ...prev,
         response: fallbackResponse,
@@ -226,45 +256,51 @@ export const PlayerComparision = () => {
     // Calculate total points for each player across all metrics
     const p1 = playerOne.player;
     const p2 = playerTwo.player;
-    
+
     let p1Points = 0;
     let p2Points = 0;
-    
+
     // Playing level
     if (p1.playingLevel > p2.playingLevel) p1Points += 1;
     else if (p1.playingLevel < p2.playingLevel) p2Points += 1;
-    
+
     // Followers
     if (p1.followerCount > p2.followerCount) p1Points += 1;
     else if (p1.followerCount < p2.followerCount) p2Points += 1;
-    
+
     // Connections
     if (playerOne.connectionCount > playerTwo.connectionCount) p1Points += 1;
-    else if (playerOne.connectionCount < playerTwo.connectionCount) p2Points += 1;
-    
+    else if (playerOne.connectionCount < playerTwo.connectionCount)
+      p2Points += 1;
+
     // Endorsements
-    if ((p1.endorsementsReceived || 0) > (p2.endorsementsReceived || 0)) p1Points += 1;
-    else if ((p1.endorsementsReceived || 0) < (p2.endorsementsReceived || 0)) p2Points += 1;
-    
+    if ((p1.endorsementsReceived || 0) > (p2.endorsementsReceived || 0))
+      p1Points += 1;
+    else if ((p1.endorsementsReceived || 0) < (p2.endorsementsReceived || 0))
+      p2Points += 1;
+
     // Posts
     if ((p1.postCount || 0) > (p2.postCount || 0)) p1Points += 1;
     else if ((p1.postCount || 0) < (p2.postCount || 0)) p2Points += 1;
-    
+
     // Comments
     if ((p1.commentsCount || 0) > (p2.commentsCount || 0)) p1Points += 1;
     else if ((p1.commentsCount || 0) < (p2.commentsCount || 0)) p2Points += 1;
-    
+
     // Likes
-    if ((p1.userPostLikesCount || 0) > (p2.userPostLikesCount || 0)) p1Points += 1;
-    else if ((p1.userPostLikesCount || 0) < (p2.userPostLikesCount || 0)) p2Points += 1;
-    
+    if ((p1.userPostLikesCount || 0) > (p2.userPostLikesCount || 0))
+      p1Points += 1;
+    else if ((p1.userPostLikesCount || 0) < (p2.userPostLikesCount || 0))
+      p2Points += 1;
+
     // Shared posts
     if ((p1.countSharedPosts || 0) > (p2.countSharedPosts || 0)) p1Points += 1;
-    else if ((p1.countSharedPosts || 0) < (p2.countSharedPosts || 0)) p2Points += 1;
-    
+    else if ((p1.countSharedPosts || 0) < (p2.countSharedPosts || 0))
+      p2Points += 1;
+
     // Determine winner based on total points
     let winner, explanation, score;
-    
+
     if (p1Points > p2Points) {
       winner = playerOne.fullName;
       score = `${p1Points} - ${p2Points}`;
@@ -274,15 +310,15 @@ export const PlayerComparision = () => {
       score = `${p1Points} - ${p2Points}`;
       explanation = `${playerTwo.fullName} outperforms ${playerOne.fullName} in ${p2Points} metrics compared to ${p1Points}. They have better overall engagement and metrics across most categories.`;
     } else {
-      winner = "Tie";
+      winner = 'Tie';
       score = `${p1Points} - ${p2Points}`;
       explanation = `${playerOne.fullName} and ${playerTwo.fullName} are evenly matched with similar metrics across all categories.`;
     }
-    
+
     return {
       winner,
       score,
-      explanation
+      explanation,
     };
   };
 
@@ -316,7 +352,9 @@ export const PlayerComparision = () => {
         <Text style={[styles.comparisonValue, {color: textColor}]}>
           {leftValue ?? 'N/A'}
         </Text>
-        <Text style={[styles.comparisonLabel, {color: textColor}]}>{label}</Text>
+        <Text style={[styles.comparisonLabel, {color: textColor}]}>
+          {label}
+        </Text>
         <Text style={[styles.comparisonValue, {color: textColor}]}>
           {rightValue ?? 'N/A'}
         </Text>
@@ -334,43 +372,42 @@ export const PlayerComparision = () => {
                 <UserPlaceholderIcon width={28} height={28} color={textColor} />
               </View>
               <Input
-                placeholder="Enter first username"
+                placeholder='Enter first username'
                 value={playerOneUsername}
                 onChangeText={setPlayerOneUsername}
                 mt={3}
-                width="100%"
-                variant="filled"
+                width='100%'
+                variant='filled'
                 backgroundColor={cardColor}
                 color={textColor}
               />
             </View>
-            
+
             <View style={styles.profileImagePlaceholder}>
               <View style={styles.profilePicContainer}>
                 <UserPlaceholderIcon width={28} height={28} color={textColor} />
               </View>
               <Input
-                placeholder="Enter second username"
+                placeholder='Enter second username'
                 value={playerTwoUsername}
                 onChangeText={setPlayerTwoUsername}
                 mt={3}
-                width="100%"
-                variant="filled"
+                width='100%'
+                variant='filled'
                 backgroundColor={cardColor}
                 color={textColor}
               />
             </View>
           </View>
         </ScrollView>
-        
+
         <View style={styles.buttonContainer}>
           <Button
             style={styles.compareButton}
             onPress={handleCompare}
             isDisabled={!playerOneUsername || !playerTwoUsername}
-            _text={{ color: 'white', fontWeight: 'bold' }}
-            backgroundColor={appColors.warmRed}
-          >
+            _text={{color: 'white', fontWeight: 'bold'}}
+            backgroundColor={appColors.warmRed}>
             Compare Players
           </Button>
         </View>
@@ -385,43 +422,93 @@ export const PlayerComparision = () => {
           {/* Player Profiles Skeletons */}
           <View style={styles.profilesRow}>
             <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
-              <Skeleton rounded="full" h="80px" w="80px" startColor={`${appColors.whisperGray}60`} />
-              <Skeleton.Text mt="4" lines={2} startColor={`${appColors.whisperGray}60`} w="80%" />
+              <Skeleton
+                rounded='full'
+                h='80px'
+                w='80px'
+                startColor={`${appColors.whisperGray}60`}
+              />
+              <Skeleton.Text
+                mt='4'
+                lines={2}
+                startColor={`${appColors.whisperGray}60`}
+                w='80%'
+              />
             </View>
-            
+
             <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
-              <Skeleton rounded="full" h="80px" w="80px" startColor={`${appColors.whisperGray}60`} />
-              <Skeleton.Text mt="4" lines={2} startColor={`${appColors.whisperGray}60`} w="80%" />
+              <Skeleton
+                rounded='full'
+                h='80px'
+                w='80px'
+                startColor={`${appColors.whisperGray}60`}
+              />
+              <Skeleton.Text
+                mt='4'
+                lines={2}
+                startColor={`${appColors.whisperGray}60`}
+                w='80%'
+              />
             </View>
           </View>
 
           {/* Metrics Skeleton */}
           <View style={[styles.metricsContainer, {backgroundColor: cardColor}]}>
-            <Skeleton h="6" rounded="md" w="50%" alignSelf="center" mb="4" startColor={`${appColors.whisperGray}60`} />
-            
+            <Skeleton
+              h='6'
+              rounded='md'
+              w='50%'
+              alignSelf='center'
+              mb='4'
+              startColor={`${appColors.whisperGray}60`}
+            />
+
             {[...Array(10)].map((_, index) => (
               <View key={index} style={styles.comparisonRow}>
-                <Skeleton h="5" rounded="md" w="30%" startColor={`${appColors.whisperGray}60`} />
-                <Skeleton h="5" rounded="md" w="30%" startColor={`${appColors.whisperGray}60`} />
-                <Skeleton h="5" rounded="md" w="30%" startColor={`${appColors.whisperGray}60`} />
+                <Skeleton
+                  h='5'
+                  rounded='md'
+                  w='30%'
+                  startColor={`${appColors.whisperGray}60`}
+                />
+                <Skeleton
+                  h='5'
+                  rounded='md'
+                  w='30%'
+                  startColor={`${appColors.whisperGray}60`}
+                />
+                <Skeleton
+                  h='5'
+                  rounded='md'
+                  w='30%'
+                  startColor={`${appColors.whisperGray}60`}
+                />
               </View>
             ))}
           </View>
 
           {/* AI Analysis Skeleton */}
           <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-            <Skeleton h="6" rounded="md" w="70%" mb="4" startColor={`${appColors.whisperGray}60`} />
-            <Skeleton.Text lines={3} startColor={`${appColors.whisperGray}60`} />
+            <Skeleton
+              h='6'
+              rounded='md'
+              w='70%'
+              mb='4'
+              startColor={`${appColors.whisperGray}60`}
+            />
+            <Skeleton.Text
+              lines={3}
+              startColor={`${appColors.whisperGray}60`}
+            />
           </View>
         </ScrollView>
-        
+
         <View style={styles.buttonContainer}>
           <Button
             style={styles.compareButton}
             isDisabled={true}
-            _text={{ color: 'white', fontWeight: 'bold' }}
-            backgroundColor={appColors.warmRed}
-          >
+            _text={{color: 'white', fontWeight: 'bold'}}
+            backgroundColor={appColors.warmRed}>
             Compare Different Players
           </Button>
         </View>
@@ -437,14 +524,13 @@ export const PlayerComparision = () => {
             Error loading player comparison. Please try again.
           </Text>
         </View>
-        
+
         <View style={styles.buttonContainer}>
           <Button
             style={styles.compareButton}
             onPress={() => setShowComparison(false)}
-            _text={{ color: 'white', fontWeight: 'bold' }}
-            backgroundColor={appColors.warmRed}
-          >
+            _text={{color: 'white', fontWeight: 'bold'}}
+            backgroundColor={appColors.warmRed}>
             Try Again
           </Button>
         </View>
@@ -454,18 +540,21 @@ export const PlayerComparision = () => {
 
   const renderComparisonScreen = () => {
     if (!data) return null;
-    
+
     const {playerOne, playerTwo} = data;
 
     // Calculate total engagement score
     const getTotalEngagement = (player: any) => {
       const p = player.player;
-      return p.followerCount + p.pendingConnectionCount + 
-             (p.endorsementsReceived || 0) + 
-             (p.countSharedPosts || 0) + 
-             (p.commentsCount || 0) + 
-             (p.userPostLikesCount || 0) + 
-             (p.postCount || 0);
+      return (
+        p.followerCount +
+        p.pendingConnectionCount +
+        (p.endorsementsReceived || 0) +
+        (p.countSharedPosts || 0) +
+        (p.commentsCount || 0) +
+        (p.userPostLikesCount || 0) +
+        (p.postCount || 0)
+      );
     };
 
     const engagementOne = getTotalEngagement(playerOne);
@@ -489,17 +578,25 @@ export const PlayerComparision = () => {
                     }}
                   />
                 ) : (
-                  <UserPlaceholderIcon width={customWidth(28)} height={customHeight(28)} color={textColor} />
+                  <UserPlaceholderIcon
+                    width={customWidth(28)}
+                    height={customHeight(28)}
+                    color={textColor}
+                  />
                 )}
               </View>
-              <Text style={[fontBold(16), {color: textColor, marginTop: customHeight(10)}]}>
+              <Text
+                style={[
+                  fontBold(16),
+                  {color: textColor, marginTop: customHeight(10)},
+                ]}>
                 {playerOne.fullName}
               </Text>
               <Text style={[fontRegular(14), {color: textColor}]}>
                 {playerOne.username}
               </Text>
             </View>
-            
+
             <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
               <View style={styles.profilePicContainer}>
                 {playerTwo.profilePicUrl ? (
@@ -513,10 +610,18 @@ export const PlayerComparision = () => {
                     }}
                   />
                 ) : (
-                  <UserPlaceholderIcon width={customWidth(28)} height={customHeight(28)} color={textColor} />
+                  <UserPlaceholderIcon
+                    width={customWidth(28)}
+                    height={customHeight(28)}
+                    color={textColor}
+                  />
                 )}
               </View>
-              <Text style={[fontBold(16), {color: textColor, marginTop: customHeight(10)}]}>
+              <Text
+                style={[
+                  fontBold(16),
+                  {color: textColor, marginTop: customHeight(10)},
+                ]}>
                 {playerTwo.fullName}
               </Text>
               <Text style={[fontRegular(14), {color: textColor}]}>
@@ -527,85 +632,105 @@ export const PlayerComparision = () => {
 
           {/* Comparison Metrics */}
           <View style={[styles.metricsContainer, {backgroundColor: cardColor}]}>
-            <Text style={[fontBold(16), {color: textColor, marginBottom: customHeight(10), textAlign: 'center'}]}>
+            <Text
+              style={[
+                fontBold(16),
+                {
+                  color: textColor,
+                  marginBottom: customHeight(10),
+                  textAlign: 'center',
+                },
+              ]}>
               Player Metrics
             </Text>
 
             {renderComparisonItem(
               'Sport',
-              sports ? sports[playerOne.player.primarySport] : playerOne.player.primarySport,
-              sports ? sports[playerTwo.player.primarySport] : playerTwo.player.primarySport
+              sports
+                ? sports[playerOne.player.primarySport]
+                : playerOne.player.primarySport,
+              sports
+                ? sports[playerTwo.player.primarySport]
+                : playerTwo.player.primarySport,
             )}
 
             {renderComparisonItem(
               'Playing Level',
               getPlayingLevelText(playerOne.player.playingLevel),
-              getPlayingLevelText(playerTwo.player.playingLevel)
+              getPlayingLevelText(playerTwo.player.playingLevel),
             )}
 
             {renderComparisonItem(
               'Followers',
               playerOne.player.followerCount,
-              playerTwo.player.followerCount
+              playerTwo.player.followerCount,
             )}
 
             {renderComparisonItem(
               'Connections',
               playerOne.connectionCount,
-              playerTwo.connectionCount
+              playerTwo.connectionCount,
             )}
 
             {renderComparisonItem(
               'Pending Connections',
               playerOne.player.pendingConnectionCount,
-              playerTwo.player.pendingConnectionCount
+              playerTwo.player.pendingConnectionCount,
             )}
 
             {renderComparisonItem(
               'Endorsements',
               playerOne.player.endorsementsReceived || 0,
-              playerTwo.player.endorsementsReceived || 0
+              playerTwo.player.endorsementsReceived || 0,
             )}
 
             {renderComparisonItem(
               'Shared Posts',
               playerOne.player.countSharedPosts || 0,
-              playerTwo.player.countSharedPosts || 0
+              playerTwo.player.countSharedPosts || 0,
             )}
 
             {renderComparisonItem(
               'Comments',
               playerOne.player.commentsCount || 0,
-              playerTwo.player.commentsCount || 0
+              playerTwo.player.commentsCount || 0,
             )}
 
             {renderComparisonItem(
               'Post Likes',
               playerOne.player.userPostLikesCount || 0,
-              playerTwo.player.userPostLikesCount || 0
+              playerTwo.player.userPostLikesCount || 0,
             )}
 
             {renderComparisonItem(
               'Total Posts',
               playerOne.player.postCount || 0,
-              playerTwo.player.postCount || 0
+              playerTwo.player.postCount || 0,
             )}
 
             {renderComparisonItem(
               'Total Engagement',
               engagementOne,
-              engagementTwo
+              engagementTwo,
             )}
           </View>
 
           {/* AI Analysis */}
           {geminiAnalysis.analysisCIP && (
             <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-              <Text style={[fontBold(16), {color: textColor, marginBottom: customHeight(10)}]}>
+              <Text
+                style={[
+                  fontBold(16),
+                  {color: textColor, marginBottom: customHeight(10)},
+                ]}>
                 AI Comparison Analysis
               </Text>
-              <ActivityIndicator size="small" color={appColors.warmRed} />
-              <Text style={[fontRegular(14), {color: textColor, marginTop: customHeight(10)}]}>
+              <ActivityIndicator size='small' color={appColors.warmRed} />
+              <Text
+                style={[
+                  fontRegular(14),
+                  {color: textColor, marginTop: customHeight(10)},
+                ]}>
                 AI is analyzing player metrics...
               </Text>
             </View>
@@ -613,22 +738,35 @@ export const PlayerComparision = () => {
 
           {geminiAnalysis.analysisDone && geminiAnalysis.response && (
             <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-              <Text style={[fontBold(16), {color: textColor, marginBottom: customHeight(10)}]}>
+              <Text
+                style={[
+                  fontBold(16),
+                  {color: textColor, marginBottom: customHeight(10)},
+                ]}>
                 AI Comparison Analysis
               </Text>
-              
-              <Text style={[fontRegular(14), {color: textColor, marginBottom: customHeight(5)}]}>
+
+              <Text
+                style={[
+                  fontRegular(14),
+                  {color: textColor, marginBottom: customHeight(5)},
+                ]}>
                 <Text style={fontBold(14)}>Winner: </Text>
-                {geminiAnalysis.response.winner} ({geminiAnalysis.response.score})
+                {geminiAnalysis.response.winner} (
+                {geminiAnalysis.response.score})
               </Text>
-              
+
               <Text style={[fontRegular(14), {color: textColor}]}>
                 {geminiAnalysis.response.explanation}
               </Text>
             </View>
           )}
 
-          <View style={{marginTop: customHeight(20), marginBottom: customHeight(30)}}>
+          <View
+            style={{
+              marginTop: customHeight(20),
+              marginBottom: customHeight(30),
+            }}>
             <TouchableOpacity
               style={{
                 alignItems: 'center',
@@ -659,9 +797,8 @@ export const PlayerComparision = () => {
           <Button
             style={styles.compareButton}
             onPress={() => setShowComparison(false)}
-            _text={{ color: 'white', fontWeight: 'bold' }}
-            backgroundColor={appColors.warmRed}
-          >
+            _text={{color: 'white', fontWeight: 'bold'}}
+            backgroundColor={appColors.warmRed}>
             Compare Different Players
           </Button>
         </View>
@@ -687,8 +824,8 @@ export const PlayerComparision = () => {
 
   return (
     <PageContainer>
-      <GeneralHeader 
-        title="Player Comparison" 
+      <GeneralHeader
+        title='Player Comparison'
         showLeftElement={true}
         backHandler={() => {
           if (showComparison) {
