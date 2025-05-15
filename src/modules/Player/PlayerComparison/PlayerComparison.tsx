@@ -28,6 +28,8 @@ import PageContainer from '../../../components/PageContainer';
 import GeneralHeader from '../../../components/GeneralHeader';
 import {useAppNavigation} from '../../../utils/customHooks/navigator';
 import {customHeight, customWidth} from '../../../styles/responsiveStyles';
+import {useContainerShadow} from '../../../utils/customHooks/customHooks';
+import {PulseEffect} from '../../../components/PulseEffect';
 
 type GeminiComparisonResponse = {
   winner: string;
@@ -43,8 +45,8 @@ type GeminiAnalysisType = {
 
 export const PlayerComparison = () => {
   const navigation = useAppNavigation();
-  const [playerOneUsername, setPlayerOneUsername] = useState('');
-  const [playerTwoUsername, setPlayerTwoUsername] = useState('');
+  const [playerOneUsername, setPlayerOneUsername] = useState('@jazeb_player');
+  const [playerTwoUsername, setPlayerTwoUsername] = useState('@player1234');
   const [showComparison, setShowComparison] = useState(false);
   const [geminiAnalysis, setGeminiAnalysis] = useState<GeminiAnalysisType>({
     response: undefined,
@@ -89,6 +91,7 @@ export const PlayerComparison = () => {
         commentsCount: data.playerOne.player.commentsCount || 0,
         userPostLikesCount: data.playerOne.player.userPostLikesCount || 0,
         postCount: data.playerOne.player.postCount || 0,
+        contractsCount: data.playerOne.player.totalContracts || 0,
       };
 
       const playerTwoMetrics = {
@@ -104,6 +107,7 @@ export const PlayerComparison = () => {
         commentsCount: data.playerTwo.player.commentsCount || 0,
         userPostLikesCount: data.playerTwo.player.userPostLikesCount || 0,
         postCount: data.playerTwo.player.postCount || 0,
+        contractsCount: data.playerTwo.player.totalContracts || 0,
       };
 
       const prompt = `
@@ -147,10 +151,10 @@ export const PlayerComparison = () => {
 
       try {
         const geminiResponse = await geminiModel.generateContent([prompt]);
-        console.log(
-          '🚀 ~ performGeminiAnalysis ~ geminiResponse:',
-          geminiResponse,
-        );
+        // console.log(
+        //   '🚀 ~ performGeminiAnalysis ~ geminiResponse:',
+        //   geminiResponse,
+        // );
 
         if (
           geminiResponse &&
@@ -161,10 +165,10 @@ export const PlayerComparison = () => {
           const responseText =
             geminiResponse.response.candidates[0]?.content?.parts?.[0]?.text ||
             '';
-          console.log(
-            '🚀 ~ performGeminiAnalysis ~ responseText:',
-            responseText,
-          );
+          // console.log(
+          //   '🚀 ~ performGeminiAnalysis ~ responseText:',
+          //   responseText,
+          // );
 
           // Try to parse the JSON response directly
           try {
@@ -183,13 +187,13 @@ export const PlayerComparison = () => {
 
               if (jsonStart >= 0 && jsonEnd > jsonStart) {
                 const jsonText = cleanedText.substring(jsonStart, jsonEnd + 1);
-                console.log('🚀 ~ performGeminiAnalysis ~ jsonText:', jsonText);
+                // console.log('🚀 ~ performGeminiAnalysis ~ jsonText:', jsonText);
 
                 const parsedResponse = JSON.parse(jsonText);
-                console.log(
-                  '🚀 ~ performGeminiAnalysis ~ parsedResponse:',
-                  parsedResponse,
-                );
+                // console.log(
+                //   '🚀 ~ performGeminiAnalysis ~ parsedResponse:',
+                //   parsedResponse,
+                // );
 
                 // Verify the required fields exist
                 if (
@@ -205,11 +209,11 @@ export const PlayerComparison = () => {
                   }));
                   return;
                 } else {
-                  console.log('Missing required fields in the response');
+                  // console.log('Missing required fields in the response');
                   throw new Error('Missing required fields in the response');
                 }
               } else {
-                console.log('No JSON found in the response');
+                // console.log('No JSON found in the response');
                 throw new Error('No JSON found in the response');
               }
             }
@@ -349,13 +353,23 @@ export const PlayerComparison = () => {
   ) => {
     return (
       <View style={styles.comparisonRow}>
-        <Text style={[styles.comparisonValue, {color: textColor}]}>
+        <Text
+          style={[
+            fontBold(14, textColor),
+            styles.comparisonValue,
+            {textAlign: 'left'},
+          ]}>
           {leftValue ?? 'N/A'}
         </Text>
-        <Text style={[styles.comparisonLabel, {color: textColor}]}>
+        <Text style={[fontBold(14, appColors.warmRed), styles.comparisonLabel]}>
           {label}
         </Text>
-        <Text style={[styles.comparisonValue, {color: textColor}]}>
+        <Text
+          style={[
+            fontBold(14, textColor),
+            styles.comparisonValue,
+            {textAlign: 'right'},
+          ]}>
           {rightValue ?? 'N/A'}
         </Text>
       </View>
@@ -365,7 +379,9 @@ export const PlayerComparison = () => {
   const renderInputScreen = () => {
     return (
       <View style={styles.contentContainer}>
-        <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+        <ScrollView
+          contentContainerStyle={{paddingBottom: 100}}
+          showsVerticalScrollIndicator={false}>
           <View style={styles.inputContainer}>
             <View style={styles.profileImagePlaceholder}>
               <View style={styles.profilePicContainer}>
@@ -401,15 +417,17 @@ export const PlayerComparison = () => {
           </View>
         </ScrollView>
 
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.compareButton}
-            onPress={handleCompare}
-            isDisabled={!playerOneUsername || !playerTwoUsername}
-            _text={{color: 'white', fontWeight: 'bold'}}
-            backgroundColor={appColors.warmRed}>
-            Compare Players
-          </Button>
+        <View style={[styles.buttonContainer, {backgroundColor: cardColor}]}>
+          <PulseEffect>
+            <Button
+              style={[styles.compareButton]}
+              onPress={handleCompare}
+              isDisabled={!playerOneUsername || !playerTwoUsername}
+              _text={{color: 'white', fontWeight: 'bold'}}
+              backgroundColor={appColors.warmRed}>
+              Compare Players
+            </Button>
+          </PulseEffect>
         </View>
       </View>
     );
@@ -418,7 +436,9 @@ export const PlayerComparison = () => {
   const renderLoadingScreen = () => {
     return (
       <View style={styles.contentContainer}>
-        <ScrollView contentContainerStyle={{paddingBottom: customHeight(100)}}>
+        <ScrollView
+          contentContainerStyle={{paddingBottom: customHeight(100)}}
+          showsVerticalScrollIndicator={false}>
           {/* Player Profiles Skeletons */}
           <View style={styles.profilesRow}>
             <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
@@ -503,13 +523,13 @@ export const PlayerComparison = () => {
           </View>
         </ScrollView>
 
-        <View style={styles.buttonContainer}>
+        <View style={[styles.buttonContainer, {backgroundColor: cardColor}]}>
           <Button
             style={styles.compareButton}
             isDisabled={true}
             _text={{color: 'white', fontWeight: 'bold'}}
             backgroundColor={appColors.warmRed}>
-            Compare Different Players
+            Compare Other Players
           </Button>
         </View>
       </View>
@@ -521,22 +541,26 @@ export const PlayerComparison = () => {
       <View style={styles.contentContainer}>
         <View style={styles.loadingContainer}>
           <Text style={{color: textColor}}>
-            Error loading player comparison. Please try again.
+            Error while doing player comparison. Please try again.
           </Text>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.compareButton}
-            onPress={() => setShowComparison(false)}
-            _text={{color: 'white', fontWeight: 'bold'}}
-            backgroundColor={appColors.warmRed}>
-            Try Again
-          </Button>
+        <View style={[styles.buttonContainer, {backgroundColor: cardColor}]}>
+          <PulseEffect>
+            <Button
+              style={styles.compareButton}
+              onPress={() => setShowComparison(false)}
+              _text={{color: 'white', fontWeight: 'bold'}}
+              backgroundColor={appColors.warmRed}>
+              Try Again
+            </Button>
+          </PulseEffect>
         </View>
       </View>
     );
   };
+
+  const containerShadow = useContainerShadow(6);
 
   const renderComparisonScreen = () => {
     if (!data) return null;
@@ -548,7 +572,8 @@ export const PlayerComparison = () => {
       const p = player.player;
       return (
         p.followerCount +
-        p.pendingConnectionCount +
+        // p.pendingConnectionCount +
+        (p.totalContracts || 0) +
         (p.endorsementsReceived || 0) +
         (p.countSharedPosts || 0) +
         (p.commentsCount || 0) +
@@ -562,10 +587,17 @@ export const PlayerComparison = () => {
 
     return (
       <View style={styles.contentContainer}>
-        <ScrollView contentContainerStyle={{paddingBottom: customHeight(100)}}>
+        <ScrollView
+          contentContainerStyle={{paddingBottom: customHeight(50)}}
+          showsVerticalScrollIndicator={false}>
           {/* Player Profiles */}
           <View style={styles.profilesRow}>
-            <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
+            <View
+              style={[
+                styles.profileCard,
+                {backgroundColor: cardColor},
+                containerShadow,
+              ]}>
               <View style={styles.profilePicContainer}>
                 {playerOne.profilePicUrl ? (
                   <Image
@@ -588,16 +620,25 @@ export const PlayerComparison = () => {
               <Text
                 style={[
                   fontBold(16),
-                  {color: textColor, marginTop: customHeight(10)},
+                  {color: textColor, marginTop: customHeight(14)},
                 ]}>
                 {playerOne.fullName}
               </Text>
-              <Text style={[fontRegular(14), {color: textColor}]}>
+              <Text
+                style={[
+                  fontRegular(12),
+                  {color: `${textColor}90`, marginTop: customHeight(6)},
+                ]}>
                 {playerOne.username}
               </Text>
             </View>
 
-            <View style={[styles.profileCard, {backgroundColor: cardColor}]}>
+            <View
+              style={[
+                styles.profileCard,
+                {backgroundColor: cardColor},
+                containerShadow,
+              ]}>
               <View style={styles.profilePicContainer}>
                 {playerTwo.profilePicUrl ? (
                   <Image
@@ -620,24 +661,110 @@ export const PlayerComparison = () => {
               <Text
                 style={[
                   fontBold(16),
-                  {color: textColor, marginTop: customHeight(10)},
+                  {color: textColor, marginTop: customHeight(14)},
                 ]}>
                 {playerTwo.fullName}
               </Text>
-              <Text style={[fontRegular(14), {color: textColor}]}>
+              <Text
+                style={[
+                  fontRegular(12),
+                  {color: `${textColor}90`, marginTop: customHeight(6)},
+                ]}>
                 {playerTwo.username}
               </Text>
             </View>
           </View>
 
+          {/* AI Analysis */}
+          {geminiAnalysis.analysisCIP && (
+            <View
+              style={[
+                styles.aiContainer,
+                {backgroundColor: cardColor},
+                styles.analysisBox,
+                {
+                  borderWidth: 0.5,
+                  borderColor: appColors.success,
+                  backgroundColor: `${appColors.success}30`,
+                  gap: 8,
+                  marginBottom: 30,
+                },
+              ]}>
+              <Text
+                style={[
+                  fontBold(16),
+                  {color: textColor, marginBottom: customHeight(10)},
+                ]}>
+                AI Comparison Analysis
+              </Text>
+              <ActivityIndicator size='small' color={appColors.black} />
+              <Text
+                style={[
+                  fontRegular(14),
+                  {color: textColor, marginTop: customHeight(10)},
+                ]}>
+                AI is analyzing player metrics...
+              </Text>
+            </View>
+          )}
+
+          {geminiAnalysis.analysisDone && geminiAnalysis.response && (
+            <View
+              style={[
+                styles.aiContainer,
+                {backgroundColor: cardColor},
+                styles.analysisBox,
+                {
+                  borderWidth: 0.5,
+                  borderColor: appColors.success,
+                  backgroundColor: `${appColors.success}30`,
+                  gap: 8,
+                  marginBottom: 30,
+                },
+              ]}>
+              <Text
+                style={[
+                  fontBold(16, textColor),
+                  {marginBottom: customHeight(10), textAlign: 'center'},
+                ]}>
+                AI Comparison Analysis
+              </Text>
+
+              <Text
+                style={[
+                  fontRegular(14),
+                  {color: textColor, marginBottom: customHeight(5)},
+                ]}>
+                <Text style={fontBold(14)}>Winner: </Text>
+                {geminiAnalysis.response.winner}
+              </Text>
+
+              <Text
+                style={[
+                  fontRegular(14),
+                  {color: textColor, marginBottom: customHeight(5)},
+                ]}>
+                <Text style={fontBold(14)}>Analysis: </Text>
+              </Text>
+
+              <Text style={[fontRegular(14), {color: textColor}]}>
+                {geminiAnalysis.response.explanation}
+              </Text>
+            </View>
+          )}
+
           {/* Comparison Metrics */}
-          <View style={[styles.metricsContainer, {backgroundColor: cardColor}]}>
+          <View
+            style={[
+              styles.metricsContainer,
+              {backgroundColor: cardColor},
+              containerShadow,
+            ]}>
             <Text
               style={[
-                fontBold(16),
+                fontBold(16, textColor),
                 {
-                  color: textColor,
-                  marginBottom: customHeight(10),
+                  marginBottom: customHeight(30),
                   textAlign: 'center',
                 },
               ]}>
@@ -673,9 +800,9 @@ export const PlayerComparison = () => {
             )}
 
             {renderComparisonItem(
-              'Pending Connections',
-              playerOne.player.pendingConnectionCount,
-              playerTwo.player.pendingConnectionCount,
+              'Sponsorships',
+              playerOne.player.totalContracts,
+              playerTwo.player.totalContracts,
             )}
 
             {renderComparisonItem(
@@ -715,53 +842,6 @@ export const PlayerComparison = () => {
             )}
           </View>
 
-          {/* AI Analysis */}
-          {geminiAnalysis.analysisCIP && (
-            <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-              <Text
-                style={[
-                  fontBold(16),
-                  {color: textColor, marginBottom: customHeight(10)},
-                ]}>
-                AI Comparison Analysis
-              </Text>
-              <ActivityIndicator size='small' color={appColors.warmRed} />
-              <Text
-                style={[
-                  fontRegular(14),
-                  {color: textColor, marginTop: customHeight(10)},
-                ]}>
-                AI is analyzing player metrics...
-              </Text>
-            </View>
-          )}
-
-          {geminiAnalysis.analysisDone && geminiAnalysis.response && (
-            <View style={[styles.aiContainer, {backgroundColor: cardColor}]}>
-              <Text
-                style={[
-                  fontBold(16),
-                  {color: textColor, marginBottom: customHeight(10)},
-                ]}>
-                AI Comparison Analysis
-              </Text>
-
-              <Text
-                style={[
-                  fontRegular(14),
-                  {color: textColor, marginBottom: customHeight(5)},
-                ]}>
-                <Text style={fontBold(14)}>Winner: </Text>
-                {geminiAnalysis.response.winner} (
-                {geminiAnalysis.response.score})
-              </Text>
-
-              <Text style={[fontRegular(14), {color: textColor}]}>
-                {geminiAnalysis.response.explanation}
-              </Text>
-            </View>
-          )}
-
           <View
             style={{
               marginTop: customHeight(20),
@@ -793,14 +873,16 @@ export const PlayerComparison = () => {
           </View>
         </ScrollView>
 
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.compareButton}
-            onPress={() => setShowComparison(false)}
-            _text={{color: 'white', fontWeight: 'bold'}}
-            backgroundColor={appColors.warmRed}>
-            Compare Different Players
-          </Button>
+        <View style={[styles.buttonContainer, {backgroundColor: cardColor}]}>
+          <PulseEffect>
+            <Button
+              style={styles.compareButton}
+              onPress={() => setShowComparison(false)}
+              _text={{color: 'white', fontWeight: 'bold'}}
+              backgroundColor={appColors.warmRed}>
+              Compare Different Players
+            </Button>
+          </PulseEffect>
         </View>
       </View>
     );
@@ -867,15 +949,18 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: customHeight(20),
+    bottom: customHeight(0),
     left: customWidth(16),
     right: customWidth(16),
+    backgroundColor: 'red',
+    paddingVertical: customHeight(10),
   },
   compareButton: {
     height: customHeight(50),
     borderRadius: 10,
   },
   profilesRow: {
+    // backgroundColor: 'red',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: customHeight(20),
@@ -883,13 +968,14 @@ const styles = StyleSheet.create({
   profileCard: {
     width: '48%',
     padding: customWidth(16),
-    borderRadius: 10,
+    borderRadius: 16,
     alignItems: 'center',
   },
   metricsContainer: {
     padding: customWidth(16),
     borderRadius: 10,
     marginBottom: customHeight(20),
+    paddingHorizontal: customWidth(20),
   },
   comparisonRow: {
     flexDirection: 'row',
@@ -902,19 +988,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   comparisonValue: {
-    fontSize: 14,
-    fontWeight: 'bold',
     width: '30%',
     textAlign: 'center',
   },
   aiContainer: {
     padding: customWidth(16),
-    borderRadius: 10,
+    borderRadius: 14,
     marginBottom: customHeight(20),
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  analysisBox: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 20,
+    marginTop: 16,
   },
 });

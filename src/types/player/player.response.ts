@@ -110,6 +110,7 @@ export type PlayerComparisonResponse = {
       commentsCount: number;
       userPostLikesCount: number;
       postCount: number;
+      totalContracts: number;
     };
     connection: {
       status: number;
@@ -157,6 +158,7 @@ export type PlayerComparisonResponse = {
       commentsCount: number;
       userPostLikesCount: number;
       postCount: number;
+      totalContracts: number;
     };
     connection: {
       status: number;
