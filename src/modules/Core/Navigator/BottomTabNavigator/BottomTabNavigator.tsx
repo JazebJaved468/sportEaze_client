@@ -22,6 +22,7 @@ import {useCardColor} from '../../../../utils/customHooks/colorHooks';
 import Menu from '../../Menu';
 import PlayerProfile from '../../../Player/PlayerProfile';
 import FanExplore from '../../../Fan/FanExplore';
+import PatronContractListing from '../../../Patron/PatronContractListing';
 
 const TAB_ICONS_SIZE = 20;
 
@@ -406,9 +407,9 @@ export const PatronBottomTabNavigator = () => {
                     icon={
                       <ContractIcon
                         color={color}
-                        width={TAB_ICONS_SIZE + 6}
-                        height={TAB_ICONS_SIZE + 6}
-                        strokeWidth={focused ? 1.1 : 0.7}
+                        width={TAB_ICONS_SIZE + 5}
+                        height={TAB_ICONS_SIZE + 5}
+                        strokeWidth={focused ? 1.1 : 1}
                       />
                     }
                     label={route.name}
@@ -453,7 +454,10 @@ export const PatronBottomTabNavigator = () => {
       <Tab.Screen name={BottomTabNames.Explore} component={FanExplore} />
       {/* <Tab.Screen name={BottomTabNames.Create} component={CreatePost} /> */}
 
-      <Tab.Screen name={BottomTabNames.Contracts} component={FanExplore} />
+      <Tab.Screen
+        name={BottomTabNames.Contracts}
+        component={PatronContractListing}
+      />
 
       <Tab.Screen name={BottomTabNames.Messages} component={ChatListing} />
       <Tab.Screen name={BottomTabNames.Profile} component={Menu} />
