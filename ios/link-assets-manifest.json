@@ -2,6 +2,10 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/fonts/InderRegular.ttf",
+      "sha1": "9a6b94bc6dfaf51efe3b7de6ab993715ef0c709d"
+    },
+    {
       "path": "src/assets/fonts/LatoBlack.ttf",
       "sha1": "a001eb827743636e04f8efa7d4aeedf0541c46ac"
     },
